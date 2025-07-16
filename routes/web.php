@@ -32,6 +32,7 @@ use App\Http\Controllers\LateUndertimeReportController;
 use App\Http\Controllers\LeaveStatusOverviewController;
 use App\Http\Controllers\OutbaseSummaryController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\TicketTypeController;
 use App\Http\Middleware\EnsureUserHasCompany;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
@@ -185,6 +186,7 @@ Route::middleware('auth', EnsureUserHasCompany::class)->group(function () {
 });
 
 Route::middleware('auth', EnsureUserIsAdmin::class, EnsureUserHasCompany::class)->group(function () {
+    Route::resource('ticket_types', TicketTypeController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('company_users', CompanyUserController::class);
