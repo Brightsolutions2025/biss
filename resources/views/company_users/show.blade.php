@@ -48,10 +48,6 @@
 
                         {{-- Action Buttons --}}
                         <div class="d-flex gap-3">
-                            <a href="{{ route('company_users.index') }}" class="btn btn-secondary">
-                                Back
-                            </a>
-
                             <form method="POST" action="{{ route('company_users.destroy', [$companyUser->company_id, $companyUser->user_id]) }}">
                                 @csrf
                                 @method('DELETE')
