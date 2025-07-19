@@ -216,7 +216,6 @@ class TeamController extends Controller
 
             Log::info('Team created', [
                 'team_id'    => $team->id,
-                'company_id' => $companyId,
                 'user_id'    => auth()->id(),
             ]);
 

@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PayrollPeriod extends Model
 {
+    use HasFactory;
+    
     protected $guarded = [];
     protected $dates = ['start_date', 'end_date'];
     protected $casts = [

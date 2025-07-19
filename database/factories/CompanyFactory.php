@@ -23,6 +23,8 @@ class CompanyFactory extends Factory
             'industry' => $this->faker->word,
             'address'  => $this->faker->address,
             'phone'    => $this->faker->phoneNumber,
+            'offset_valid_after_days'  => 90,
+            'offset_valid_before_days' => 0,
         ];
     }
 }

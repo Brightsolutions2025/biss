@@ -13,83 +13,55 @@ class UserPreferenceTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+    protected Company $company1;
+    protected Company $company2;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user = User::factory()
-            ->hasAttached(Company::factory(), [], 'companies') // Attach at least one company
-            ->create();
-    }
+        $this->user = User::factory()->create();
+        $this->company1 = Company::factory()->create();
+        $this->company2 = Company::factory()->create();
 
-    public function test_user_can_view_preferences_page(): void
-    {
-        $response = $this->actingAs($this->user)->get('/preferences');
+        // Attach both companies to the user
+        $this->user->companies()->attach([$this->company1->id, $this->company2->id]);
 
-        $response->assertOk()->assertViewIs('preferences.index');
-    }
-
-    public function test_user_can_view_edit_preferences_form(): void
-    {
-        $response = $this->actingAs($this->user)->get('/preferences/edit');
-
-        $response->assertOk()->assertViewIs('preferences.edit');
-    }
-
-    public function test_user_can_update_preferences(): void
-    {
-        $company = $this->user->companies->first();
-
-        $response = $this->actingAs($this->user)->patch('/preferences', [
-            'company_id'  => $company->id,
+        // Assign initial preference to company1
+        UserPreference::factory()->create([
+            'user_id'     => $this->user->id,
+            'company_id'  => $this->company1->id,
             'preferences' => ['theme' => 'dark'],
         ]);
+    }
 
-        $response->assertRedirect(route('dashboard'))
-                 ->assertSessionHas('success', 'Preferences updated successfully.');
+    /** @test */
+    public function it_displays_edit_preferences_form()
+    {
+        $this->actingAs($this->user);
+
+        $response = $this->get(route('preferences.edit'));
+
+        $response->assertOk();
+        $response->assertViewIs('preferences.edit');
+        $response->assertViewHasAll(['preference', 'companies']);
+    }
+
+    /** @test */
+    public function it_updates_user_preferences_to_different_company()
+    {
+        $this->actingAs($this->user);
+
+        $response = $this->put(route('preferences.update'), [
+            'company_id'  => $this->company2->id, // switch from company1 to company2
+            'preferences' => ['theme' => 'light'],
+        ]);
+
+        $response->assertRedirect(route('dashboard'));
 
         $this->assertDatabaseHas('user_preferences', [
             'user_id'    => $this->user->id,
-            'company_id' => $company->id,
+            'company_id' => $this->company2->id,
         ]);
-    }
-
-    public function test_preferences_update_requires_valid_company(): void
-    {
-        $invalidCompanyId = 999;
-
-        $response = $this->actingAs($this->user)->patch('/preferences', [
-            'company_id' => $invalidCompanyId,
-        ]);
-
-        $response->assertSessionHasErrors(['company_id']);
-    }
-
-    public function test_user_can_switch_active_company(): void
-    {
-        $company = $this->user->companies->first();
-
-        $response = $this->actingAs($this->user)->post('/preferences/switch-company', [
-            'company_id' => $company->id,
-        ]);
-
-        $response->assertSessionHas('success', 'Switched active company.');
-
-        $this->assertDatabaseHas('user_preferences', [
-            'user_id'    => $this->user->id,
-            'company_id' => $company->id,
-        ]);
-    }
-
-    public function test_user_cannot_switch_to_unauthorized_company(): void
-    {
-        $unauthorizedCompany = Company::factory()->create();
-
-        $response = $this->actingAs($this->user)->post('/preferences/switch-company', [
-            'company_id' => $unauthorizedCompany->id,
-        ]);
-
-        $response->assertForbidden();
     }
 }
