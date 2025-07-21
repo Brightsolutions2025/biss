@@ -1,6 +1,66 @@
 Search.appendIndex(
     [
                 {
+            "fqsen": "\\App\\Console\\Commands\\BackupRestoreCommand",
+            "name": "BackupRestoreCommand",
+            "summary": "",
+            "url": "classes/App-Console-Commands-BackupRestoreCommand.html"
+        },                {
+            "fqsen": "\\App\\Console\\Commands\\BackupRestoreCommand\u003A\u003Ahandle\u0028\u0029",
+            "name": "handle",
+            "summary": "",
+            "url": "classes/App-Console-Commands-BackupRestoreCommand.html#method_handle"
+        },                {
+            "fqsen": "\\App\\Console\\Commands\\BackupRestoreCommand\u003A\u003A\u0024signature",
+            "name": "signature",
+            "summary": "",
+            "url": "classes/App-Console-Commands-BackupRestoreCommand.html#property_signature"
+        },                {
+            "fqsen": "\\App\\Console\\Commands\\BackupRestoreCommand\u003A\u003A\u0024description",
+            "name": "description",
+            "summary": "",
+            "url": "classes/App-Console-Commands-BackupRestoreCommand.html#property_description"
+        },                {
+            "fqsen": "\\App\\Console\\Commands\\SendDtrReminders",
+            "name": "SendDtrReminders",
+            "summary": "",
+            "url": "classes/App-Console-Commands-SendDtrReminders.html"
+        },                {
+            "fqsen": "\\App\\Console\\Commands\\SendDtrReminders\u003A\u003Ahandle\u0028\u0029",
+            "name": "handle",
+            "summary": "",
+            "url": "classes/App-Console-Commands-SendDtrReminders.html#method_handle"
+        },                {
+            "fqsen": "\\App\\Console\\Commands\\SendDtrReminders\u003A\u003A\u0024signature",
+            "name": "signature",
+            "summary": "",
+            "url": "classes/App-Console-Commands-SendDtrReminders.html#property_signature"
+        },                {
+            "fqsen": "\\App\\Console\\Commands\\SendDtrReminders\u003A\u003A\u0024description",
+            "name": "description",
+            "summary": "",
+            "url": "classes/App-Console-Commands-SendDtrReminders.html#property_description"
+        },                {
+            "fqsen": "\\App\\Console\\Commands\\SendTestEmail",
+            "name": "SendTestEmail",
+            "summary": "",
+            "url": "classes/App-Console-Commands-SendTestEmail.html"
+        },                {
+            "fqsen": "\\App\\Console\\Commands\\SendTestEmail\u003A\u003Ahandle\u0028\u0029",
+            "name": "handle",
+            "summary": "",
+            "url": "classes/App-Console-Commands-SendTestEmail.html#method_handle"
+        },                {
+            "fqsen": "\\App\\Console\\Commands\\SendTestEmail\u003A\u003A\u0024signature",
+            "name": "signature",
+            "summary": "",
+            "url": "classes/App-Console-Commands-SendTestEmail.html#property_signature"
+        },                {
+            "fqsen": "\\App\\Console\\Commands\\SendTestEmail\u003A\u003A\u0024description",
+            "name": "description",
+            "summary": "",
+            "url": "classes/App-Console-Commands-SendTestEmail.html#property_description"
+        },                {
             "fqsen": "\\App\\Exports\\DtrStatusExport",
             "name": "DtrStatusExport",
             "summary": "",
@@ -25,6 +85,371 @@ Search.appendIndex(
             "name": "payrollPeriod",
             "summary": "",
             "url": "classes/App-Exports-DtrStatusExport.html#property_payrollPeriod"
+        },                {
+            "fqsen": "\\App\\Exports\\FiledOvertimeExport",
+            "name": "FiledOvertimeExport",
+            "summary": "",
+            "url": "classes/App-Exports-FiledOvertimeExport.html"
+        },                {
+            "fqsen": "\\App\\Exports\\FiledOvertimeExport\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Exports-FiledOvertimeExport.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Exports\\FiledOvertimeExport\u003A\u003Aview\u0028\u0029",
+            "name": "view",
+            "summary": "",
+            "url": "classes/App-Exports-FiledOvertimeExport.html#method_view"
+        },                {
+            "fqsen": "\\App\\Exports\\FiledOvertimeExport\u003A\u003A\u0024user",
+            "name": "user",
+            "summary": "",
+            "url": "classes/App-Exports-FiledOvertimeExport.html#property_user"
+        },                {
+            "fqsen": "\\App\\Exports\\FiledOvertimeExport\u003A\u003A\u0024company",
+            "name": "company",
+            "summary": "",
+            "url": "classes/App-Exports-FiledOvertimeExport.html#property_company"
+        },                {
+            "fqsen": "\\App\\Exports\\FiledOvertimeExport\u003A\u003A\u0024request",
+            "name": "request",
+            "summary": "",
+            "url": "classes/App-Exports-FiledOvertimeExport.html#property_request"
+        },                {
+            "fqsen": "\\App\\Exports\\LateUndertimeExport",
+            "name": "LateUndertimeExport",
+            "summary": "",
+            "url": "classes/App-Exports-LateUndertimeExport.html"
+        },                {
+            "fqsen": "\\App\\Exports\\LateUndertimeExport\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Exports-LateUndertimeExport.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Exports\\LateUndertimeExport\u003A\u003Aview\u0028\u0029",
+            "name": "view",
+            "summary": "",
+            "url": "classes/App-Exports-LateUndertimeExport.html#method_view"
+        },                {
+            "fqsen": "\\App\\Exports\\LateUndertimeExport\u003A\u003A\u0024grouped",
+            "name": "grouped",
+            "summary": "",
+            "url": "classes/App-Exports-LateUndertimeExport.html#property_grouped"
+        },                {
+            "fqsen": "\\App\\Exports\\LateUndertimeExport\u003A\u003A\u0024date_from",
+            "name": "date_from",
+            "summary": "",
+            "url": "classes/App-Exports-LateUndertimeExport.html#property_date_from"
+        },                {
+            "fqsen": "\\App\\Exports\\LateUndertimeExport\u003A\u003A\u0024date_to",
+            "name": "date_to",
+            "summary": "",
+            "url": "classes/App-Exports-LateUndertimeExport.html#property_date_to"
+        },                {
+            "fqsen": "\\App\\Exports\\LateUndertimeExport\u003A\u003A\u0024company",
+            "name": "company",
+            "summary": "",
+            "url": "classes/App-Exports-LateUndertimeExport.html#property_company"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveSummaryExcelExport",
+            "name": "LeaveSummaryExcelExport",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveSummaryExcelExport.html"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveSummaryExcelExport\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveSummaryExcelExport.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveSummaryExcelExport\u003A\u003Aview\u0028\u0029",
+            "name": "view",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveSummaryExcelExport.html#method_view"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveSummaryExcelExport\u003A\u003A\u0024user",
+            "name": "user",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveSummaryExcelExport.html#property_user"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveSummaryExcelExport\u003A\u003A\u0024company",
+            "name": "company",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveSummaryExcelExport.html#property_company"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveSummaryExcelExport\u003A\u003A\u0024year",
+            "name": "year",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveSummaryExcelExport.html#property_year"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveSummaryExport",
+            "name": "LeaveSummaryExport",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveSummaryExport.html"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveSummaryExport\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveSummaryExport.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveSummaryExport\u003A\u003Acollection\u0028\u0029",
+            "name": "collection",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveSummaryExport.html#method_collection"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveSummaryExport\u003A\u003Aheadings\u0028\u0029",
+            "name": "headings",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveSummaryExport.html#method_headings"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveSummaryExport\u003A\u003A\u0024user",
+            "name": "user",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveSummaryExport.html#property_user"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveSummaryExport\u003A\u003A\u0024company",
+            "name": "company",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveSummaryExport.html#property_company"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveSummaryExport\u003A\u003A\u0024year",
+            "name": "year",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveSummaryExport.html#property_year"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveTimelineExport",
+            "name": "LeaveTimelineExport",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveTimelineExport.html"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveTimelineExport\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveTimelineExport.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveTimelineExport\u003A\u003Atitle\u0028\u0029",
+            "name": "title",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveTimelineExport.html#method_title"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveTimelineExport\u003A\u003Aarray\u0028\u0029",
+            "name": "array",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveTimelineExport.html#method_array"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveTimelineExport\u003A\u003Astyles\u0028\u0029",
+            "name": "styles",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveTimelineExport.html#method_styles"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveTimelineExport\u003A\u003A\u0024leaveRequests",
+            "name": "leaveRequests",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveTimelineExport.html#property_leaveRequests"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveTimelineExport\u003A\u003A\u0024startDate",
+            "name": "startDate",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveTimelineExport.html#property_startDate"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveTimelineExport\u003A\u003A\u0024endDate",
+            "name": "endDate",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveTimelineExport.html#property_endDate"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveTimelineExport\u003A\u003A\u0024employeeName",
+            "name": "employeeName",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveTimelineExport.html#property_employeeName"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveUtilizationExport",
+            "name": "LeaveUtilizationExport",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveUtilizationExport.html"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveUtilizationExport\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveUtilizationExport.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveUtilizationExport\u003A\u003Aview\u0028\u0029",
+            "name": "view",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveUtilizationExport.html#method_view"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveUtilizationExport\u003A\u003A\u0024company",
+            "name": "company",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveUtilizationExport.html#property_company"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveUtilizationExport\u003A\u003A\u0024leaveBalances",
+            "name": "leaveBalances",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveUtilizationExport.html#property_leaveBalances"
+        },                {
+            "fqsen": "\\App\\Exports\\LeaveUtilizationExport\u003A\u003A\u0024periodCovered",
+            "name": "periodCovered",
+            "summary": "",
+            "url": "classes/App-Exports-LeaveUtilizationExport.html#property_periodCovered"
+        },                {
+            "fqsen": "\\App\\Exports\\OffsetSummaryExport",
+            "name": "OffsetSummaryExport",
+            "summary": "",
+            "url": "classes/App-Exports-OffsetSummaryExport.html"
+        },                {
+            "fqsen": "\\App\\Exports\\OffsetSummaryExport\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Exports-OffsetSummaryExport.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Exports\\OffsetSummaryExport\u003A\u003Aview\u0028\u0029",
+            "name": "view",
+            "summary": "",
+            "url": "classes/App-Exports-OffsetSummaryExport.html#method_view"
+        },                {
+            "fqsen": "\\App\\Exports\\OffsetSummaryExport\u003A\u003A\u0024offsetRequests",
+            "name": "offsetRequests",
+            "summary": "",
+            "url": "classes/App-Exports-OffsetSummaryExport.html#property_offsetRequests"
+        },                {
+            "fqsen": "\\App\\Exports\\OffsetSummaryExport\u003A\u003A\u0024startDate",
+            "name": "startDate",
+            "summary": "",
+            "url": "classes/App-Exports-OffsetSummaryExport.html#property_startDate"
+        },                {
+            "fqsen": "\\App\\Exports\\OffsetSummaryExport\u003A\u003A\u0024endDate",
+            "name": "endDate",
+            "summary": "",
+            "url": "classes/App-Exports-OffsetSummaryExport.html#property_endDate"
+        },                {
+            "fqsen": "\\App\\Exports\\OffsetTrackerExport",
+            "name": "OffsetTrackerExport",
+            "summary": "",
+            "url": "classes/App-Exports-OffsetTrackerExport.html"
+        },                {
+            "fqsen": "\\App\\Exports\\OffsetTrackerExport\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Exports-OffsetTrackerExport.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Exports\\OffsetTrackerExport\u003A\u003Aview\u0028\u0029",
+            "name": "view",
+            "summary": "",
+            "url": "classes/App-Exports-OffsetTrackerExport.html#method_view"
+        },                {
+            "fqsen": "\\App\\Exports\\OffsetTrackerExport\u003A\u003A\u0024request",
+            "name": "request",
+            "summary": "",
+            "url": "classes/App-Exports-OffsetTrackerExport.html#property_request"
+        },                {
+            "fqsen": "\\App\\Exports\\OffsetTrackerExport\u003A\u003A\u0024companyName",
+            "name": "companyName",
+            "summary": "",
+            "url": "classes/App-Exports-OffsetTrackerExport.html#property_companyName"
+        },                {
+            "fqsen": "\\App\\Exports\\OffsetTrackerExport\u003A\u003A\u0024periodText",
+            "name": "periodText",
+            "summary": "",
+            "url": "classes/App-Exports-OffsetTrackerExport.html#property_periodText"
+        },                {
+            "fqsen": "\\App\\Exports\\OutbaseReportExport",
+            "name": "OutbaseReportExport",
+            "summary": "",
+            "url": "classes/App-Exports-OutbaseReportExport.html"
+        },                {
+            "fqsen": "\\App\\Exports\\OutbaseReportExport\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Exports-OutbaseReportExport.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Exports\\OutbaseReportExport\u003A\u003Aview\u0028\u0029",
+            "name": "view",
+            "summary": "",
+            "url": "classes/App-Exports-OutbaseReportExport.html#method_view"
+        },                {
+            "fqsen": "\\App\\Exports\\OutbaseReportExport\u003A\u003A\u0024outbaseRequests",
+            "name": "outbaseRequests",
+            "summary": "",
+            "url": "classes/App-Exports-OutbaseReportExport.html#property_outbaseRequests"
+        },                {
+            "fqsen": "\\App\\Exports\\OutbaseReportExport\u003A\u003A\u0024startDate",
+            "name": "startDate",
+            "summary": "",
+            "url": "classes/App-Exports-OutbaseReportExport.html#property_startDate"
+        },                {
+            "fqsen": "\\App\\Exports\\OutbaseReportExport\u003A\u003A\u0024endDate",
+            "name": "endDate",
+            "summary": "",
+            "url": "classes/App-Exports-OutbaseReportExport.html#property_endDate"
+        },                {
+            "fqsen": "\\App\\Exports\\OutbaseSummaryExport",
+            "name": "OutbaseSummaryExport",
+            "summary": "",
+            "url": "classes/App-Exports-OutbaseSummaryExport.html"
+        },                {
+            "fqsen": "\\App\\Exports\\OutbaseSummaryExport\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Exports-OutbaseSummaryExport.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Exports\\OutbaseSummaryExport\u003A\u003Aview\u0028\u0029",
+            "name": "view",
+            "summary": "",
+            "url": "classes/App-Exports-OutbaseSummaryExport.html#method_view"
+        },                {
+            "fqsen": "\\App\\Exports\\OutbaseSummaryExport\u003A\u003AgetPeriod\u0028\u0029",
+            "name": "getPeriod",
+            "summary": "",
+            "url": "classes/App-Exports-OutbaseSummaryExport.html#method_getPeriod"
+        },                {
+            "fqsen": "\\App\\Exports\\OutbaseSummaryExport\u003A\u003A\u0024filters",
+            "name": "filters",
+            "summary": "",
+            "url": "classes/App-Exports-OutbaseSummaryExport.html#property_filters"
+        },                {
+            "fqsen": "\\App\\Exports\\OutbaseSummaryExport\u003A\u003A\u0024company",
+            "name": "company",
+            "summary": "",
+            "url": "classes/App-Exports-OutbaseSummaryExport.html#property_company"
+        },                {
+            "fqsen": "\\App\\Exports\\OvertimeOffsetExport",
+            "name": "OvertimeOffsetExport",
+            "summary": "",
+            "url": "classes/App-Exports-OvertimeOffsetExport.html"
+        },                {
+            "fqsen": "\\App\\Exports\\OvertimeOffsetExport\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Exports-OvertimeOffsetExport.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Exports\\OvertimeOffsetExport\u003A\u003Aview\u0028\u0029",
+            "name": "view",
+            "summary": "",
+            "url": "classes/App-Exports-OvertimeOffsetExport.html#method_view"
+        },                {
+            "fqsen": "\\App\\Exports\\OvertimeOffsetExport\u003A\u003A\u0024request",
+            "name": "request",
+            "summary": "",
+            "url": "classes/App-Exports-OvertimeOffsetExport.html#property_request"
+        },                {
+            "fqsen": "\\App\\Exports\\TimeRecordExport",
+            "name": "TimeRecordExport",
+            "summary": "",
+            "url": "classes/App-Exports-TimeRecordExport.html"
+        },                {
+            "fqsen": "\\App\\Exports\\TimeRecordExport\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Exports-TimeRecordExport.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Exports\\TimeRecordExport\u003A\u003Aview\u0028\u0029",
+            "name": "view",
+            "summary": "",
+            "url": "classes/App-Exports-TimeRecordExport.html#method_view"
+        },                {
+            "fqsen": "\\App\\Exports\\TimeRecordExport\u003A\u003A\u0024timeRecord",
+            "name": "timeRecord",
+            "summary": "",
+            "url": "classes/App-Exports-TimeRecordExport.html#property_timeRecord"
         },                {
             "fqsen": "\\App\\Http\\Controllers\\Auth\\AuthenticatedSessionController",
             "name": "AuthenticatedSessionController",
@@ -146,6 +571,56 @@ Search.appendIndex(
             "summary": "Mark\u0020the\u0020authenticated\u0020user\u0027s\u0020email\u0020address\u0020as\u0020verified.",
             "url": "classes/App-Http-Controllers-Auth-VerifyEmailController.html#method___invoke"
         },                {
+            "fqsen": "\\App\\Http\\Controllers\\ClientController",
+            "name": "ClientController",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ClientController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ClientController\u003A\u003Aindex\u0028\u0029",
+            "name": "index",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ClientController.html#method_index"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ClientController\u003A\u003Acreate\u0028\u0029",
+            "name": "create",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ClientController.html#method_create"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ClientController\u003A\u003Astore\u0028\u0029",
+            "name": "store",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ClientController.html#method_store"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ClientController\u003A\u003Ashow\u0028\u0029",
+            "name": "show",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ClientController.html#method_show"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ClientController\u003A\u003Aedit\u0028\u0029",
+            "name": "edit",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ClientController.html#method_edit"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ClientController\u003A\u003Aupdate\u0028\u0029",
+            "name": "update",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ClientController.html#method_update"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ClientController\u003A\u003Adestroy\u0028\u0029",
+            "name": "destroy",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ClientController.html#method_destroy"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ClientController\u003A\u003AauthorizeClient\u0028\u0029",
+            "name": "authorizeClient",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ClientController.html#method_authorizeClient"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ClientController\u003A\u003AlogAudit\u0028\u0029",
+            "name": "logAudit",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ClientController.html#method_logAudit"
+        },                {
             "fqsen": "\\App\\Http\\Controllers\\CompanyController",
             "name": "CompanyController",
             "summary": "",
@@ -165,6 +640,51 @@ Search.appendIndex(
             "name": "store",
             "summary": "Store\u0020a\u0020newly\u0020created\u0020company\u0020in\u0020storage\u0020and\u0020attach\u0020the\u0020user.",
             "url": "classes/App-Http-Controllers-CompanyController.html#method_store"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyController\u003A\u003AvalidateCompanyData\u0028\u0029",
+            "name": "validateCompanyData",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-CompanyController.html#method_validateCompanyData"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyController\u003A\u003AadminRoleExists\u0028\u0029",
+            "name": "adminRoleExists",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-CompanyController.html#method_adminRoleExists"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyController\u003A\u003AisCurrentUserAdmin\u0028\u0029",
+            "name": "isCurrentUserAdmin",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-CompanyController.html#method_isCurrentUserAdmin"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyController\u003A\u003AassignUserToCompany\u0028\u0029",
+            "name": "assignUserToCompany",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-CompanyController.html#method_assignUserToCompany"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyController\u003A\u003AcreateDefaultRoles\u0028\u0029",
+            "name": "createDefaultRoles",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-CompanyController.html#method_createDefaultRoles"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyController\u003A\u003AassignBasePermissions\u0028\u0029",
+            "name": "assignBasePermissions",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-CompanyController.html#method_assignBasePermissions"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyController\u003A\u003AassignReportPermissions\u0028\u0029",
+            "name": "assignReportPermissions",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-CompanyController.html#method_assignReportPermissions"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyController\u003A\u003AsetUserPreferences\u0028\u0029",
+            "name": "setUserPreferences",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-CompanyController.html#method_setUserPreferences"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyController\u003A\u003AgetOrCreatePermission\u0028\u0029",
+            "name": "getOrCreatePermission",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-CompanyController.html#method_getOrCreatePermission"
         },                {
             "fqsen": "\\App\\Http\\Controllers\\CompanyController\u003A\u003Ashow\u0028\u0029",
             "name": "show",
@@ -191,10 +711,60 @@ Search.appendIndex(
             "summary": "Private\u0020helper\u0020to\u0020ensure\u0020user\u0020belongs\u0020to\u0020the\u0020company.",
             "url": "classes/App-Http-Controllers-CompanyController.html#method_authorizeCompany"
         },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyUserController",
+            "name": "CompanyUserController",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-CompanyUserController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyUserController\u003A\u003Aindex\u0028\u0029",
+            "name": "index",
+            "summary": "Display\u0020a\u0020list\u0020of\u0020users\u0020for\u0020the\u0020given\u0020company.",
+            "url": "classes/App-Http-Controllers-CompanyUserController.html#method_index"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyUserController\u003A\u003Acreate\u0028\u0029",
+            "name": "create",
+            "summary": "Show\u0020form\u0020to\u0020assign\u0020users\u0020to\u0020a\u0020company.",
+            "url": "classes/App-Http-Controllers-CompanyUserController.html#method_create"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyUserController\u003A\u003Astore\u0028\u0029",
+            "name": "store",
+            "summary": "Store\u0020new\u0020user\u0020assignments\u0020to\u0020the\u0020company.",
+            "url": "classes/App-Http-Controllers-CompanyUserController.html#method_store"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyUserController\u003A\u003Ashow\u0028\u0029",
+            "name": "show",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-CompanyUserController.html#method_show"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyUserController\u003A\u003Aedit\u0028\u0029",
+            "name": "edit",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-CompanyUserController.html#method_edit"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyUserController\u003A\u003Aupdate\u0028\u0029",
+            "name": "update",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-CompanyUserController.html#method_update"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\CompanyUserController\u003A\u003Adestroy\u0028\u0029",
+            "name": "destroy",
+            "summary": "Remove\u0020a\u0020user\u0020from\u0020a\u0020company.",
+            "url": "classes/App-Http-Controllers-CompanyUserController.html#method_destroy"
+        },                {
             "fqsen": "\\App\\Http\\Controllers\\Controller",
             "name": "Controller",
             "summary": "",
             "url": "classes/App-Http-Controllers-Controller.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\DashboardController",
+            "name": "DashboardController",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-DashboardController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\DashboardController\u003A\u003Aindex\u0028\u0029",
+            "name": "index",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-DashboardController.html#method_index"
         },                {
             "fqsen": "\\App\\Http\\Controllers\\DepartmentController",
             "name": "DepartmentController",
@@ -331,6 +901,66 @@ Search.appendIndex(
             "summary": "Ensure\u0020the\u0020authenticated\u0020user\u0020belongs\u0020to\u0020the\u0020given\u0020company\u0020ID.",
             "url": "classes/App-Http-Controllers-EmployeeShiftController.html#method_authorizeCompany"
         },                {
+            "fqsen": "\\App\\Http\\Controllers\\FileController",
+            "name": "FileController",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-FileController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\FileController\u003A\u003Adownload\u0028\u0029",
+            "name": "download",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-FileController.html#method_download"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\FileController\u003A\u003Adestroy\u0028\u0029",
+            "name": "destroy",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-FileController.html#method_destroy"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\FiledOvertimeReportController",
+            "name": "FiledOvertimeReportController",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-FiledOvertimeReportController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\FiledOvertimeReportController\u003A\u003Aindex\u0028\u0029",
+            "name": "index",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-FiledOvertimeReportController.html#method_index"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\FiledOvertimeReportController\u003A\u003AovertimeHistoryPdf\u0028\u0029",
+            "name": "overtimeHistoryPdf",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-FiledOvertimeReportController.html#method_overtimeHistoryPdf"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\FiledOvertimeReportController\u003A\u003AovertimeHistoryExcel\u0028\u0029",
+            "name": "overtimeHistoryExcel",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-FiledOvertimeReportController.html#method_overtimeHistoryExcel"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LateUndertimeReportController",
+            "name": "LateUndertimeReportController",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LateUndertimeReportController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LateUndertimeReportController\u003A\u003Aindex\u0028\u0029",
+            "name": "index",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LateUndertimeReportController.html#method_index"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LateUndertimeReportController\u003A\u003AexportPdf\u0028\u0029",
+            "name": "exportPdf",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LateUndertimeReportController.html#method_exportPdf"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LateUndertimeReportController\u003A\u003AexportExcel\u0028\u0029",
+            "name": "exportExcel",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LateUndertimeReportController.html#method_exportExcel"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LateUndertimeReportController\u003A\u003ArestrictToDepartmentHead\u0028\u0029",
+            "name": "restrictToDepartmentHead",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LateUndertimeReportController.html#method_restrictToDepartmentHead"
+        },                {
             "fqsen": "\\App\\Http\\Controllers\\LeaveBalanceController",
             "name": "LeaveBalanceController",
             "summary": "",
@@ -411,6 +1041,11 @@ Search.appendIndex(
             "summary": "Update\u0020the\u0020specified\u0020leave\u0020request\u0020in\u0020storage.",
             "url": "classes/App-Http-Controllers-LeaveRequestController.html#method_update"
         },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveRequestController\u003A\u003AcanEditLeaveRequest\u0028\u0029",
+            "name": "canEditLeaveRequest",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveRequestController.html#method_canEditLeaveRequest"
+        },                {
             "fqsen": "\\App\\Http\\Controllers\\LeaveRequestController\u003A\u003Adestroy\u0028\u0029",
             "name": "destroy",
             "summary": "Remove\u0020the\u0020specified\u0020leave\u0020request\u0020from\u0020storage.",
@@ -441,10 +1076,85 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Http-Controllers-LeaveRequestController.html#method_authorizeCompany"
         },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveRequestController\u003A\u003AfetchApprovedByDate\u0028\u0029",
+            "name": "fetchApprovedByDate",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveRequestController.html#method_fetchApprovedByDate"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveStatusOverviewController",
+            "name": "LeaveStatusOverviewController",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveStatusOverviewController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveStatusOverviewController\u003A\u003Aindex\u0028\u0029",
+            "name": "index",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveStatusOverviewController.html#method_index"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveStatusOverviewController\u003A\u003AexportPdf\u0028\u0029",
+            "name": "exportPdf",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveStatusOverviewController.html#method_exportPdf"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveStatusOverviewController\u003A\u003AexportExcel\u0028\u0029",
+            "name": "exportExcel",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveStatusOverviewController.html#method_exportExcel"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveStatusOverviewController\u003A\u003ArestrictToDepartmentHead\u0028\u0029",
+            "name": "restrictToDepartmentHead",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveStatusOverviewController.html#method_restrictToDepartmentHead"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveSummaryReportController",
+            "name": "LeaveSummaryReportController",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveSummaryReportController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveSummaryReportController\u003A\u003Aindex\u0028\u0029",
+            "name": "index",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveSummaryReportController.html#method_index"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveSummaryReportController\u003A\u003AleaveSummaryPdf\u0028\u0029",
+            "name": "leaveSummaryPdf",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveSummaryReportController.html#method_leaveSummaryPdf"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveSummaryReportController\u003A\u003AleaveSummaryExcel\u0028\u0029",
+            "name": "leaveSummaryExcel",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveSummaryReportController.html#method_leaveSummaryExcel"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveTimelineReportController",
+            "name": "LeaveTimelineReportController",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveTimelineReportController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveTimelineReportController\u003A\u003Aindex\u0028\u0029",
+            "name": "index",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveTimelineReportController.html#method_index"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveTimelineReportController\u003A\u003AleaveTimelineExcel\u0028\u0029",
+            "name": "leaveTimelineExcel",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveTimelineReportController.html#method_leaveTimelineExcel"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\LeaveTimelineReportController\u003A\u003AleaveTimelinePdf\u0028\u0029",
+            "name": "leaveTimelinePdf",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-LeaveTimelineReportController.html#method_leaveTimelinePdf"
+        },                {
             "fqsen": "\\App\\Http\\Controllers\\OffsetRequestController",
             "name": "OffsetRequestController",
             "summary": "",
             "url": "classes/App-Http-Controllers-OffsetRequestController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetRequestController\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetRequestController.html#method___construct"
         },                {
             "fqsen": "\\App\\Http\\Controllers\\OffsetRequestController\u003A\u003Aindex\u0028\u0029",
             "name": "index",
@@ -471,6 +1181,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Http-Controllers-OffsetRequestController.html#method_edit"
         },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetRequestController\u003A\u003AcanEditOffsetRequest\u0028\u0029",
+            "name": "canEditOffsetRequest",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetRequestController.html#method_canEditOffsetRequest"
+        },                {
             "fqsen": "\\App\\Http\\Controllers\\OffsetRequestController\u003A\u003Aupdate\u0028\u0029",
             "name": "update",
             "summary": "",
@@ -495,6 +1210,96 @@ Search.appendIndex(
             "name": "reject",
             "summary": "",
             "url": "classes/App-Http-Controllers-OffsetRequestController.html#method_reject"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetRequestController\u003A\u003AfetchApprovedByDate\u0028\u0029",
+            "name": "fetchApprovedByDate",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetRequestController.html#method_fetchApprovedByDate"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetRequestController\u003A\u003AOT_OFFSET_VALID_AFTER_DAYS",
+            "name": "OT_OFFSET_VALID_AFTER_DAYS",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetRequestController.html#constant_OT_OFFSET_VALID_AFTER_DAYS"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetRequestController\u003A\u003AOT_OFFSET_VALID_BEFORE_DAYS",
+            "name": "OT_OFFSET_VALID_BEFORE_DAYS",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetRequestController.html#constant_OT_OFFSET_VALID_BEFORE_DAYS"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetRequestController\u003A\u003A\u0024offsetValidity",
+            "name": "offsetValidity",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetRequestController.html#property_offsetValidity"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetSummaryReportController",
+            "name": "OffsetSummaryReportController",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetSummaryReportController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetSummaryReportController\u003A\u003Aindex\u0028\u0029",
+            "name": "index",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetSummaryReportController.html#method_index"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetSummaryReportController\u003A\u003AexportPdf\u0028\u0029",
+            "name": "exportPdf",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetSummaryReportController.html#method_exportPdf"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetSummaryReportController\u003A\u003AexportExcel\u0028\u0029",
+            "name": "exportExcel",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetSummaryReportController.html#method_exportExcel"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetSummaryReportController\u003A\u003AgetFilteredOffsetRequests\u0028\u0029",
+            "name": "getFilteredOffsetRequests",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetSummaryReportController.html#method_getFilteredOffsetRequests"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetTrackerController",
+            "name": "OffsetTrackerController",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetTrackerController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetTrackerController\u003A\u003Aindex\u0028\u0029",
+            "name": "index",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetTrackerController.html#method_index"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetTrackerController\u003A\u003AoffsetTrackerPdf\u0028\u0029",
+            "name": "offsetTrackerPdf",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetTrackerController.html#method_offsetTrackerPdf"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetTrackerController\u003A\u003AoffsetTrackerExcel\u0028\u0029",
+            "name": "offsetTrackerExcel",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetTrackerController.html#method_offsetTrackerExcel"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OffsetTrackerController\u003A\u003AgetOffsetData\u0028\u0029",
+            "name": "getOffsetData",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OffsetTrackerController.html#method_getOffsetData"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OutbaseReportController",
+            "name": "OutbaseReportController",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OutbaseReportController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OutbaseReportController\u003A\u003Aindex\u0028\u0029",
+            "name": "index",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OutbaseReportController.html#method_index"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OutbaseReportController\u003A\u003AoutbaseHistoryPdf\u0028\u0029",
+            "name": "outbaseHistoryPdf",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OutbaseReportController.html#method_outbaseHistoryPdf"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OutbaseReportController\u003A\u003AoutbaseHistoryExcel\u0028\u0029",
+            "name": "outbaseHistoryExcel",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OutbaseReportController.html#method_outbaseHistoryExcel"
         },                {
             "fqsen": "\\App\\Http\\Controllers\\OutbaseRequestController",
             "name": "OutbaseRequestController",
@@ -526,6 +1331,11 @@ Search.appendIndex(
             "summary": "Show\u0020the\u0020form\u0020for\u0020editing\u0020the\u0020specified\u0020outbase\u0020request.",
             "url": "classes/App-Http-Controllers-OutbaseRequestController.html#method_edit"
         },                {
+            "fqsen": "\\App\\Http\\Controllers\\OutbaseRequestController\u003A\u003AcanEditOutbaseRequest\u0028\u0029",
+            "name": "canEditOutbaseRequest",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OutbaseRequestController.html#method_canEditOutbaseRequest"
+        },                {
             "fqsen": "\\App\\Http\\Controllers\\OutbaseRequestController\u003A\u003Aupdate\u0028\u0029",
             "name": "update",
             "summary": "Update\u0020the\u0020specified\u0020outbase\u0020request\u0020in\u0020storage.",
@@ -550,6 +1360,41 @@ Search.appendIndex(
             "name": "reject",
             "summary": "",
             "url": "classes/App-Http-Controllers-OutbaseRequestController.html#method_reject"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OutbaseRequestController\u003A\u003AfetchApprovedByDate\u0028\u0029",
+            "name": "fetchApprovedByDate",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OutbaseRequestController.html#method_fetchApprovedByDate"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OutbaseSummaryController",
+            "name": "OutbaseSummaryController",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OutbaseSummaryController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OutbaseSummaryController\u003A\u003Aindex\u0028\u0029",
+            "name": "index",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OutbaseSummaryController.html#method_index"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OutbaseSummaryController\u003A\u003AexportExcel\u0028\u0029",
+            "name": "exportExcel",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OutbaseSummaryController.html#method_exportExcel"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OutbaseSummaryController\u003A\u003AexportPdf\u0028\u0029",
+            "name": "exportPdf",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OutbaseSummaryController.html#method_exportPdf"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OutbaseSummaryController\u003A\u003AgetFilteredOutbaseData\u0028\u0029",
+            "name": "getFilteredOutbaseData",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OutbaseSummaryController.html#method_getFilteredOutbaseData"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OutbaseSummaryController\u003A\u003ArestrictToDepartmentHead\u0028\u0029",
+            "name": "restrictToDepartmentHead",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OutbaseSummaryController.html#method_restrictToDepartmentHead"
         },                {
             "fqsen": "\\App\\Http\\Controllers\\OvertimeRequestController",
             "name": "OvertimeRequestController",
@@ -581,6 +1426,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Http-Controllers-OvertimeRequestController.html#method_edit"
         },                {
+            "fqsen": "\\App\\Http\\Controllers\\OvertimeRequestController\u003A\u003AcanEditOvertimeRequest\u0028\u0029",
+            "name": "canEditOvertimeRequest",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OvertimeRequestController.html#method_canEditOvertimeRequest"
+        },                {
             "fqsen": "\\App\\Http\\Controllers\\OvertimeRequestController\u003A\u003Aupdate\u0028\u0029",
             "name": "update",
             "summary": "",
@@ -605,6 +1455,11 @@ Search.appendIndex(
             "name": "authorizeCompany",
             "summary": "",
             "url": "classes/App-Http-Controllers-OvertimeRequestController.html#method_authorizeCompany"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\OvertimeRequestController\u003A\u003AfetchApprovedByDate\u0028\u0029",
+            "name": "fetchApprovedByDate",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-OvertimeRequestController.html#method_fetchApprovedByDate"
         },                {
             "fqsen": "\\App\\Http\\Controllers\\PayrollPeriodController",
             "name": "PayrollPeriodController",
@@ -751,6 +1606,56 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Http-Controllers-ReportController.html#method_downloadExcel"
         },                {
+            "fqsen": "\\App\\Http\\Controllers\\ReportController\u003A\u003AleaveUtilization\u0028\u0029",
+            "name": "leaveUtilization",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ReportController.html#method_leaveUtilization"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ReportController\u003A\u003AleaveUtilizationPdf\u0028\u0029",
+            "name": "leaveUtilizationPdf",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ReportController.html#method_leaveUtilizationPdf"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ReportController\u003A\u003AleaveUtilizationExcel\u0028\u0029",
+            "name": "leaveUtilizationExcel",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ReportController.html#method_leaveUtilizationExcel"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ReportController\u003A\u003AgetLeaveUtilizationData\u0028\u0029",
+            "name": "getLeaveUtilizationData",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ReportController.html#method_getLeaveUtilizationData"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ReportController\u003A\u003AgetPeriodText\u0028\u0029",
+            "name": "getPeriodText",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ReportController.html#method_getPeriodText"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ReportController\u003A\u003AovertimeOffsetComparison\u0028\u0029",
+            "name": "overtimeOffsetComparison",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ReportController.html#method_overtimeOffsetComparison"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ReportController\u003A\u003AovertimeOffsetComparisonPdf\u0028\u0029",
+            "name": "overtimeOffsetComparisonPdf",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ReportController.html#method_overtimeOffsetComparisonPdf"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ReportController\u003A\u003AovertimeOffsetComparisonExcel\u0028\u0029",
+            "name": "overtimeOffsetComparisonExcel",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ReportController.html#method_overtimeOffsetComparisonExcel"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ReportController\u003A\u003AgenerateOvertimeOffsetData\u0028\u0029",
+            "name": "generateOvertimeOffsetData",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ReportController.html#method_generateOvertimeOffsetData"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\ReportController\u003A\u003ArestrictToDepartmentHead\u0028\u0029",
+            "name": "restrictToDepartmentHead",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-ReportController.html#method_restrictToDepartmentHead"
+        },                {
             "fqsen": "\\App\\Http\\Controllers\\RoleController",
             "name": "RoleController",
             "summary": "",
@@ -886,6 +1791,51 @@ Search.appendIndex(
             "summary": "Ensure\u0020the\u0020team\u0020belongs\u0020to\u0020a\u0020department\u0020in\u0020the\u0020user\u0027s\u0020active\u0020company.",
             "url": "classes/App-Http-Controllers-TeamController.html#method_authorizeTeam"
         },                {
+            "fqsen": "\\App\\Http\\Controllers\\TicketTypeController",
+            "name": "TicketTypeController",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-TicketTypeController.html"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\TicketTypeController\u003A\u003Aindex\u0028\u0029",
+            "name": "index",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-TicketTypeController.html#method_index"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\TicketTypeController\u003A\u003Acreate\u0028\u0029",
+            "name": "create",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-TicketTypeController.html#method_create"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\TicketTypeController\u003A\u003Astore\u0028\u0029",
+            "name": "store",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-TicketTypeController.html#method_store"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\TicketTypeController\u003A\u003Ashow\u0028\u0029",
+            "name": "show",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-TicketTypeController.html#method_show"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\TicketTypeController\u003A\u003Aedit\u0028\u0029",
+            "name": "edit",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-TicketTypeController.html#method_edit"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\TicketTypeController\u003A\u003Aupdate\u0028\u0029",
+            "name": "update",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-TicketTypeController.html#method_update"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\TicketTypeController\u003A\u003Adestroy\u0028\u0029",
+            "name": "destroy",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-TicketTypeController.html#method_destroy"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\TicketTypeController\u003A\u003AauthorizeCompany\u0028\u0029",
+            "name": "authorizeCompany",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-TicketTypeController.html#method_authorizeCompany"
+        },                {
             "fqsen": "\\App\\Http\\Controllers\\TimeLogController",
             "name": "TimeLogController",
             "summary": "",
@@ -956,6 +1906,11 @@ Search.appendIndex(
             "summary": "Show\u0020the\u0020form\u0020for\u0020creating\u0020a\u0020new\u0020time\u0020record.",
             "url": "classes/App-Http-Controllers-TimeRecordController.html#method_create"
         },                {
+            "fqsen": "\\App\\Http\\Controllers\\TimeRecordController\u003A\u003AgetTimeLogs\u0028\u0029",
+            "name": "getTimeLogs",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-TimeRecordController.html#method_getTimeLogs"
+        },                {
             "fqsen": "\\App\\Http\\Controllers\\TimeRecordController\u003A\u003Astore\u0028\u0029",
             "name": "store",
             "summary": "Store\u0020a\u0020newly\u0020created\u0020time\u0020record\u0020in\u0020storage.",
@@ -970,6 +1925,11 @@ Search.appendIndex(
             "name": "edit",
             "summary": "Show\u0020the\u0020form\u0020for\u0020editing\u0020the\u0020specified\u0020time\u0020record.",
             "url": "classes/App-Http-Controllers-TimeRecordController.html#method_edit"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\TimeRecordController\u003A\u003AcanEditTimeRecord\u0028\u0029",
+            "name": "canEditTimeRecord",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-TimeRecordController.html#method_canEditTimeRecord"
         },                {
             "fqsen": "\\App\\Http\\Controllers\\TimeRecordController\u003A\u003Aupdate\u0028\u0029",
             "name": "update",
@@ -995,6 +1955,16 @@ Search.appendIndex(
             "name": "reject",
             "summary": "",
             "url": "classes/App-Http-Controllers-TimeRecordController.html#method_reject"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\TimeRecordController\u003A\u003AexportPdf\u0028\u0029",
+            "name": "exportPdf",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-TimeRecordController.html#method_exportPdf"
+        },                {
+            "fqsen": "\\App\\Http\\Controllers\\TimeRecordController\u003A\u003AexportExcel\u0028\u0029",
+            "name": "exportExcel",
+            "summary": "",
+            "url": "classes/App-Http-Controllers-TimeRecordController.html#method_exportExcel"
         },                {
             "fqsen": "\\App\\Http\\Controllers\\UserController",
             "name": "UserController",
@@ -1126,6 +2096,101 @@ Search.appendIndex(
             "summary": "Get\u0020the\u0020validation\u0020rules\u0020that\u0020apply\u0020to\u0020the\u0020request.",
             "url": "classes/App-Http-Requests-ProfileUpdateRequest.html#method_rules"
         },                {
+            "fqsen": "\\App\\Mail\\DtrReminderEmail",
+            "name": "DtrReminderEmail",
+            "summary": "",
+            "url": "classes/App-Mail-DtrReminderEmail.html"
+        },                {
+            "fqsen": "\\App\\Mail\\DtrReminderEmail\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Mail-DtrReminderEmail.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Mail\\DtrReminderEmail\u003A\u003Abuild\u0028\u0029",
+            "name": "build",
+            "summary": "",
+            "url": "classes/App-Mail-DtrReminderEmail.html#method_build"
+        },                {
+            "fqsen": "\\App\\Mail\\DtrReminderEmail\u003A\u003Aenvelope\u0028\u0029",
+            "name": "envelope",
+            "summary": "Get\u0020the\u0020message\u0020envelope.",
+            "url": "classes/App-Mail-DtrReminderEmail.html#method_envelope"
+        },                {
+            "fqsen": "\\App\\Mail\\DtrReminderEmail\u003A\u003Acontent\u0028\u0029",
+            "name": "content",
+            "summary": "Get\u0020the\u0020message\u0020content\u0020definition.",
+            "url": "classes/App-Mail-DtrReminderEmail.html#method_content"
+        },                {
+            "fqsen": "\\App\\Mail\\DtrReminderEmail\u003A\u003Aattachments\u0028\u0029",
+            "name": "attachments",
+            "summary": "Get\u0020the\u0020attachments\u0020for\u0020the\u0020message.",
+            "url": "classes/App-Mail-DtrReminderEmail.html#method_attachments"
+        },                {
+            "fqsen": "\\App\\Mail\\DtrReminderEmail\u003A\u003A\u0024employee",
+            "name": "employee",
+            "summary": "",
+            "url": "classes/App-Mail-DtrReminderEmail.html#property_employee"
+        },                {
+            "fqsen": "\\App\\Mail\\DtrReminderEmail\u003A\u003A\u0024status",
+            "name": "status",
+            "summary": "",
+            "url": "classes/App-Mail-DtrReminderEmail.html#property_status"
+        },                {
+            "fqsen": "\\App\\Mail\\DtrReminderEmail\u003A\u003A\u0024payrollPeriod",
+            "name": "payrollPeriod",
+            "summary": "",
+            "url": "classes/App-Mail-DtrReminderEmail.html#property_payrollPeriod"
+        },                {
+            "fqsen": "\\App\\Mail\\TestEmail",
+            "name": "TestEmail",
+            "summary": "",
+            "url": "classes/App-Mail-TestEmail.html"
+        },                {
+            "fqsen": "\\App\\Mail\\TestEmail\u003A\u003Abuild\u0028\u0029",
+            "name": "build",
+            "summary": "",
+            "url": "classes/App-Mail-TestEmail.html#method_build"
+        },                {
+            "fqsen": "\\App\\Models\\AuditLog",
+            "name": "AuditLog",
+            "summary": "",
+            "url": "classes/App-Models-AuditLog.html"
+        },                {
+            "fqsen": "\\App\\Models\\AuditLog\u003A\u003A\u0024fillable",
+            "name": "fillable",
+            "summary": "",
+            "url": "classes/App-Models-AuditLog.html#property_fillable"
+        },                {
+            "fqsen": "\\App\\Models\\AuditLog\u003A\u003A\u0024casts",
+            "name": "casts",
+            "summary": "",
+            "url": "classes/App-Models-AuditLog.html#property_casts"
+        },                {
+            "fqsen": "\\App\\Models\\Client",
+            "name": "Client",
+            "summary": "",
+            "url": "classes/App-Models-Client.html"
+        },                {
+            "fqsen": "\\App\\Models\\Client\u003A\u003Acompany\u0028\u0029",
+            "name": "company",
+            "summary": "Get\u0020the\u0020company\u0020that\u0020owns\u0020the\u0020client.",
+            "url": "classes/App-Models-Client.html#method_company"
+        },                {
+            "fqsen": "\\App\\Models\\Client\u003A\u003Apath\u0028\u0029",
+            "name": "path",
+            "summary": "Route\u0020model\u0020binding\u0020or\u0020resource\u0020route\u0020helper.",
+            "url": "classes/App-Models-Client.html#method_path"
+        },                {
+            "fqsen": "\\App\\Models\\Client\u003A\u003A\u0024guarded",
+            "name": "guarded",
+            "summary": "",
+            "url": "classes/App-Models-Client.html#property_guarded"
+        },                {
+            "fqsen": "\\App\\Models\\Client\u003A\u003A\u0024casts",
+            "name": "casts",
+            "summary": "",
+            "url": "classes/App-Models-Client.html#property_casts"
+        },                {
             "fqsen": "\\App\\Models\\Company",
             "name": "Company",
             "summary": "",
@@ -1146,10 +2211,90 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Models-Company.html#method_roles"
         },                {
+            "fqsen": "\\App\\Models\\Company\u003A\u003Aemployees\u0028\u0029",
+            "name": "employees",
+            "summary": "",
+            "url": "classes/App-Models-Company.html#method_employees"
+        },                {
+            "fqsen": "\\App\\Models\\Company\u003A\u003Adepartments\u0028\u0029",
+            "name": "departments",
+            "summary": "",
+            "url": "classes/App-Models-Company.html#method_departments"
+        },                {
+            "fqsen": "\\App\\Models\\Company\u003A\u003Ateams\u0028\u0029",
+            "name": "teams",
+            "summary": "",
+            "url": "classes/App-Models-Company.html#method_teams"
+        },                {
+            "fqsen": "\\App\\Models\\Company\u003A\u003AleaveRequests\u0028\u0029",
+            "name": "leaveRequests",
+            "summary": "",
+            "url": "classes/App-Models-Company.html#method_leaveRequests"
+        },                {
+            "fqsen": "\\App\\Models\\Company\u003A\u003AovertimeRequests\u0028\u0029",
+            "name": "overtimeRequests",
+            "summary": "",
+            "url": "classes/App-Models-Company.html#method_overtimeRequests"
+        },                {
+            "fqsen": "\\App\\Models\\Company\u003A\u003AoffsetRequests\u0028\u0029",
+            "name": "offsetRequests",
+            "summary": "",
+            "url": "classes/App-Models-Company.html#method_offsetRequests"
+        },                {
+            "fqsen": "\\App\\Models\\Company\u003A\u003AoutbaseRequests\u0028\u0029",
+            "name": "outbaseRequests",
+            "summary": "",
+            "url": "classes/App-Models-Company.html#method_outbaseRequests"
+        },                {
+            "fqsen": "\\App\\Models\\Company\u003A\u003AtimeLogs\u0028\u0029",
+            "name": "timeLogs",
+            "summary": "",
+            "url": "classes/App-Models-Company.html#method_timeLogs"
+        },                {
+            "fqsen": "\\App\\Models\\Company\u003A\u003AtimeRecords\u0028\u0029",
+            "name": "timeRecords",
+            "summary": "",
+            "url": "classes/App-Models-Company.html#method_timeRecords"
+        },                {
+            "fqsen": "\\App\\Models\\Company\u003A\u003ApayrollPeriods\u0028\u0029",
+            "name": "payrollPeriods",
+            "summary": "",
+            "url": "classes/App-Models-Company.html#method_payrollPeriods"
+        },                {
             "fqsen": "\\App\\Models\\Company\u003A\u003A\u0024guarded",
             "name": "guarded",
             "summary": "",
             "url": "classes/App-Models-Company.html#property_guarded"
+        },                {
+            "fqsen": "\\App\\Models\\CompanyUser",
+            "name": "CompanyUser",
+            "summary": "",
+            "url": "classes/App-Models-CompanyUser.html"
+        },                {
+            "fqsen": "\\App\\Models\\CompanyUser\u003A\u003Acompany\u0028\u0029",
+            "name": "company",
+            "summary": "Get\u0020the\u0020company\u0020for\u0020this\u0020pivot\u0020entry.",
+            "url": "classes/App-Models-CompanyUser.html#method_company"
+        },                {
+            "fqsen": "\\App\\Models\\CompanyUser\u003A\u003Auser\u0028\u0029",
+            "name": "user",
+            "summary": "Get\u0020the\u0020user\u0020for\u0020this\u0020pivot\u0020entry.",
+            "url": "classes/App-Models-CompanyUser.html#method_user"
+        },                {
+            "fqsen": "\\App\\Models\\CompanyUser\u003A\u003Apath\u0028\u0029",
+            "name": "path",
+            "summary": "Route\u0020model\u0020binding\u0020or\u0020resource\u0020route\u0020helper\u0020\u0028if\u0020needed\u0029.",
+            "url": "classes/App-Models-CompanyUser.html#method_path"
+        },                {
+            "fqsen": "\\App\\Models\\CompanyUser\u003A\u003A\u0024table",
+            "name": "table",
+            "summary": "",
+            "url": "classes/App-Models-CompanyUser.html#property_table"
+        },                {
+            "fqsen": "\\App\\Models\\CompanyUser\u003A\u003A\u0024guarded",
+            "name": "guarded",
+            "summary": "",
+            "url": "classes/App-Models-CompanyUser.html#property_guarded"
         },                {
             "fqsen": "\\App\\Models\\Department",
             "name": "Department",
@@ -1165,6 +2310,16 @@ Search.appendIndex(
             "name": "path",
             "summary": "Route\u0020model\u0020binding\u0020or\u0020resource\u0020route\u0020helper.",
             "url": "classes/App-Models-Department.html#method_path"
+        },                {
+            "fqsen": "\\App\\Models\\Department\u003A\u003Aemployees\u0028\u0029",
+            "name": "employees",
+            "summary": "",
+            "url": "classes/App-Models-Department.html#method_employees"
+        },                {
+            "fqsen": "\\App\\Models\\Department\u003A\u003Ahead\u0028\u0029",
+            "name": "head",
+            "summary": "",
+            "url": "classes/App-Models-Department.html#method_head"
         },                {
             "fqsen": "\\App\\Models\\Department\u003A\u003A\u0024guarded",
             "name": "guarded",
@@ -1206,6 +2361,41 @@ Search.appendIndex(
             "summary": "Route\u0020model\u0020binding\u0020or\u0020resource\u0020route\u0020helper.",
             "url": "classes/App-Models-Employee.html#method_path"
         },                {
+            "fqsen": "\\App\\Models\\Employee\u003A\u003AemployeeShift\u0028\u0029",
+            "name": "employeeShift",
+            "summary": "",
+            "url": "classes/App-Models-Employee.html#method_employeeShift"
+        },                {
+            "fqsen": "\\App\\Models\\Employee\u003A\u003AleaveRequests\u0028\u0029",
+            "name": "leaveRequests",
+            "summary": "",
+            "url": "classes/App-Models-Employee.html#method_leaveRequests"
+        },                {
+            "fqsen": "\\App\\Models\\Employee\u003A\u003AovertimeRequests\u0028\u0029",
+            "name": "overtimeRequests",
+            "summary": "",
+            "url": "classes/App-Models-Employee.html#method_overtimeRequests"
+        },                {
+            "fqsen": "\\App\\Models\\Employee\u003A\u003AoffsetRequests\u0028\u0029",
+            "name": "offsetRequests",
+            "summary": "",
+            "url": "classes/App-Models-Employee.html#method_offsetRequests"
+        },                {
+            "fqsen": "\\App\\Models\\Employee\u003A\u003AoutbaseRequests\u0028\u0029",
+            "name": "outbaseRequests",
+            "summary": "",
+            "url": "classes/App-Models-Employee.html#method_outbaseRequests"
+        },                {
+            "fqsen": "\\App\\Models\\Employee\u003A\u003AtimeLogs\u0028\u0029",
+            "name": "timeLogs",
+            "summary": "",
+            "url": "classes/App-Models-Employee.html#method_timeLogs"
+        },                {
+            "fqsen": "\\App\\Models\\Employee\u003A\u003AtimeRecords\u0028\u0029",
+            "name": "timeRecords",
+            "summary": "",
+            "url": "classes/App-Models-Employee.html#method_timeRecords"
+        },                {
             "fqsen": "\\App\\Models\\Employee\u003A\u003A\u0024guarded",
             "name": "guarded",
             "summary": "",
@@ -1240,6 +2430,21 @@ Search.appendIndex(
             "name": "guarded",
             "summary": "",
             "url": "classes/App-Models-EmployeeShift.html#property_guarded"
+        },                {
+            "fqsen": "\\App\\Models\\File",
+            "name": "File",
+            "summary": "",
+            "url": "classes/App-Models-File.html"
+        },                {
+            "fqsen": "\\App\\Models\\File\u003A\u003Afileable\u0028\u0029",
+            "name": "fileable",
+            "summary": "",
+            "url": "classes/App-Models-File.html#method_fileable"
+        },                {
+            "fqsen": "\\App\\Models\\File\u003A\u003A\u0024fillable",
+            "name": "fillable",
+            "summary": "",
+            "url": "classes/App-Models-File.html#property_fillable"
         },                {
             "fqsen": "\\App\\Models\\LeaveBalance",
             "name": "LeaveBalance",
@@ -1290,6 +2495,11 @@ Search.appendIndex(
             "name": "path",
             "summary": "Route\u0020model\u0020binding\u0020or\u0020resource\u0020route\u0020helper.",
             "url": "classes/App-Models-LeaveRequest.html#method_path"
+        },                {
+            "fqsen": "\\App\\Models\\LeaveRequest\u003A\u003Afiles\u0028\u0029",
+            "name": "files",
+            "summary": "",
+            "url": "classes/App-Models-LeaveRequest.html#method_files"
         },                {
             "fqsen": "\\App\\Models\\LeaveRequest\u003A\u003A\u0024guarded",
             "name": "guarded",
@@ -1356,6 +2566,11 @@ Search.appendIndex(
             "summary": "Route\u0020model\u0020binding\u0020or\u0020resource\u0020route\u0020helper.",
             "url": "classes/App-Models-OffsetRequest.html#method_path"
         },                {
+            "fqsen": "\\App\\Models\\OffsetRequest\u003A\u003Afiles\u0028\u0029",
+            "name": "files",
+            "summary": "",
+            "url": "classes/App-Models-OffsetRequest.html#method_files"
+        },                {
             "fqsen": "\\App\\Models\\OffsetRequest\u003A\u003A\u0024guarded",
             "name": "guarded",
             "summary": "",
@@ -1385,6 +2600,16 @@ Search.appendIndex(
             "name": "path",
             "summary": "Route\u0020model\u0020binding\u0020or\u0020resource\u0020route\u0020helper.",
             "url": "classes/App-Models-OutbaseRequest.html#method_path"
+        },                {
+            "fqsen": "\\App\\Models\\OutbaseRequest\u003A\u003AscopeApproved\u0028\u0029",
+            "name": "scopeApproved",
+            "summary": "",
+            "url": "classes/App-Models-OutbaseRequest.html#method_scopeApproved"
+        },                {
+            "fqsen": "\\App\\Models\\OutbaseRequest\u003A\u003Afiles\u0028\u0029",
+            "name": "files",
+            "summary": "",
+            "url": "classes/App-Models-OutbaseRequest.html#method_files"
         },                {
             "fqsen": "\\App\\Models\\OutbaseRequest\u003A\u003A\u0024guarded",
             "name": "guarded",
@@ -1431,6 +2656,16 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Models-OvertimeRequest.html#method_getRemainingHoursAttribute"
         },                {
+            "fqsen": "\\App\\Models\\OvertimeRequest\u003A\u003AoffsetOvertimes\u0028\u0029",
+            "name": "offsetOvertimes",
+            "summary": "",
+            "url": "classes/App-Models-OvertimeRequest.html#method_offsetOvertimes"
+        },                {
+            "fqsen": "\\App\\Models\\OvertimeRequest\u003A\u003Afiles\u0028\u0029",
+            "name": "files",
+            "summary": "",
+            "url": "classes/App-Models-OvertimeRequest.html#method_files"
+        },                {
             "fqsen": "\\App\\Models\\OvertimeRequest\u003A\u003A\u0024guarded",
             "name": "guarded",
             "summary": "",
@@ -1455,6 +2690,16 @@ Search.appendIndex(
             "name": "guarded",
             "summary": "",
             "url": "classes/App-Models-PayrollPeriod.html#property_guarded"
+        },                {
+            "fqsen": "\\App\\Models\\PayrollPeriod\u003A\u003A\u0024dates",
+            "name": "dates",
+            "summary": "",
+            "url": "classes/App-Models-PayrollPeriod.html#property_dates"
+        },                {
+            "fqsen": "\\App\\Models\\PayrollPeriod\u003A\u003A\u0024casts",
+            "name": "casts",
+            "summary": "",
+            "url": "classes/App-Models-PayrollPeriod.html#property_casts"
         },                {
             "fqsen": "\\App\\Models\\Permission",
             "name": "Permission",
@@ -1561,6 +2806,31 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Models-Team.html#property_guarded"
         },                {
+            "fqsen": "\\App\\Models\\TicketType",
+            "name": "TicketType",
+            "summary": "",
+            "url": "classes/App-Models-TicketType.html"
+        },                {
+            "fqsen": "\\App\\Models\\TicketType\u003A\u003Acompany\u0028\u0029",
+            "name": "company",
+            "summary": "Get\u0020the\u0020company\u0020that\u0020owns\u0020this\u0020ticket\u0020type.",
+            "url": "classes/App-Models-TicketType.html#method_company"
+        },                {
+            "fqsen": "\\App\\Models\\TicketType\u003A\u003Atickets\u0028\u0029",
+            "name": "tickets",
+            "summary": "Get\u0020the\u0020tickets\u0020associated\u0020with\u0020this\u0020ticket\u0020type.",
+            "url": "classes/App-Models-TicketType.html#method_tickets"
+        },                {
+            "fqsen": "\\App\\Models\\TicketType\u003A\u003Apath\u0028\u0029",
+            "name": "path",
+            "summary": "Route\u0020model\u0020binding\u0020or\u0020resource\u0020route\u0020helper.",
+            "url": "classes/App-Models-TicketType.html#method_path"
+        },                {
+            "fqsen": "\\App\\Models\\TicketType\u003A\u003A\u0024guarded",
+            "name": "guarded",
+            "summary": "",
+            "url": "classes/App-Models-TicketType.html#property_guarded"
+        },                {
             "fqsen": "\\App\\Models\\TimeLog",
             "name": "TimeLog",
             "summary": "",
@@ -1615,6 +2885,11 @@ Search.appendIndex(
             "name": "path",
             "summary": "Route\u0020model\u0020binding\u0020or\u0020resource\u0020route\u0020helper.",
             "url": "classes/App-Models-TimeRecord.html#method_path"
+        },                {
+            "fqsen": "\\App\\Models\\TimeRecord\u003A\u003Afiles\u0028\u0029",
+            "name": "files",
+            "summary": "",
+            "url": "classes/App-Models-TimeRecord.html#method_files"
         },                {
             "fqsen": "\\App\\Models\\TimeRecord\u003A\u003A\u0024guarded",
             "name": "guarded",
@@ -1686,6 +2961,31 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Models-User.html#method_employee"
         },                {
+            "fqsen": "\\App\\Models\\User\u003A\u003AhasPermission\u0028\u0029",
+            "name": "hasPermission",
+            "summary": "",
+            "url": "classes/App-Models-User.html#method_hasPermission"
+        },                {
+            "fqsen": "\\App\\Models\\User\u003A\u003ArolesForCompany\u0028\u0029",
+            "name": "rolesForCompany",
+            "summary": "",
+            "url": "classes/App-Models-User.html#method_rolesForCompany"
+        },                {
+            "fqsen": "\\App\\Models\\User\u003A\u003AhasRole\u0028\u0029",
+            "name": "hasRole",
+            "summary": "Check\u0020if\u0020the\u0020user\u0020has\u0020a\u0020role\u0020by\u0020name,\u0020optionally\u0020scoped\u0020to\u0020a\u0020company.",
+            "url": "classes/App-Models-User.html#method_hasRole"
+        },                {
+            "fqsen": "\\App\\Models\\User\u003A\u003AhasAnyRole\u0028\u0029",
+            "name": "hasAnyRole",
+            "summary": "",
+            "url": "classes/App-Models-User.html#method_hasAnyRole"
+        },                {
+            "fqsen": "\\App\\Models\\User\u003A\u003AhasAnyPermission\u0028\u0029",
+            "name": "hasAnyPermission",
+            "summary": "",
+            "url": "classes/App-Models-User.html#method_hasAnyPermission"
+        },                {
             "fqsen": "\\App\\Models\\User\u003A\u003A\u0024fillable",
             "name": "fillable",
             "summary": "The\u0020attributes\u0020that\u0020are\u0020mass\u0020assignable.",
@@ -1721,6 +3021,316 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Models-UserPreference.html#property_casts"
         },                {
+            "fqsen": "\\App\\Notifications\\DtrSubmissionReminderNotification",
+            "name": "DtrSubmissionReminderNotification",
+            "summary": "",
+            "url": "classes/App-Notifications-DtrSubmissionReminderNotification.html"
+        },                {
+            "fqsen": "\\App\\Notifications\\DtrSubmissionReminderNotification\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Notifications-DtrSubmissionReminderNotification.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Notifications\\DtrSubmissionReminderNotification\u003A\u003Avia\u0028\u0029",
+            "name": "via",
+            "summary": "",
+            "url": "classes/App-Notifications-DtrSubmissionReminderNotification.html#method_via"
+        },                {
+            "fqsen": "\\App\\Notifications\\DtrSubmissionReminderNotification\u003A\u003AtoMail\u0028\u0029",
+            "name": "toMail",
+            "summary": "",
+            "url": "classes/App-Notifications-DtrSubmissionReminderNotification.html#method_toMail"
+        },                {
+            "fqsen": "\\App\\Notifications\\DtrSubmissionReminderNotification\u003A\u003A\u0024period",
+            "name": "period",
+            "summary": "",
+            "url": "classes/App-Notifications-DtrSubmissionReminderNotification.html#property_period"
+        },                {
+            "fqsen": "\\App\\Notifications\\DtrSubmissionReminderNotification\u003A\u003A\u0024status",
+            "name": "status",
+            "summary": "",
+            "url": "classes/App-Notifications-DtrSubmissionReminderNotification.html#property_status"
+        },                {
+            "fqsen": "\\App\\Notifications\\LeaveRequestStatusChanged",
+            "name": "LeaveRequestStatusChanged",
+            "summary": "",
+            "url": "classes/App-Notifications-LeaveRequestStatusChanged.html"
+        },                {
+            "fqsen": "\\App\\Notifications\\LeaveRequestStatusChanged\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Notifications-LeaveRequestStatusChanged.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Notifications\\LeaveRequestStatusChanged\u003A\u003Avia\u0028\u0029",
+            "name": "via",
+            "summary": "",
+            "url": "classes/App-Notifications-LeaveRequestStatusChanged.html#method_via"
+        },                {
+            "fqsen": "\\App\\Notifications\\LeaveRequestStatusChanged\u003A\u003AtoMail\u0028\u0029",
+            "name": "toMail",
+            "summary": "",
+            "url": "classes/App-Notifications-LeaveRequestStatusChanged.html#method_toMail"
+        },                {
+            "fqsen": "\\App\\Notifications\\LeaveRequestStatusChanged\u003A\u003A\u0024leaveRequest",
+            "name": "leaveRequest",
+            "summary": "",
+            "url": "classes/App-Notifications-LeaveRequestStatusChanged.html#property_leaveRequest"
+        },                {
+            "fqsen": "\\App\\Notifications\\LeaveRequestStatusChanged\u003A\u003A\u0024status",
+            "name": "status",
+            "summary": "",
+            "url": "classes/App-Notifications-LeaveRequestStatusChanged.html#property_status"
+        },                {
+            "fqsen": "\\App\\Notifications\\LeaveRequestSubmitted",
+            "name": "LeaveRequestSubmitted",
+            "summary": "",
+            "url": "classes/App-Notifications-LeaveRequestSubmitted.html"
+        },                {
+            "fqsen": "\\App\\Notifications\\LeaveRequestSubmitted\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Notifications-LeaveRequestSubmitted.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Notifications\\LeaveRequestSubmitted\u003A\u003Avia\u0028\u0029",
+            "name": "via",
+            "summary": "",
+            "url": "classes/App-Notifications-LeaveRequestSubmitted.html#method_via"
+        },                {
+            "fqsen": "\\App\\Notifications\\LeaveRequestSubmitted\u003A\u003AtoMail\u0028\u0029",
+            "name": "toMail",
+            "summary": "",
+            "url": "classes/App-Notifications-LeaveRequestSubmitted.html#method_toMail"
+        },                {
+            "fqsen": "\\App\\Notifications\\LeaveRequestSubmitted\u003A\u003A\u0024leaveRequest",
+            "name": "leaveRequest",
+            "summary": "",
+            "url": "classes/App-Notifications-LeaveRequestSubmitted.html#property_leaveRequest"
+        },                {
+            "fqsen": "\\App\\Notifications\\OffsetRequestStatusChanged",
+            "name": "OffsetRequestStatusChanged",
+            "summary": "",
+            "url": "classes/App-Notifications-OffsetRequestStatusChanged.html"
+        },                {
+            "fqsen": "\\App\\Notifications\\OffsetRequestStatusChanged\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Notifications-OffsetRequestStatusChanged.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Notifications\\OffsetRequestStatusChanged\u003A\u003Avia\u0028\u0029",
+            "name": "via",
+            "summary": "",
+            "url": "classes/App-Notifications-OffsetRequestStatusChanged.html#method_via"
+        },                {
+            "fqsen": "\\App\\Notifications\\OffsetRequestStatusChanged\u003A\u003AtoMail\u0028\u0029",
+            "name": "toMail",
+            "summary": "",
+            "url": "classes/App-Notifications-OffsetRequestStatusChanged.html#method_toMail"
+        },                {
+            "fqsen": "\\App\\Notifications\\OffsetRequestStatusChanged\u003A\u003A\u0024offsetRequest",
+            "name": "offsetRequest",
+            "summary": "",
+            "url": "classes/App-Notifications-OffsetRequestStatusChanged.html#property_offsetRequest"
+        },                {
+            "fqsen": "\\App\\Notifications\\OffsetRequestStatusChanged\u003A\u003A\u0024status",
+            "name": "status",
+            "summary": "",
+            "url": "classes/App-Notifications-OffsetRequestStatusChanged.html#property_status"
+        },                {
+            "fqsen": "\\App\\Notifications\\OffsetRequestSubmitted",
+            "name": "OffsetRequestSubmitted",
+            "summary": "",
+            "url": "classes/App-Notifications-OffsetRequestSubmitted.html"
+        },                {
+            "fqsen": "\\App\\Notifications\\OffsetRequestSubmitted\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Notifications-OffsetRequestSubmitted.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Notifications\\OffsetRequestSubmitted\u003A\u003Avia\u0028\u0029",
+            "name": "via",
+            "summary": "",
+            "url": "classes/App-Notifications-OffsetRequestSubmitted.html#method_via"
+        },                {
+            "fqsen": "\\App\\Notifications\\OffsetRequestSubmitted\u003A\u003AtoMail\u0028\u0029",
+            "name": "toMail",
+            "summary": "",
+            "url": "classes/App-Notifications-OffsetRequestSubmitted.html#method_toMail"
+        },                {
+            "fqsen": "\\App\\Notifications\\OffsetRequestSubmitted\u003A\u003A\u0024offsetRequest",
+            "name": "offsetRequest",
+            "summary": "",
+            "url": "classes/App-Notifications-OffsetRequestSubmitted.html#property_offsetRequest"
+        },                {
+            "fqsen": "\\App\\Notifications\\OutbaseRequestStatusChanged",
+            "name": "OutbaseRequestStatusChanged",
+            "summary": "",
+            "url": "classes/App-Notifications-OutbaseRequestStatusChanged.html"
+        },                {
+            "fqsen": "\\App\\Notifications\\OutbaseRequestStatusChanged\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Notifications-OutbaseRequestStatusChanged.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Notifications\\OutbaseRequestStatusChanged\u003A\u003Avia\u0028\u0029",
+            "name": "via",
+            "summary": "",
+            "url": "classes/App-Notifications-OutbaseRequestStatusChanged.html#method_via"
+        },                {
+            "fqsen": "\\App\\Notifications\\OutbaseRequestStatusChanged\u003A\u003AtoMail\u0028\u0029",
+            "name": "toMail",
+            "summary": "",
+            "url": "classes/App-Notifications-OutbaseRequestStatusChanged.html#method_toMail"
+        },                {
+            "fqsen": "\\App\\Notifications\\OutbaseRequestStatusChanged\u003A\u003A\u0024outbaseRequest",
+            "name": "outbaseRequest",
+            "summary": "",
+            "url": "classes/App-Notifications-OutbaseRequestStatusChanged.html#property_outbaseRequest"
+        },                {
+            "fqsen": "\\App\\Notifications\\OutbaseRequestStatusChanged\u003A\u003A\u0024status",
+            "name": "status",
+            "summary": "",
+            "url": "classes/App-Notifications-OutbaseRequestStatusChanged.html#property_status"
+        },                {
+            "fqsen": "\\App\\Notifications\\OutbaseRequestSubmitted",
+            "name": "OutbaseRequestSubmitted",
+            "summary": "",
+            "url": "classes/App-Notifications-OutbaseRequestSubmitted.html"
+        },                {
+            "fqsen": "\\App\\Notifications\\OutbaseRequestSubmitted\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Notifications-OutbaseRequestSubmitted.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Notifications\\OutbaseRequestSubmitted\u003A\u003Avia\u0028\u0029",
+            "name": "via",
+            "summary": "",
+            "url": "classes/App-Notifications-OutbaseRequestSubmitted.html#method_via"
+        },                {
+            "fqsen": "\\App\\Notifications\\OutbaseRequestSubmitted\u003A\u003AtoMail\u0028\u0029",
+            "name": "toMail",
+            "summary": "",
+            "url": "classes/App-Notifications-OutbaseRequestSubmitted.html#method_toMail"
+        },                {
+            "fqsen": "\\App\\Notifications\\OutbaseRequestSubmitted\u003A\u003A\u0024outbaseRequest",
+            "name": "outbaseRequest",
+            "summary": "",
+            "url": "classes/App-Notifications-OutbaseRequestSubmitted.html#property_outbaseRequest"
+        },                {
+            "fqsen": "\\App\\Notifications\\OvertimeRequestStatusChanged",
+            "name": "OvertimeRequestStatusChanged",
+            "summary": "",
+            "url": "classes/App-Notifications-OvertimeRequestStatusChanged.html"
+        },                {
+            "fqsen": "\\App\\Notifications\\OvertimeRequestStatusChanged\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Notifications-OvertimeRequestStatusChanged.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Notifications\\OvertimeRequestStatusChanged\u003A\u003Avia\u0028\u0029",
+            "name": "via",
+            "summary": "",
+            "url": "classes/App-Notifications-OvertimeRequestStatusChanged.html#method_via"
+        },                {
+            "fqsen": "\\App\\Notifications\\OvertimeRequestStatusChanged\u003A\u003AtoMail\u0028\u0029",
+            "name": "toMail",
+            "summary": "",
+            "url": "classes/App-Notifications-OvertimeRequestStatusChanged.html#method_toMail"
+        },                {
+            "fqsen": "\\App\\Notifications\\OvertimeRequestStatusChanged\u003A\u003A\u0024overtimeRequest",
+            "name": "overtimeRequest",
+            "summary": "",
+            "url": "classes/App-Notifications-OvertimeRequestStatusChanged.html#property_overtimeRequest"
+        },                {
+            "fqsen": "\\App\\Notifications\\OvertimeRequestStatusChanged\u003A\u003A\u0024status",
+            "name": "status",
+            "summary": "",
+            "url": "classes/App-Notifications-OvertimeRequestStatusChanged.html#property_status"
+        },                {
+            "fqsen": "\\App\\Notifications\\OvertimeRequestSubmitted",
+            "name": "OvertimeRequestSubmitted",
+            "summary": "",
+            "url": "classes/App-Notifications-OvertimeRequestSubmitted.html"
+        },                {
+            "fqsen": "\\App\\Notifications\\OvertimeRequestSubmitted\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "Create\u0020a\u0020new\u0020notification\u0020instance.",
+            "url": "classes/App-Notifications-OvertimeRequestSubmitted.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Notifications\\OvertimeRequestSubmitted\u003A\u003Avia\u0028\u0029",
+            "name": "via",
+            "summary": "Get\u0020the\u0020notification\u0027s\u0020delivery\u0020channels.",
+            "url": "classes/App-Notifications-OvertimeRequestSubmitted.html#method_via"
+        },                {
+            "fqsen": "\\App\\Notifications\\OvertimeRequestSubmitted\u003A\u003AtoMail\u0028\u0029",
+            "name": "toMail",
+            "summary": "Get\u0020the\u0020mail\u0020representation\u0020of\u0020the\u0020notification.",
+            "url": "classes/App-Notifications-OvertimeRequestSubmitted.html#method_toMail"
+        },                {
+            "fqsen": "\\App\\Notifications\\OvertimeRequestSubmitted\u003A\u003AtoArray\u0028\u0029",
+            "name": "toArray",
+            "summary": "Get\u0020the\u0020array\u0020representation\u0020of\u0020the\u0020notification.",
+            "url": "classes/App-Notifications-OvertimeRequestSubmitted.html#method_toArray"
+        },                {
+            "fqsen": "\\App\\Notifications\\OvertimeRequestSubmitted\u003A\u003A\u0024overtimeRequest",
+            "name": "overtimeRequest",
+            "summary": "",
+            "url": "classes/App-Notifications-OvertimeRequestSubmitted.html#property_overtimeRequest"
+        },                {
+            "fqsen": "\\App\\Notifications\\TimeRecordStatusChanged",
+            "name": "TimeRecordStatusChanged",
+            "summary": "",
+            "url": "classes/App-Notifications-TimeRecordStatusChanged.html"
+        },                {
+            "fqsen": "\\App\\Notifications\\TimeRecordStatusChanged\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Notifications-TimeRecordStatusChanged.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Notifications\\TimeRecordStatusChanged\u003A\u003Avia\u0028\u0029",
+            "name": "via",
+            "summary": "",
+            "url": "classes/App-Notifications-TimeRecordStatusChanged.html#method_via"
+        },                {
+            "fqsen": "\\App\\Notifications\\TimeRecordStatusChanged\u003A\u003AtoMail\u0028\u0029",
+            "name": "toMail",
+            "summary": "",
+            "url": "classes/App-Notifications-TimeRecordStatusChanged.html#method_toMail"
+        },                {
+            "fqsen": "\\App\\Notifications\\TimeRecordStatusChanged\u003A\u003A\u0024timeRecord",
+            "name": "timeRecord",
+            "summary": "",
+            "url": "classes/App-Notifications-TimeRecordStatusChanged.html#property_timeRecord"
+        },                {
+            "fqsen": "\\App\\Notifications\\TimeRecordStatusChanged\u003A\u003A\u0024status",
+            "name": "status",
+            "summary": "",
+            "url": "classes/App-Notifications-TimeRecordStatusChanged.html#property_status"
+        },                {
+            "fqsen": "\\App\\Notifications\\TimeRecordSubmitted",
+            "name": "TimeRecordSubmitted",
+            "summary": "",
+            "url": "classes/App-Notifications-TimeRecordSubmitted.html"
+        },                {
+            "fqsen": "\\App\\Notifications\\TimeRecordSubmitted\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Notifications-TimeRecordSubmitted.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Notifications\\TimeRecordSubmitted\u003A\u003Avia\u0028\u0029",
+            "name": "via",
+            "summary": "",
+            "url": "classes/App-Notifications-TimeRecordSubmitted.html#method_via"
+        },                {
+            "fqsen": "\\App\\Notifications\\TimeRecordSubmitted\u003A\u003AtoMail\u0028\u0029",
+            "name": "toMail",
+            "summary": "",
+            "url": "classes/App-Notifications-TimeRecordSubmitted.html#method_toMail"
+        },                {
+            "fqsen": "\\App\\Notifications\\TimeRecordSubmitted\u003A\u003A\u0024timeRecord",
+            "name": "timeRecord",
+            "summary": "",
+            "url": "classes/App-Notifications-TimeRecordSubmitted.html#property_timeRecord"
+        },                {
             "fqsen": "\\App\\Providers\\AppServiceProvider",
             "name": "AppServiceProvider",
             "summary": "",
@@ -1746,6 +3356,31 @@ Search.appendIndex(
             "summary": "Get\u0020the\u0020view\u0020\/\u0020contents\u0020that\u0020represents\u0020the\u0020component.",
             "url": "classes/App-View-Components-AppLayout.html#method_render"
         },                {
+            "fqsen": "\\App\\View\\Components\\Dashboard\\Card",
+            "name": "Card",
+            "summary": "",
+            "url": "classes/App-View-Components-Dashboard-Card.html"
+        },                {
+            "fqsen": "\\App\\View\\Components\\Dashboard\\Card\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-View-Components-Dashboard-Card.html#method___construct"
+        },                {
+            "fqsen": "\\App\\View\\Components\\Dashboard\\Card\u003A\u003Arender\u0028\u0029",
+            "name": "render",
+            "summary": "",
+            "url": "classes/App-View-Components-Dashboard-Card.html#method_render"
+        },                {
+            "fqsen": "\\App\\View\\Components\\Dashboard\\Card\u003A\u003A\u0024title",
+            "name": "title",
+            "summary": "",
+            "url": "classes/App-View-Components-Dashboard-Card.html#property_title"
+        },                {
+            "fqsen": "\\App\\View\\Components\\Dashboard\\Card\u003A\u003A\u0024value",
+            "name": "value",
+            "summary": "",
+            "url": "classes/App-View-Components-Dashboard-Card.html#property_value"
+        },                {
             "fqsen": "\\App\\View\\Components\\GuestLayout",
             "name": "GuestLayout",
             "summary": "",
@@ -1761,15 +3396,25 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/default.html"
         },                {
-            "fqsen": "\\App\\Exports",
-            "name": "Exports",
+            "fqsen": "\\App\\Console\\Commands",
+            "name": "Commands",
             "summary": "",
-            "url": "namespaces/app-exports.html"
+            "url": "namespaces/app-console-commands.html"
+        },                {
+            "fqsen": "\\App\\Console",
+            "name": "Console",
+            "summary": "",
+            "url": "namespaces/app-console.html"
         },                {
             "fqsen": "\\App",
             "name": "App",
             "summary": "",
             "url": "namespaces/app.html"
+        },                {
+            "fqsen": "\\App\\Exports",
+            "name": "Exports",
+            "summary": "",
+            "url": "namespaces/app-exports.html"
         },                {
             "fqsen": "\\App\\Http\\Controllers\\Auth",
             "name": "Auth",
@@ -1801,10 +3446,20 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/app-http-requests.html"
         },                {
+            "fqsen": "\\App\\Mail",
+            "name": "Mail",
+            "summary": "",
+            "url": "namespaces/app-mail.html"
+        },                {
             "fqsen": "\\App\\Models",
             "name": "Models",
             "summary": "",
             "url": "namespaces/app-models.html"
+        },                {
+            "fqsen": "\\App\\Notifications",
+            "name": "Notifications",
+            "summary": "",
+            "url": "namespaces/app-notifications.html"
         },                {
             "fqsen": "\\App\\Providers",
             "name": "Providers",
@@ -1820,5 +3475,10 @@ Search.appendIndex(
             "name": "View",
             "summary": "",
             "url": "namespaces/app-view.html"
+        },                {
+            "fqsen": "\\App\\View\\Components\\Dashboard",
+            "name": "Dashboard",
+            "summary": "",
+            "url": "namespaces/app-view-components-dashboard.html"
         }            ]
 );

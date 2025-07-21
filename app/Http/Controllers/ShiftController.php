@@ -219,7 +219,7 @@ class ShiftController extends Controller
     protected function authorizeShift(Shift $shift)
     {
         $companyId = $shift->company_id;
-        $user = auth()->user();
+        $user      = auth()->user();
 
         // Ensure the user is assigned to the company
         if (!$user->companies->contains($companyId)) {

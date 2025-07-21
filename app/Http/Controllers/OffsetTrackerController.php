@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\OvertimeRequest;
-use App\Models\Employee;
-use Illuminate\Support\Facades\Auth;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\OffsetTrackerExport;
+use App\Models\Employee;
+use App\Models\OvertimeRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OffsetTrackerController extends Controller
 {
     public function index(Request $request)
     {
-        $user = Auth::user();
+        $user    = Auth::user();
         $company = $user->preference->company;
 
         if (!$user->hasPermission('view offset report')) {
@@ -28,7 +28,7 @@ class OffsetTrackerController extends Controller
 
         // Default date range: start of last year to today
         $from = $request->input('from') ?? now()->subYear()->startOfYear()->format('Y-m-d');
-        $to = $request->input('to') ?? now()->format('Y-m-d');
+        $to   = $request->input('to')   ?? now()->format('Y-m-d');
 
         $employeeModel = Employee::with([
             'user',
@@ -49,7 +49,7 @@ class OffsetTrackerController extends Controller
             ->whereDate('date', '<=', $to);
 
         $offsetData = $query->get()->map(function ($ot) {
-            $used = $ot->offsetRequests->sum(fn($offset) => $offset->pivot->used_hours);
+            $used = $ot->offsetRequests->sum(fn ($offset) => $offset->pivot->used_hours);
             return [
                 'employee_name'    => $ot->employee->user->name,
                 'date'             => $ot->date,
@@ -62,9 +62,9 @@ class OffsetTrackerController extends Controller
         });
 
         return view('reports.offset_tracker', [
-            'offsetData' => $offsetData,
-            'from' => $from,
-            'to' => $to,
+            'offsetData'    => $offsetData,
+            'from'          => $from,
+            'to'            => $to,
             'employeeModel' => $employeeModel,
         ]);
     }
@@ -73,36 +73,36 @@ class OffsetTrackerController extends Controller
     {
         $offsetData = $this->getOffsetData($request);
 
-        $user = Auth::user();
+        $user    = Auth::user();
         $company = $user->preference->company;
 
         $periodText = 'All Dates';
         if ($request->filled('from') || $request->filled('to')) {
-            $from = $request->filled('from') ? date('M d, Y', strtotime($request->from)) : '...';
-            $to = $request->filled('to') ? date('M d, Y', strtotime($request->to)) : '...';
+            $from       = $request->filled('from') ? date('M d, Y', strtotime($request->from)) : '...';
+            $to         = $request->filled('to') ? date('M d, Y', strtotime($request->to)) : '...';
             $periodText = "{$from} to {$to}";
         }
 
         return Pdf::loadView('reports.offset_tracker_pdf', [
-            'offsetData' => $offsetData,
-            'periodText' => $periodText,
+            'offsetData'  => $offsetData,
+            'periodText'  => $periodText,
             'companyName' => $company->name,
         ])->download('offset_tracker.pdf');
     }
 
     public function offsetTrackerExcel(Request $request)
     {
-        $user = Auth::user();
+        $user    = Auth::user();
         $company = $user->preference->company;
 
         $from = $request->filled('from') ? $request->from : null;
-        $to = $request->filled('to') ? $request->to : null;
+        $to   = $request->filled('to') ? $request->to : null;
 
         $periodText = 'All Dates';
         if ($from || $to) {
             $fromFormatted = $from ? date('M d, Y', strtotime($from)) : '...';
-            $toFormatted = $to ? date('M d, Y', strtotime($to)) : '...';
-            $periodText = "$fromFormatted to $toFormatted";
+            $toFormatted   = $to ? date('M d, Y', strtotime($to)) : '...';
+            $periodText    = "$fromFormatted to $toFormatted";
         }
 
         return Excel::download(
@@ -113,7 +113,7 @@ class OffsetTrackerController extends Controller
 
     public function getOffsetData(Request $request)
     {
-        $user = Auth::user();
+        $user    = Auth::user();
         $company = $user->preference->company;
 
         if (!$user->hasPermission('view offset report')) {
@@ -139,7 +139,7 @@ class OffsetTrackerController extends Controller
         }
 
         return $query->get()->map(function ($ot) {
-            $used = $ot->offsetRequests->sum(fn($offset) => $offset->pivot->used_hours);
+            $used = $ot->offsetRequests->sum(fn ($offset) => $offset->pivot->used_hours);
             return [
                 'employee_name'    => $ot->employee->user->name,
                 'date'             => $ot->date,

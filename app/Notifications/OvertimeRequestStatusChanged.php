@@ -4,8 +4,8 @@ namespace App\Notifications;
 
 use App\Models\OvertimeRequest;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class OvertimeRequestStatusChanged extends Notification
 {
@@ -17,7 +17,7 @@ class OvertimeRequestStatusChanged extends Notification
     public function __construct(OvertimeRequest $overtimeRequest, $status)
     {
         $this->overtimeRequest = $overtimeRequest;
-        $this->status = $status;
+        $this->status          = $status;
     }
 
     public function via($notifiable)
@@ -30,14 +30,14 @@ class OvertimeRequestStatusChanged extends Notification
         $statusLabel = ucfirst($this->status);
 
         if ($this->status === 'approved') {
-            $statusMessage = "has been approved. Congratulations!";
+            $statusMessage = 'has been approved. Congratulations!';
         } elseif ($this->status === 'rejected') {
-            $statusMessage = "was rejected. Please contact your supervisor if you need clarification.";
+            $statusMessage = 'was rejected. Please contact your supervisor if you need clarification.';
         } else {
-            $statusMessage = "was updated.";
+            $statusMessage = 'was updated.';
         }
 
-        $mail = (new MailMessage)
+        $mail = (new MailMessage())
             ->subject("Overtime Request {$statusLabel}")
             ->greeting("Hi {$notifiable->name},")
             ->line("Your overtime request dated {$this->overtimeRequest->date} {$statusMessage}")

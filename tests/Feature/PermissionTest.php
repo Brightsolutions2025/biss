@@ -4,9 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\Company;
 use App\Models\Permission;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\UserPreference;
-use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -21,7 +21,7 @@ class PermissionTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->company = Company::factory()->create();
 
         // Attach user to company
@@ -29,7 +29,7 @@ class PermissionTest extends TestCase
 
         // Set user preference
         UserPreference::factory()->create([
-            'user_id'   => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -64,7 +64,7 @@ class PermissionTest extends TestCase
         $this->actingAs($this->user);
 
         $data = [
-            'name' => 'View Reports',
+            'name'        => 'View Reports',
             'description' => 'Can view reports',
         ];
 
@@ -72,7 +72,7 @@ class PermissionTest extends TestCase
 
         $response->assertRedirect(route('permissions.index'));
         $this->assertDatabaseHas('permissions', [
-            'name' => 'View Reports',
+            'name'       => 'View Reports',
             'company_id' => $this->company->id,
         ]);
     }
@@ -103,20 +103,20 @@ class PermissionTest extends TestCase
     public function it_updates_a_permission()
     {
         $permission = Permission::factory()->create([
-            'name' => 'Old Name',
+            'name'       => 'Old Name',
             'company_id' => $this->company->id,
         ]);
 
         $this->actingAs($this->user);
 
         $response = $this->put(route('permissions.update', $permission), [
-            'name' => 'Updated Name',
+            'name'        => 'Updated Name',
             'description' => 'Updated description',
         ]);
 
         $response->assertRedirect(route('permissions.index'));
         $this->assertDatabaseHas('permissions', [
-            'id' => $permission->id,
+            'id'   => $permission->id,
             'name' => 'Updated Name',
         ]);
     }

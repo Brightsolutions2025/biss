@@ -61,6 +61,10 @@
 </h4>
     <ul class="phpdocumentor-list">
                     <li>
+                <a href="namespaces/app-console.html" class="">Console</a>
+                
+            </li>
+                    <li>
                 <a href="namespaces/app-exports.html" class="">Exports</a>
                 
             </li>
@@ -69,7 +73,15 @@
                 
             </li>
                     <li>
+                <a href="namespaces/app-mail.html" class="">Mail</a>
+                
+            </li>
+                    <li>
                 <a href="namespaces/app-models.html" class="">Models</a>
+                
+            </li>
+                    <li>
+                <a href="namespaces/app-notifications.html" class="">Notifications</a>
                 
             </li>
                     <li>
@@ -127,6 +139,9 @@
         </div>
     
     
+            <span class="phpdocumentor-element__extends">
+            uses
+                            <abbr title="\Illuminate\Database\Eloquent\Factories\HasFactory">HasFactory</abbr>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -137,7 +152,7 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">7</span>
+    <span class="phpdocumentor-element-found-in__line">8</span>
 
     </aside>
 
@@ -206,6 +221,36 @@
 <dd>Get the department the employee belongs to.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/App-Models-Employee.html#method_employeeShift">employeeShift()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/App-Models-Employee.html#method_leaveRequests">leaveRequests()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/App-Models-Employee.html#method_offsetRequests">offsetRequests()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/App-Models-Employee.html#method_outbaseRequests">outbaseRequests()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/App-Models-Employee.html#method_overtimeRequests">overtimeRequests()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/App-Models-Employee.html#method_path">path()</a>
     <span>
                                 &nbsp;: mixed    </span>
@@ -218,6 +263,18 @@
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>Get the team the employee belongs to.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/App-Models-Employee.html#method_timeLogs">timeLogs()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/App-Models-Employee.html#method_timeRecords">timeRecords()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/App-Models-Employee.html#method_user">user()</a>
@@ -256,7 +313,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">9</span>
+    <span class="phpdocumentor-element-found-in__line">12</span>
 
     </aside>
 
@@ -297,7 +354,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">30</span>
+    <span class="phpdocumentor-element-found-in__line">33</span>
 
     </aside>
 
@@ -332,7 +389,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">22</span>
+    <span class="phpdocumentor-element-found-in__line">25</span>
 
     </aside>
 
@@ -367,7 +424,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">41</span>
 
     </aside>
 
@@ -394,6 +451,176 @@
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_employeeShift">
+        employeeShift()
+        <a href="classes/App-Models-Employee.html#method_employeeShift" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">62</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">employeeShift</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_leaveRequests">
+        leaveRequests()
+        <a href="classes/App-Models-Employee.html#method_leaveRequests" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">66</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">leaveRequests</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_offsetRequests">
+        offsetRequests()
+        <a href="classes/App-Models-Employee.html#method_offsetRequests" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">74</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">offsetRequests</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_outbaseRequests">
+        outbaseRequests()
+        <a href="classes/App-Models-Employee.html#method_outbaseRequests" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">78</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">outbaseRequests</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_overtimeRequests">
+        overtimeRequests()
+        <a href="classes/App-Models-Employee.html#method_overtimeRequests" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">70</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">overtimeRequests</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_path">
         path()
         <a href="classes/App-Models-Employee.html#method_path" class="headerlink"><i class="fas fa-link"></i></a>
@@ -402,7 +629,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">54</span>
+    <span class="phpdocumentor-element-found-in__line">57</span>
 
     </aside>
 
@@ -437,7 +664,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 
     </aside>
 
@@ -464,6 +691,74 @@
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_timeLogs">
+        timeLogs()
+        <a href="classes/App-Models-Employee.html#method_timeLogs" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">82</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">timeLogs</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_timeRecords">
+        timeRecords()
+        <a href="classes/App-Models-Employee.html#method_timeRecords" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">86</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">timeRecords</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_user">
         user()
         <a href="classes/App-Models-Employee.html#method_user" class="headerlink"><i class="fas fa-link"></i></a>
@@ -472,7 +767,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Models/Employee.php"><a href="files/app-models-employee.html"><abbr title="app/Models/Employee.php">Employee.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">14</span>
+    <span class="phpdocumentor-element-found-in__line">17</span>
 
     </aside>
 
@@ -616,8 +911,15 @@
                                             <li class=""><a href="classes/App-Models-Employee.html#method_approver">approver()</a></li>
                                             <li class=""><a href="classes/App-Models-Employee.html#method_company">company()</a></li>
                                             <li class=""><a href="classes/App-Models-Employee.html#method_department">department()</a></li>
+                                            <li class=""><a href="classes/App-Models-Employee.html#method_employeeShift">employeeShift()</a></li>
+                                            <li class=""><a href="classes/App-Models-Employee.html#method_leaveRequests">leaveRequests()</a></li>
+                                            <li class=""><a href="classes/App-Models-Employee.html#method_offsetRequests">offsetRequests()</a></li>
+                                            <li class=""><a href="classes/App-Models-Employee.html#method_outbaseRequests">outbaseRequests()</a></li>
+                                            <li class=""><a href="classes/App-Models-Employee.html#method_overtimeRequests">overtimeRequests()</a></li>
                                             <li class=""><a href="classes/App-Models-Employee.html#method_path">path()</a></li>
                                             <li class=""><a href="classes/App-Models-Employee.html#method_team">team()</a></li>
+                                            <li class=""><a href="classes/App-Models-Employee.html#method_timeLogs">timeLogs()</a></li>
+                                            <li class=""><a href="classes/App-Models-Employee.html#method_timeRecords">timeRecords()</a></li>
                                             <li class=""><a href="classes/App-Models-Employee.html#method_user">user()</a></li>
                                     </ul>
             </li>

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class () extends Migration {
     public function up(): void
     {
         Schema::create('clients', function (Blueprint $table) {
@@ -106,7 +106,7 @@ return new class extends Migration {
 
             // Notes
             $table->text('remarks')->nullable(); // "Memo"
-            
+
             $table->timestamps();
         });
 
@@ -120,7 +120,7 @@ return new class extends Migration {
             $table->decimal('quantity', 12, 2);
             $table->decimal('frequency', 12, 2)->default(1); // "Frq"
             $table->string('unit');
-            
+
             // Pricing Details
             $table->decimal('unit_price', 15, 2);
             $table->decimal('amount', 15, 2); // quantity × frequency × unit_price

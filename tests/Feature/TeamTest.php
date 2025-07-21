@@ -23,11 +23,11 @@ class TeamTest extends TestCase
         parent::setUp();
 
         $this->company = Company::factory()->create();
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->user->companies()->attach($this->company->id);
 
         UserPreference::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -42,7 +42,7 @@ class TeamTest extends TestCase
             'team.delete',
         ])->map(function ($name) {
             return \App\Models\Permission::create([
-                'name' => $name,
+                'name'       => $name,
                 'company_id' => $this->company->id,
             ]);
         });
@@ -55,7 +55,7 @@ class TeamTest extends TestCase
     {
         $department = Department::factory()->create(['company_id' => $this->company->id]);
         Team::factory()->count(3)->create([
-            'company_id' => $this->company->id,
+            'company_id'    => $this->company->id,
             'department_id' => $department->id,
         ]);
 
@@ -82,13 +82,13 @@ class TeamTest extends TestCase
 
         $response = $this->post(route('teams.store'), [
             'department_id' => $department->id,
-            'name' => 'Finance Team',
-            'description' => 'Handles finances',
+            'name'          => 'Finance Team',
+            'description'   => 'Handles finances',
         ]);
 
         $response->assertRedirect(route('teams.index'));
         $this->assertDatabaseHas('teams', [
-            'name' => 'Finance Team',
+            'name'       => 'Finance Team',
             'company_id' => $this->company->id,
         ]);
     }
@@ -97,8 +97,8 @@ class TeamTest extends TestCase
     public function it_displays_a_specific_team()
     {
         $department = Department::factory()->create(['company_id' => $this->company->id]);
-        $team = Team::factory()->create([
-            'company_id' => $this->company->id,
+        $team       = Team::factory()->create([
+            'company_id'    => $this->company->id,
             'department_id' => $department->id,
         ]);
 
@@ -112,8 +112,8 @@ class TeamTest extends TestCase
     public function it_displays_edit_form()
     {
         $department = Department::factory()->create(['company_id' => $this->company->id]);
-        $team = Team::factory()->create([
-            'company_id' => $this->company->id,
+        $team       = Team::factory()->create([
+            'company_id'    => $this->company->id,
             'department_id' => $department->id,
         ]);
 
@@ -127,9 +127,9 @@ class TeamTest extends TestCase
     public function it_updates_a_team()
     {
         $department = Department::factory()->create(['company_id' => $this->company->id]);
-        $team = Team::factory()->create([
-            'name' => 'Old Name',
-            'company_id' => $this->company->id,
+        $team       = Team::factory()->create([
+            'name'          => 'Old Name',
+            'company_id'    => $this->company->id,
             'department_id' => $department->id,
         ]);
 
@@ -137,13 +137,13 @@ class TeamTest extends TestCase
 
         $response = $this->put(route('teams.update', $team), [
             'department_id' => $department->id,
-            'name' => 'Updated Team',
-            'description' => 'Updated description',
+            'name'          => 'Updated Team',
+            'description'   => 'Updated description',
         ]);
 
         $response->assertRedirect(route('teams.index'));
         $this->assertDatabaseHas('teams', [
-            'id' => $team->id,
+            'id'   => $team->id,
             'name' => 'Updated Team',
         ]);
     }
@@ -152,8 +152,8 @@ class TeamTest extends TestCase
     public function it_deletes_a_team()
     {
         $department = Department::factory()->create(['company_id' => $this->company->id]);
-        $team = Team::factory()->create([
-            'company_id' => $this->company->id,
+        $team       = Team::factory()->create([
+            'company_id'    => $this->company->id,
             'department_id' => $department->id,
         ]);
 

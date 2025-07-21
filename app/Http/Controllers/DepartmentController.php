@@ -18,7 +18,7 @@ class DepartmentController extends Controller
         if (!auth()->user()->hasPermission('department.browse')) {
             abort(403, 'Unauthorized to browse departments.');
         }
-        
+
         $company = auth()->user()->preference->company;
 
         $query = Department::where('company_id', $company->id);
@@ -44,9 +44,9 @@ class DepartmentController extends Controller
         if (!auth()->user()->hasPermission('department.create')) {
             abort(403, 'Unauthorized to create departments.');
         }
-        
+
         $company = auth()->user()->preference->company;
-        $users = User::whereHas('employee', function ($q) use ($company) {
+        $users   = User::whereHas('employee', function ($q) use ($company) {
             $q->where('company_id', $company->id);
         })->get();
 
@@ -77,7 +77,7 @@ class DepartmentController extends Controller
                 'company_id'  => $companyId,
                 'name'        => $validated['name'],
                 'description' => $validated['description'] ?? null,
-                'head_id'     => $validated['head_id'] ?? null,
+                'head_id'     => $validated['head_id']     ?? null,
             ]);
 
             DB::commit();
@@ -123,7 +123,7 @@ class DepartmentController extends Controller
         }
 
         $company = auth()->user()->preference->company;
-        $users = User::whereHas('employee', function ($q) use ($company) {
+        $users   = User::whereHas('employee', function ($q) use ($company) {
             $q->where('company_id', $company->id);
         })->get();
 

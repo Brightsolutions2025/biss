@@ -24,11 +24,11 @@ class LeaveBalanceTest extends TestCase
         parent::setUp();
 
         $this->company = Company::factory()->create();
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->user->companies()->attach($this->company->id);
 
         UserPreference::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -42,7 +42,7 @@ class LeaveBalanceTest extends TestCase
             'leave_balance.update',
             'leave_balance.delete',
         ])->map(fn ($name) => Permission::create([
-            'name' => $name,
+            'name'       => $name,
             'company_id' => $this->company->id,
         ]));
 
@@ -77,8 +77,8 @@ class LeaveBalanceTest extends TestCase
         $this->actingAs($this->user);
 
         $data = [
-            'employee_id' => $employee->id,
-            'year' => 2025,
+            'employee_id'       => $employee->id,
+            'year'              => 2025,
             'beginning_balance' => 10,
         ];
 
@@ -87,8 +87,8 @@ class LeaveBalanceTest extends TestCase
         $response->assertRedirect(route('leave_balances.index'));
         $this->assertDatabaseHas('leave_balances', [
             'employee_id' => $data['employee_id'],
-            'year' => $data['year'],
-            'company_id' => $this->company->id,
+            'year'        => $data['year'],
+            'company_id'  => $this->company->id,
         ]);
     }
 
@@ -118,13 +118,13 @@ class LeaveBalanceTest extends TestCase
     public function it_updates_a_leave_balance()
     {
         $leaveBalance = LeaveBalance::factory()->create(['company_id' => $this->company->id]);
-        $employee = Employee::factory()->create(['company_id' => $this->company->id]);
+        $employee     = Employee::factory()->create(['company_id' => $this->company->id]);
 
         $this->actingAs($this->user);
 
         $data = [
-            'employee_id' => $employee->id,
-            'year' => 2026,
+            'employee_id'       => $employee->id,
+            'year'              => 2026,
             'beginning_balance' => 15,
         ];
 
@@ -132,9 +132,9 @@ class LeaveBalanceTest extends TestCase
 
         $response->assertRedirect(route('leave_balances.index'));
         $this->assertDatabaseHas('leave_balances', [
-            'id' => $leaveBalance->id,
-            'employee_id' => $data['employee_id'],
-            'year' => $data['year'],
+            'id'                => $leaveBalance->id,
+            'employee_id'       => $data['employee_id'],
+            'year'              => $data['year'],
             'beginning_balance' => $data['beginning_balance'],
         ]);
     }

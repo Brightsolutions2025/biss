@@ -29,11 +29,11 @@ class TimeRecordTest extends TestCase
         parent::setUp();
 
         $this->company = Company::factory()->create();
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->user->companies()->attach($this->company->id);
 
         UserPreference::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -48,14 +48,14 @@ class TimeRecordTest extends TestCase
             'time_record.update',
             'time_record.delete',
         ])->map(fn ($name) => Permission::create([
-            'name' => $name,
+            'name'       => $name,
             'company_id' => $this->company->id,
         ]));
 
         $role->permissions()->attach($permissions->pluck('id'), ['company_id' => $this->company->id]);
 
         $this->employee = Employee::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -68,8 +68,8 @@ class TimeRecordTest extends TestCase
     public function it_displays_time_record_index()
     {
         TimeRecord::factory()->create([
-            'employee_id' => $this->employee->id,
-            'company_id' => $this->company->id,
+            'employee_id'       => $this->employee->id,
+            'company_id'        => $this->company->id,
             'payroll_period_id' => $this->payrollPeriod->id,
         ]);
 
@@ -96,16 +96,16 @@ class TimeRecordTest extends TestCase
         $this->actingAs($this->user);
 
         $data = [
-            'employee_id' => $this->employee->id,
+            'employee_id'       => $this->employee->id,
             'payroll_period_id' => $this->payrollPeriod->id,
             'time_record_lines' => [
                 [
-                    'date' => now()->toDateString(),
-                    'clock_in' => '08:00',
-                    'clock_out' => '17:00',
-                    'late_minutes' => 0,
+                    'date'              => now()->toDateString(),
+                    'clock_in'          => '08:00',
+                    'clock_out'         => '17:00',
+                    'late_minutes'      => 0,
                     'undertime_minutes' => 0,
-                    'remarks' => 'On time',
+                    'remarks'           => 'On time',
                 ],
             ],
             'files' => [UploadedFile::fake()->create('attachment.pdf')],
@@ -117,7 +117,7 @@ class TimeRecordTest extends TestCase
 
         $this->assertDatabaseHas('time_records', [
             'employee_id' => $this->employee->id,
-            'company_id' => $this->company->id,
+            'company_id'  => $this->company->id,
         ]);
     }
 
@@ -125,8 +125,8 @@ class TimeRecordTest extends TestCase
     public function it_shows_a_time_record()
     {
         $timeRecord = TimeRecord::factory()->create([
-            'employee_id' => $this->employee->id,
-            'company_id' => $this->company->id,
+            'employee_id'       => $this->employee->id,
+            'company_id'        => $this->company->id,
             'payroll_period_id' => $this->payrollPeriod->id,
         ]);
 
@@ -140,10 +140,10 @@ class TimeRecordTest extends TestCase
     public function it_displays_time_record_edit_form()
     {
         $timeRecord = TimeRecord::factory()->create([
-            'employee_id' => $this->employee->id,
-            'company_id' => $this->company->id,
+            'employee_id'       => $this->employee->id,
+            'company_id'        => $this->company->id,
             'payroll_period_id' => $this->payrollPeriod->id,
-            'status' => 'draft',
+            'status'            => 'draft',
         ]);
 
         $this->actingAs($this->user)
@@ -156,36 +156,36 @@ class TimeRecordTest extends TestCase
     public function it_updates_a_time_record()
     {
         $timeRecord = TimeRecord::factory()->create([
-            'employee_id' => $this->employee->id,
-            'company_id' => $this->company->id,
+            'employee_id'       => $this->employee->id,
+            'company_id'        => $this->company->id,
             'payroll_period_id' => $this->payrollPeriod->id,
-            'status' => 'draft',
+            'status'            => 'draft',
         ]);
 
         $timeRecordLine = \App\Models\TimeRecordLine::factory()->create([
-            'time_record_id' => $timeRecord->id,
-            'company_id' => $this->company->id, // <-- Add this line
-            'date' => now()->toDateString(),
-            'clock_in' => '08:00',
-            'clock_out' => '17:00',
-            'late_minutes' => 0,
+            'time_record_id'    => $timeRecord->id,
+            'company_id'        => $this->company->id, // <-- Add this line
+            'date'              => now()->toDateString(),
+            'clock_in'          => '08:00',
+            'clock_out'         => '17:00',
+            'late_minutes'      => 0,
             'undertime_minutes' => 0,
-            'remarks' => 'Initial',
+            'remarks'           => 'Initial',
         ]);
 
         $updatedData = [
-            'employee_id' => $this->employee->id,
+            'employee_id'       => $this->employee->id,
             'payroll_period_id' => $this->payrollPeriod->id,
             'time_record_lines' => [
                 [
-                    'id' => $timeRecordLine->id,
-                    'company_id' => $this->company->id, // Add this
-                    'date' => now()->toDateString(),
-                    'clock_in' => '09:00',
-                    'clock_out' => '18:00',
-                    'late_minutes' => 15,
+                    'id'                => $timeRecordLine->id,
+                    'company_id'        => $this->company->id, // Add this
+                    'date'              => now()->toDateString(),
+                    'clock_in'          => '09:00',
+                    'clock_out'         => '18:00',
+                    'late_minutes'      => 15,
                     'undertime_minutes' => 0,
-                    'remarks' => 'Late clock-in',
+                    'remarks'           => 'Late clock-in',
                 ],
             ],
         ];
@@ -195,14 +195,14 @@ class TimeRecordTest extends TestCase
             ->assertRedirect(route('time_records.index'));
 
         $this->assertDatabaseHas('time_records', [
-            'id' => $timeRecord->id,
+            'id'          => $timeRecord->id,
             'employee_id' => $this->employee->id,
         ]);
 
         $this->assertDatabaseHas('time_record_lines', [
-            'id' => $timeRecordLine->id,
+            'id'             => $timeRecordLine->id,
             'time_record_id' => $timeRecord->id,
-            'remarks' => 'Late clock-in',
+            'remarks'        => 'Late clock-in',
         ]);
     }
 
@@ -210,10 +210,10 @@ class TimeRecordTest extends TestCase
     public function it_deletes_a_time_record()
     {
         $timeRecord = TimeRecord::factory()->create([
-            'employee_id' => $this->employee->id,
-            'company_id' => $this->company->id,
+            'employee_id'       => $this->employee->id,
+            'company_id'        => $this->company->id,
             'payroll_period_id' => $this->payrollPeriod->id,
-            'status' => 'draft',
+            'status'            => 'draft',
         ]);
 
         $this->actingAs($this->user)

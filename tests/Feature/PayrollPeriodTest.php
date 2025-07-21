@@ -10,7 +10,6 @@ use App\Models\User;
 use App\Models\UserPreference;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Carbon\Carbon;
 
 class PayrollPeriodTest extends TestCase
 {
@@ -24,11 +23,11 @@ class PayrollPeriodTest extends TestCase
         parent::setUp();
 
         $this->company = Company::factory()->create();
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->user->companies()->attach($this->company->id);
 
         UserPreference::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -42,7 +41,7 @@ class PayrollPeriodTest extends TestCase
             'payroll_period.update',
             'payroll_period.delete',
         ])->map(fn ($name) => Permission::create([
-            'name' => $name,
+            'name'       => $name,
             'company_id' => $this->company->id,
         ]));
 
@@ -75,9 +74,9 @@ class PayrollPeriodTest extends TestCase
         $this->actingAs($this->user);
 
         $data = [
-            'start_date' => '2025-07-01',
-            'end_date' => '2025-07-15',
-            'timezone' => 'UTC',
+            'start_date'            => '2025-07-01',
+            'end_date'              => '2025-07-15',
+            'timezone'              => 'UTC',
             'dtr_submission_due_at' => '2025-07-16 12:00:00',
         ];
 
@@ -86,7 +85,7 @@ class PayrollPeriodTest extends TestCase
         $response->assertRedirect(route('payroll_periods.index'));
         $this->assertDatabaseHas('payroll_periods', [
             'start_date' => $data['start_date'],
-            'end_date' => $data['end_date'],
+            'end_date'   => $data['end_date'],
             'company_id' => $this->company->id,
         ]);
     }
@@ -121,9 +120,9 @@ class PayrollPeriodTest extends TestCase
         $this->actingAs($this->user);
 
         $data = [
-            'start_date' => '2025-07-16',
-            'end_date' => '2025-07-31',
-            'timezone' => 'UTC',
+            'start_date'            => '2025-07-16',
+            'end_date'              => '2025-07-31',
+            'timezone'              => 'UTC',
             'dtr_submission_due_at' => '2025-08-01 10:00:00',
         ];
 
@@ -131,9 +130,9 @@ class PayrollPeriodTest extends TestCase
 
         $response->assertRedirect(route('payroll_periods.index'));
         $this->assertDatabaseHas('payroll_periods', [
-            'id' => $payrollPeriod->id,
+            'id'         => $payrollPeriod->id,
             'start_date' => $data['start_date'],
-            'end_date' => $data['end_date'],
+            'end_date'   => $data['end_date'],
         ]);
     }
 

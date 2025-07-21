@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\OvertimeRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Carbon;
 
 class OvertimeRequestController extends Controller
 {
@@ -92,13 +92,13 @@ class OvertimeRequestController extends Controller
             'time_end'        => 'required|date_format:H:i|after:time_start',
             'number_of_hours' => 'required|numeric|min:0.25',
             'reason'          => 'required|string',
-            'files' => 'array|max:5',
-            'files.*' => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
+            'files'           => 'array|max:5',
+            'files.*'         => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
         ]);
 
         // Custom validation: number_of_hours must not exceed actual duration
-        $start = \Carbon\Carbon::createFromFormat('H:i', $validated['time_start']);
-        $end = \Carbon\Carbon::createFromFormat('H:i', $validated['time_end']);
+        $start    = \Carbon\Carbon::createFromFormat('H:i', $validated['time_start']);
+        $end      = \Carbon\Carbon::createFromFormat('H:i', $validated['time_end']);
         $maxHours = $start->diffInMinutes($end) / 60;
 
         if ($validated['number_of_hours'] > $maxHours) {
@@ -175,7 +175,7 @@ class OvertimeRequestController extends Controller
         // - they own the request
         // - OR they are the approver of the employee
         if (!$user->hasPermission('overtime_request.browse_all')) {
-            $isOwner = $overtimeRequest->employee_id === $employeeId;
+            $isOwner    = $overtimeRequest->employee_id           === $employeeId;
             $isApprover = $overtimeRequest->employee->approver_id === $employeeId;
 
             if (!$isOwner && !$isApprover) {
@@ -203,8 +203,8 @@ class OvertimeRequestController extends Controller
         // If user doesn't have 'browse_all', enforce ownership or approver rights
         if (!$user->hasPermission('overtime_request.browse_all')) {
             $employeeId = $user->employee?->id;
-            $isOwner = $employeeId && $overtimeRequest->employee_id === $employeeId;
-            $isApprover = $user->id === $overtimeRequest->employee->approver_id;
+            $isOwner    = $employeeId && $overtimeRequest->employee_id === $employeeId;
+            $isApprover = $user->id                                    === $overtimeRequest->employee->approver_id;
 
             if (!$isOwner && !$isApprover) {
                 abort(403, 'You are not allowed to edit this overtime request.');
@@ -220,11 +220,11 @@ class OvertimeRequestController extends Controller
 
     protected function canEditOvertimeRequest(OvertimeRequest $overtimeRequest): bool
     {
-        $user = auth()->user();
+        $user       = auth()->user();
         $employeeId = $user->employee?->id;
 
-        $isOwner = $employeeId === $overtimeRequest->employee_id;
-        $isApprover = $user->id === $overtimeRequest->employee->approver_id;
+        $isOwner    = $employeeId === $overtimeRequest->employee_id;
+        $isApprover = $user->id   === $overtimeRequest->employee->approver_id;
 
         // Approver can always edit, employee only if not yet approved/rejected
         if ($isApprover) {
@@ -253,13 +253,13 @@ class OvertimeRequestController extends Controller
             'time_end'        => 'required|date_format:H:i|after:time_start',
             'number_of_hours' => 'required|numeric|min:0.25',
             'reason'          => 'required|string',
-            'files' => 'array|max:5',
-            'files.*' => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
+            'files'           => 'array|max:5',
+            'files.*'         => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
         ]);
 
         // Custom check: number_of_hours <= time difference
-        $start = \Carbon\Carbon::createFromFormat('H:i', $validated['time_start']);
-        $end = \Carbon\Carbon::createFromFormat('H:i', $validated['time_end']);
+        $start    = \Carbon\Carbon::createFromFormat('H:i', $validated['time_start']);
+        $end      = \Carbon\Carbon::createFromFormat('H:i', $validated['time_end']);
         $maxHours = $start->diffInMinutes($end) / 60;
 
         if ($validated['number_of_hours'] > $maxHours) {
@@ -346,7 +346,7 @@ class OvertimeRequestController extends Controller
 
                 $file->delete();
             }
-            
+
             $overtimeRequest->delete();
 
             DB::commit();
@@ -386,8 +386,8 @@ class OvertimeRequestController extends Controller
         DB::beginTransaction();
 
         try {
-            $overtimeRequest->status      = 'approved';
-            $overtimeRequest->approver_id = auth()->id();
+            $overtimeRequest->status        = 'approved';
+            $overtimeRequest->approver_id   = auth()->id();
             $overtimeRequest->approval_date = Carbon::now('Asia/Manila');
             $overtimeRequest->save();
 
@@ -493,7 +493,7 @@ class OvertimeRequestController extends Controller
                 return [$date => [
                     'hours' => $group->sum('number_of_hours'),
                     'start' => $group->min('time_start'),
-                    'end' => $group->max('time_end'),
+                    'end'   => $group->max('time_end'),
                 ]];
             });
 

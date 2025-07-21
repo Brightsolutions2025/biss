@@ -4,8 +4,8 @@ namespace App\Notifications;
 
 use App\Models\LeaveRequest;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class LeaveRequestStatusChanged extends Notification
 {
@@ -17,7 +17,7 @@ class LeaveRequestStatusChanged extends Notification
     public function __construct(LeaveRequest $leaveRequest, $status)
     {
         $this->leaveRequest = $leaveRequest;
-        $this->status = $status;
+        $this->status       = $status;
     }
 
     public function via($notifiable)
@@ -28,11 +28,11 @@ class LeaveRequestStatusChanged extends Notification
     public function toMail($notifiable)
     {
         $statusLabel = ucfirst($this->status);
-        $message = $this->status === 'approved'
+        $message     = $this->status === 'approved'
             ? 'has been approved.'
             : 'was rejected.';
 
-        $mail = (new MailMessage)
+        $mail = (new MailMessage())
             ->subject("Leave Request {$statusLabel}")
             ->greeting("Hi {$notifiable->name},")
             ->line("Your leave request from {$this->leaveRequest->date_start} to {$this->leaveRequest->date_end} {$message}")

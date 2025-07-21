@@ -2,9 +2,9 @@
 
 namespace App\Exports;
 
+use App\Http\Controllers\OffsetTrackerController;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use App\Http\Controllers\OffsetTrackerController;
 
 class OffsetTrackerExport implements FromView
 {
@@ -14,9 +14,9 @@ class OffsetTrackerExport implements FromView
 
     public function __construct($request, $companyName, $periodText)
     {
-        $this->request = $request;
+        $this->request     = $request;
         $this->companyName = $companyName;
-        $this->periodText = $periodText;
+        $this->periodText  = $periodText;
     }
 
     public function view(): View
@@ -24,9 +24,9 @@ class OffsetTrackerExport implements FromView
         $offsetData = app(OffsetTrackerController::class)->getOffsetData($this->request);
 
         return view('reports.offset_tracker_excel', [
-            'offsetData' => $offsetData,
+            'offsetData'  => $offsetData,
             'companyName' => $this->companyName,
-            'periodText' => $this->periodText,
+            'periodText'  => $this->periodText,
         ]);
     }
 }

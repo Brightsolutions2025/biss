@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\LeaveRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Carbon;
 use App\Exports\LeaveTimelineExport;
+use App\Models\LeaveRequest;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class LeaveTimelineReportController extends Controller
 {
     public function index(Request $request)
     {
-        $user = Auth::user();
+        $user    = Auth::user();
         $company = $user->preference->company;
 
         if (!$user->hasPermission('view leave report')) {
@@ -48,11 +46,11 @@ class LeaveTimelineReportController extends Controller
 
         $calendarEvents = $leaveRequests->map(function ($leave) {
             return [
-                'title' => $leave->reason,
-                'start' => Carbon::parse($leave->start_date)->toDateString(),
-                'end'   => Carbon::parse($leave->end_date)->addDay()->toDateString(),
+                'title'  => $leave->reason,
+                'start'  => Carbon::parse($leave->start_date)->toDateString(),
+                'end'    => Carbon::parse($leave->end_date)->addDay()->toDateString(),
                 'allDay' => true,
-                'color' => '#198754',
+                'color'  => '#198754',
             ];
         });
 
@@ -65,7 +63,7 @@ class LeaveTimelineReportController extends Controller
     }
     public function leaveTimelineExcel(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         $startDate = $request->filled('start_date')
@@ -101,7 +99,7 @@ class LeaveTimelineReportController extends Controller
 
     public function leaveTimelinePdf(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         $startDate = $request->filled('start_date')
@@ -130,11 +128,10 @@ class LeaveTimelineReportController extends Controller
 
         $pdf = Pdf::loadView('reports.leave_timeline_pdf', [
             'leaveRequests' => $leaveRequests,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
+            'startDate'     => $startDate,
+            'endDate'       => $endDate,
         ])->setPaper('A4', 'portrait');
 
         return $pdf->download('leave_timeline_calendar.pdf');
     }
-
 }

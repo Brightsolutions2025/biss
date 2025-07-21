@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
 {
@@ -53,7 +52,7 @@ class EmployeeController extends Controller
         $companyId   = auth()->user()->preference->company_id;
         $departments = Department::where('company_id', $companyId)->get();
         $teams       = Team::whereIn('department_id', $departments->pluck('id'))->get();
-        $users = User::whereDoesntHave('employee', function ($query) use ($companyId) {
+        $users       = User::whereDoesntHave('employee', function ($query) use ($companyId) {
             $query->where('company_id', $companyId);
         })->get();
         $approvers   = User::with('employee')->whereHas('employee', function ($query) use ($companyId) {
@@ -88,36 +87,36 @@ class EmployeeController extends Controller
                     return $query->where('company_id', $companyId);
                 }),
             ],
-            'first_name'        => 'required|string|max:255',
-            'last_name'         => 'required|string|max:255',
-            'middle_name'       => 'nullable|string|max:255',
-            'gender'            => 'nullable|string|max:10',
-            'birth_date'        => 'nullable|date',
-            'civil_status'      => 'nullable|string|max:50',
-            'nationality'       => 'nullable|string|max:100',
-            'position'          => 'nullable|string|max:255',
-            'department_id'     => 'nullable|exists:departments,id',
-            'team_id'           => 'nullable|exists:teams,id',
-            'employment_type'   => 'nullable|string|max:100',
-            'flexible_time'     => 'boolean',
-            'hire_date'         => 'nullable|date',
-            'termination_date'  => 'nullable|date',
-            'basic_salary'      => 'nullable|numeric|min:0',
-            'sss_number'        => 'nullable|string|max:50',
-            'philhealth_number' => 'nullable|string|max:50',
-            'pagibig_number'    => 'nullable|string|max:50',
-            'tin_number'        => 'nullable|string|max:50',
-            'address'           => 'nullable|string',
-            'contact_number'    => 'nullable|string|max:20',
-            'emergency_contact' => 'nullable|string|max:255',
-            'notes'             => 'nullable|string',
+            'first_name'                   => 'required|string|max:255',
+            'last_name'                    => 'required|string|max:255',
+            'middle_name'                  => 'nullable|string|max:255',
+            'gender'                       => 'nullable|string|max:10',
+            'birth_date'                   => 'nullable|date',
+            'civil_status'                 => 'nullable|string|max:50',
+            'nationality'                  => 'nullable|string|max:100',
+            'position'                     => 'nullable|string|max:255',
+            'department_id'                => 'nullable|exists:departments,id',
+            'team_id'                      => 'nullable|exists:teams,id',
+            'employment_type'              => 'nullable|string|max:100',
+            'flexible_time'                => 'boolean',
+            'hire_date'                    => 'nullable|date',
+            'termination_date'             => 'nullable|date',
+            'basic_salary'                 => 'nullable|numeric|min:0',
+            'sss_number'                   => 'nullable|string|max:50',
+            'philhealth_number'            => 'nullable|string|max:50',
+            'pagibig_number'               => 'nullable|string|max:50',
+            'tin_number'                   => 'nullable|string|max:50',
+            'address'                      => 'nullable|string',
+            'contact_number'               => 'nullable|string|max:20',
+            'emergency_contact'            => 'nullable|string|max:255',
+            'notes'                        => 'nullable|string',
             'ot_not_convertible_to_offset' => 'boolean',
         ]);
 
         DB::beginTransaction();
 
         try {
-            $validated['flexible_time'] = $request->has('flexible_time'); // checkbox handling
+            $validated['flexible_time']                = $request->has('flexible_time'); // checkbox handling
             $validated['ot_not_convertible_to_offset'] = $request->has('ot_not_convertible_to_offset');
 
             $employee             = new Employee($validated);
@@ -204,33 +203,33 @@ class EmployeeController extends Controller
                         })
                         ->ignore($employee->id),
                 ],
-                'first_name'        => 'required|string|max:255',
-                'last_name'         => 'required|string|max:255',
-                'middle_name'       => 'nullable|string|max:255',
-                'gender'            => 'nullable|string|max:10',
-                'birth_date'        => 'nullable|date',
-                'civil_status'      => 'nullable|string|max:50',
-                'nationality'       => 'nullable|string|max:100',
-                'position'          => 'nullable|string|max:255',
-                'department_id'     => 'nullable|exists:departments,id',
-                'team_id'           => 'nullable|exists:teams,id',
-                'employment_type'   => 'nullable|string|max:100',
-                'flexible_time'     => 'boolean',
-                'hire_date'         => 'nullable|date',
-                'termination_date'  => 'nullable|date',
-                'basic_salary'      => 'nullable|numeric|min:0',
-                'sss_number'        => 'nullable|string|max:50',
-                'philhealth_number' => 'nullable|string|max:50',
-                'pagibig_number'    => 'nullable|string|max:50',
-                'tin_number'        => 'nullable|string|max:50',
-                'address'           => 'nullable|string',
-                'contact_number'    => 'nullable|string|max:20',
-                'emergency_contact' => 'nullable|string|max:255',
-                'notes'             => 'nullable|string',
+                'first_name'                   => 'required|string|max:255',
+                'last_name'                    => 'required|string|max:255',
+                'middle_name'                  => 'nullable|string|max:255',
+                'gender'                       => 'nullable|string|max:10',
+                'birth_date'                   => 'nullable|date',
+                'civil_status'                 => 'nullable|string|max:50',
+                'nationality'                  => 'nullable|string|max:100',
+                'position'                     => 'nullable|string|max:255',
+                'department_id'                => 'nullable|exists:departments,id',
+                'team_id'                      => 'nullable|exists:teams,id',
+                'employment_type'              => 'nullable|string|max:100',
+                'flexible_time'                => 'boolean',
+                'hire_date'                    => 'nullable|date',
+                'termination_date'             => 'nullable|date',
+                'basic_salary'                 => 'nullable|numeric|min:0',
+                'sss_number'                   => 'nullable|string|max:50',
+                'philhealth_number'            => 'nullable|string|max:50',
+                'pagibig_number'               => 'nullable|string|max:50',
+                'tin_number'                   => 'nullable|string|max:50',
+                'address'                      => 'nullable|string',
+                'contact_number'               => 'nullable|string|max:20',
+                'emergency_contact'            => 'nullable|string|max:255',
+                'notes'                        => 'nullable|string',
                 'ot_not_convertible_to_offset' => 'boolean',
             ]);
 
-            $validated['flexible_time'] = $request->has('flexible_time'); // checkbox handling
+            $validated['flexible_time']                = $request->has('flexible_time'); // checkbox handling
             $validated['ot_not_convertible_to_offset'] = $request->has('ot_not_convertible_to_offset');
 
             $employee->fill($validated);

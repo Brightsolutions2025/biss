@@ -4,8 +4,8 @@ namespace App\Notifications;
 
 use App\Models\LeaveRequest;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class LeaveRequestSubmitted extends Notification
 {
@@ -27,12 +27,12 @@ class LeaveRequestSubmitted extends Notification
     {
         $employeeName = $this->leaveRequest->employee->user->name ?? 'An employee';
 
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject('New Leave Request Submitted')
             ->greeting("Hello {$notifiable->name},")
             ->line("{$employeeName} submitted a leave request.")
-            ->line("Date: " . $this->leaveRequest->date_start . " to " . $this->leaveRequest->date_end)
-            ->line("Reason: " . $this->leaveRequest->reason)
+            ->line('Date: ' . $this->leaveRequest->date_start . ' to ' . $this->leaveRequest->date_end)
+            ->line('Reason: ' . $this->leaveRequest->reason)
             ->action('View Request', route('leave_requests.show', $this->leaveRequest->id))
             ->line('Please review and take action.');
     }

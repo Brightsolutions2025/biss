@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OffsetSummaryExport;
 use App\Models\OffsetRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Exports\OffsetSummaryExport;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 
 class OffsetSummaryReportController extends Controller
 {
     public function index(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         if (!$user->hasPermission('view offset report')) {
@@ -34,21 +34,21 @@ class OffsetSummaryReportController extends Controller
             ? Carbon::parse($request->end_date)
             : now()->endOfMonth();
 
-        $status = $request->input('status');
-        $project = $request->input('project');
+        $status   = $request->input('status');
+        $project  = $request->input('project');
         $minHours = $request->input('min_hours');
         $maxHours = $request->input('max_hours');
         $approver = $request->input('approver');
-        $sort = $request->input('sort', 'asc');
+        $sort     = $request->input('sort', 'asc');
 
         $offsetRequests = OffsetRequest::with(['approver'])
             ->where('company_id', $company->id)
             ->where('employee_id', $employeeId)
-            ->when($status, fn($q) => $q->where('status', $status))
-            ->when($project, fn($q) => $q->where('project_or_event_description', 'like', "%{$project}%"))
-            ->when($minHours, fn($q) => $q->where('number_of_hours', '>=', $minHours))
-            ->when($maxHours, fn($q) => $q->where('number_of_hours', '<=', $maxHours))
-            ->when($approver, fn($q) => $q->whereHas('approver', fn($a) => $a->where('name', 'like', "%{$approver}%")))
+            ->when($status, fn ($q) => $q->where('status', $status))
+            ->when($project, fn ($q) => $q->where('project_or_event_description', 'like', "%{$project}%"))
+            ->when($minHours, fn ($q) => $q->where('number_of_hours', '>=', $minHours))
+            ->when($maxHours, fn ($q) => $q->where('number_of_hours', '<=', $maxHours))
+            ->when($approver, fn ($q) => $q->whereHas('approver', fn ($a) => $a->where('name', 'like', "%{$approver}%")))
             ->whereBetween('date', [$startDate, $endDate])
             ->orderBy('date', $sort)
             ->get();
@@ -62,13 +62,13 @@ class OffsetSummaryReportController extends Controller
     public function exportPdf(Request $request)
     {
         $data = $this->getFilteredOffsetRequests($request);
-        $pdf = Pdf::loadView('reports.offset_summary_pdf', $data);
+        $pdf  = Pdf::loadView('reports.offset_summary_pdf', $data);
         return $pdf->download('offset_request_summary.pdf');
     }
 
     public function exportExcel(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         if (!$user->hasPermission('view offset report')) {
@@ -76,13 +76,13 @@ class OffsetSummaryReportController extends Controller
         }
 
         $startDate = $request->filled('start_date') ? Carbon::parse($request->start_date) : now()->startOfMonth();
-        $endDate = $request->filled('end_date') ? Carbon::parse($request->end_date) : now()->endOfMonth();
+        $endDate   = $request->filled('end_date') ? Carbon::parse($request->end_date) : now()->endOfMonth();
 
         // Use your existing getFilteredOffsetRequests logic or replicate it here
         $offsetRequests = OffsetRequest::with('approver')
             ->where('company_id', $company->id)
             ->where('employee_id', optional($user->employee)->id)
-            ->when($request->status, fn($q) => $q->where('status', $request->status))
+            ->when($request->status, fn ($q) => $q->where('status', $request->status))
             ->whereBetween('date', [$startDate, $endDate])
             ->orderBy('date')
             ->get();
@@ -94,7 +94,7 @@ class OffsetSummaryReportController extends Controller
     }
     protected function getFilteredOffsetRequests(Request $request): array
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         $employeeId = optional($user->employee)->id;
@@ -111,21 +111,21 @@ class OffsetSummaryReportController extends Controller
             ? Carbon::parse($request->end_date)
             : now()->endOfMonth();
 
-        $status = $request->input('status');
-        $project = $request->input('project');
-        $minHours = $request->input('min_hours');
-        $maxHours = $request->input('max_hours');
-        $approver = $request->input('approver');
+        $status    = $request->input('status');
+        $project   = $request->input('project');
+        $minHours  = $request->input('min_hours');
+        $maxHours  = $request->input('max_hours');
+        $approver  = $request->input('approver');
         $sortOrder = $request->input('sort', 'asc');
 
         $offsetRequests = OffsetRequest::with('approver')
             ->where('company_id', $company->id)
             ->where('employee_id', $employeeId)
-            ->when($status, fn($q) => $q->where('status', $status))
-            ->when($project, fn($q) => $q->where('project_or_event_description', 'like', "%$project%"))
-            ->when($minHours, fn($q) => $q->where('number_of_hours', '>=', $minHours))
-            ->when($maxHours, fn($q) => $q->where('number_of_hours', '<=', $maxHours))
-            ->when($approver, fn($q) => $q->whereHas('approver', function ($query) use ($approver) {
+            ->when($status, fn ($q) => $q->where('status', $status))
+            ->when($project, fn ($q) => $q->where('project_or_event_description', 'like', "%$project%"))
+            ->when($minHours, fn ($q) => $q->where('number_of_hours', '>=', $minHours))
+            ->when($maxHours, fn ($q) => $q->where('number_of_hours', '<=', $maxHours))
+            ->when($approver, fn ($q) => $q->whereHas('approver', function ($query) use ($approver) {
                 $query->where('name', 'like', "%$approver%");
             }))
             ->whereBetween('date', [$startDate, $endDate])

@@ -14,16 +14,16 @@ class OutbaseReportExport implements FromView
     public function __construct($outbaseRequests, $startDate, $endDate)
     {
         $this->outbaseRequests = $outbaseRequests;
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
+        $this->startDate       = $startDate;
+        $this->endDate         = $endDate;
     }
 
     public function view(): View
     {
         return view('reports.outbase_history_excel', [
             'outbaseRequests' => $this->outbaseRequests,
-            'startDate' => $this->startDate,
-            'endDate' => $this->endDate,
+            'startDate'       => $this->startDate,
+            'endDate'         => $this->endDate,
         ]);
     }
 }

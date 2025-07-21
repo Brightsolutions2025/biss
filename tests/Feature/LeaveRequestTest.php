@@ -27,11 +27,11 @@ class LeaveRequestTest extends TestCase
         parent::setUp();
 
         $this->company = Company::factory()->create();
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->user->companies()->attach($this->company->id);
 
         UserPreference::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -46,7 +46,7 @@ class LeaveRequestTest extends TestCase
             'leave_request.update',
             'leave_request.delete',
         ])->map(fn ($name) => Permission::create([
-            'name' => $name,
+            'name'       => $name,
             'company_id' => $this->company->id,
         ]));
 
@@ -54,7 +54,7 @@ class LeaveRequestTest extends TestCase
 
         $this->employee = Employee::factory()->create([
             'company_id' => $this->company->id,
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
         ]);
     }
 
@@ -62,7 +62,7 @@ class LeaveRequestTest extends TestCase
     public function it_displays_leave_request_index()
     {
         LeaveRequest::factory()->count(2)->create([
-            'company_id' => $this->company->id,
+            'company_id'  => $this->company->id,
             'employee_id' => $this->employee->id,
         ]);
 
@@ -111,7 +111,7 @@ class LeaveRequestTest extends TestCase
     {
         $leaveRequest = LeaveRequest::factory()->create([
             'employee_id' => $this->employee->id,
-            'company_id' => $this->company->id,
+            'company_id'  => $this->company->id,
         ]);
 
         $this->actingAs($this->user)

@@ -61,6 +61,10 @@
 </h4>
     <ul class="phpdocumentor-list">
                     <li>
+                <a href="namespaces/app-console.html" class="">Console</a>
+                
+            </li>
+                    <li>
                 <a href="namespaces/app-exports.html" class="">Exports</a>
                 
             </li>
@@ -69,7 +73,15 @@
                 
             </li>
                     <li>
+                <a href="namespaces/app-mail.html" class="">Mail</a>
+                
+            </li>
+                    <li>
                 <a href="namespaces/app-models.html" class="">Models</a>
+                
+            </li>
+                    <li>
+                <a href="namespaces/app-notifications.html" class="">Notifications</a>
                 
             </li>
                     <li>
@@ -138,7 +150,7 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OvertimeRequestController.php"><a href="files/app-http-controllers-overtimerequestcontroller.html"><abbr title="app/Http/Controllers/OvertimeRequestController.php">OvertimeRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">11</span>
+    <span class="phpdocumentor-element-found-in__line">12</span>
 
     </aside>
 
@@ -197,6 +209,12 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/App-Http-Controllers-OvertimeRequestController.html#method_fetchApprovedByDate">fetchApprovedByDate()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/App-Http-Controllers-OvertimeRequestController.html#method_index">index()</a>
     <span>
                                 &nbsp;: mixed    </span>
@@ -232,6 +250,12 @@
                                 &nbsp;: mixed    </span>
 </dt>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/App-Http-Controllers-OvertimeRequestController.html#method_canEditOvertimeRequest">canEditOvertimeRequest()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+
     </dl>
 
 
@@ -260,7 +284,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OvertimeRequestController.php"><a href="files/app-http-controllers-overtimerequestcontroller.html"><abbr title="app/Http/Controllers/OvertimeRequestController.php">OvertimeRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">165</span>
+    <span class="phpdocumentor-element-found-in__line">372</span>
 
     </aside>
 
@@ -311,7 +335,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OvertimeRequestController.php"><a href="files/app-http-controllers-overtimerequestcontroller.html"><abbr title="app/Http/Controllers/OvertimeRequestController.php">OvertimeRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">25</span>
+    <span class="phpdocumentor-element-found-in__line">68</span>
 
     </aside>
 
@@ -345,7 +369,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OvertimeRequestController.php"><a href="files/app-http-controllers-overtimerequestcontroller.html"><abbr title="app/Http/Controllers/OvertimeRequestController.php">OvertimeRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">136</span>
+    <span class="phpdocumentor-element-found-in__line">315</span>
 
     </aside>
 
@@ -389,7 +413,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OvertimeRequestController.php"><a href="files/app-http-controllers-overtimerequestcontroller.html"><abbr title="app/Http/Controllers/OvertimeRequestController.php">OvertimeRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">87</span>
+    <span class="phpdocumentor-element-found-in__line">189</span>
 
     </aside>
 
@@ -425,6 +449,64 @@
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_fetchApprovedByDate">
+        fetchApprovedByDate()
+        <a href="classes/App-Http-Controllers-OvertimeRequestController.html#method_fetchApprovedByDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OvertimeRequestController.php"><a href="files/app-http-controllers-overtimerequestcontroller.html"><abbr title="app/Http/Controllers/OvertimeRequestController.php">OvertimeRequestController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">485</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">fetchApprovedByDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$employeeId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$start</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$end</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$employeeId</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$start</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$end</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_index">
         index()
         <a href="classes/App-Http-Controllers-OvertimeRequestController.html#method_index" class="headerlink"><i class="fas fa-link"></i></a>
@@ -433,20 +515,30 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OvertimeRequestController.php"><a href="files/app-http-controllers-overtimerequestcontroller.html"><abbr title="app/Http/Controllers/OvertimeRequestController.php">OvertimeRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">13</span>
+    <span class="phpdocumentor-element-found-in__line">14</span>
 
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">index</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">index</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Illuminate\Http\Request">Request</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
     
-    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$request</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\Illuminate\Http\Request">Request</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
     
 
     
@@ -467,7 +559,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OvertimeRequestController.php"><a href="files/app-http-controllers-overtimerequestcontroller.html"><abbr title="app/Http/Controllers/OvertimeRequestController.php">OvertimeRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">204</span>
+    <span class="phpdocumentor-element-found-in__line">422</span>
 
     </aside>
 
@@ -518,7 +610,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OvertimeRequestController.php"><a href="files/app-http-controllers-overtimerequestcontroller.html"><abbr title="app/Http/Controllers/OvertimeRequestController.php">OvertimeRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">160</span>
 
     </aside>
 
@@ -562,7 +654,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OvertimeRequestController.php"><a href="files/app-http-controllers-overtimerequestcontroller.html"><abbr title="app/Http/Controllers/OvertimeRequestController.php">OvertimeRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">33</span>
+    <span class="phpdocumentor-element-found-in__line">80</span>
 
     </aside>
 
@@ -606,7 +698,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OvertimeRequestController.php"><a href="files/app-http-controllers-overtimerequestcontroller.html"><abbr title="app/Http/Controllers/OvertimeRequestController.php">OvertimeRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">96</span>
+    <span class="phpdocumentor-element-found-in__line">237</span>
 
     </aside>
 
@@ -657,7 +749,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OvertimeRequestController.php"><a href="files/app-http-controllers-overtimerequestcontroller.html"><abbr title="app/Http/Controllers/OvertimeRequestController.php">OvertimeRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">248</span>
+    <span class="phpdocumentor-element-found-in__line">476</span>
 
     </aside>
 
@@ -686,6 +778,54 @@
     
 
     
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_canEditOvertimeRequest">
+        canEditOvertimeRequest()
+        <a href="classes/App-Http-Controllers-OvertimeRequestController.html#method_canEditOvertimeRequest" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OvertimeRequestController.php"><a href="files/app-http-controllers-overtimerequestcontroller.html"><abbr title="app/Http/Controllers/OvertimeRequestController.php">OvertimeRequestController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">221</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">canEditOvertimeRequest</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/App-Models-OvertimeRequest.html"><abbr title="\App\Models\OvertimeRequest">OvertimeRequest</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$overtimeRequest</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$overtimeRequest</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/App-Models-OvertimeRequest.html"><abbr title="\App\Models\OvertimeRequest">OvertimeRequest</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
 </article>
             </section>
 
@@ -804,12 +944,14 @@
                                             <li class=""><a href="classes/App-Http-Controllers-OvertimeRequestController.html#method_create">create()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OvertimeRequestController.html#method_destroy">destroy()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OvertimeRequestController.html#method_edit">edit()</a></li>
+                                            <li class=""><a href="classes/App-Http-Controllers-OvertimeRequestController.html#method_fetchApprovedByDate">fetchApprovedByDate()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OvertimeRequestController.html#method_index">index()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OvertimeRequestController.html#method_reject">reject()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OvertimeRequestController.html#method_show">show()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OvertimeRequestController.html#method_store">store()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OvertimeRequestController.html#method_update">update()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OvertimeRequestController.html#method_authorizeCompany">authorizeCompany()</a></li>
+                                            <li class=""><a href="classes/App-Http-Controllers-OvertimeRequestController.html#method_canEditOvertimeRequest">canEditOvertimeRequest()</a></li>
                                     </ul>
             </li>
                     </ul>

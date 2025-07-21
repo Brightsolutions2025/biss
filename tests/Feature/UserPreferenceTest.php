@@ -20,7 +20,7 @@ class UserPreferenceTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
+        $this->user     = User::factory()->create();
         $this->company1 = Company::factory()->create();
         $this->company2 = Company::factory()->create();
 

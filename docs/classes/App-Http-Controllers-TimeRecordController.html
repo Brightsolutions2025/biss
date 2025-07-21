@@ -61,6 +61,10 @@
 </h4>
     <ul class="phpdocumentor-list">
                     <li>
+                <a href="namespaces/app-console.html" class="">Console</a>
+                
+            </li>
+                    <li>
                 <a href="namespaces/app-exports.html" class="">Exports</a>
                 
             </li>
@@ -69,7 +73,15 @@
                 
             </li>
                     <li>
+                <a href="namespaces/app-mail.html" class="">Mail</a>
+                
+            </li>
+                    <li>
                 <a href="namespaces/app-models.html" class="">Models</a>
+                
+            </li>
+                    <li>
+                <a href="namespaces/app-notifications.html" class="">Notifications</a>
                 
             </li>
                     <li>
@@ -138,7 +150,7 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">12</span>
+    <span class="phpdocumentor-element-found-in__line">23</span>
 
     </aside>
 
@@ -200,6 +212,24 @@
 <dd>Show the form for editing the specified time record.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/App-Http-Controllers-TimeRecordController.html#method_exportExcel">exportExcel()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/App-Http-Controllers-TimeRecordController.html#method_exportPdf">exportPdf()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/App-Http-Controllers-TimeRecordController.html#method_getTimeLogs">getTimeLogs()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/App-Http-Controllers-TimeRecordController.html#method_index">index()</a>
     <span>
                                 &nbsp;: mixed    </span>
@@ -240,6 +270,12 @@
 </dt>
 <dd>Private helper to ensure user belongs to the company.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/App-Http-Controllers-TimeRecordController.html#method_canEditTimeRecord">canEditTimeRecord()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+
     </dl>
 
 
@@ -268,7 +304,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">306</span>
+    <span class="phpdocumentor-element-found-in__line">495</span>
 
     </aside>
 
@@ -319,7 +355,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">31</span>
+    <span class="phpdocumentor-element-found-in__line">93</span>
 
     </aside>
 
@@ -354,7 +390,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">270</span>
+    <span class="phpdocumentor-element-found-in__line">430</span>
 
     </aside>
 
@@ -399,7 +435,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">134</span>
+    <span class="phpdocumentor-element-found-in__line">301</span>
 
     </aside>
 
@@ -436,6 +472,152 @@
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_exportExcel">
+        exportExcel()
+        <a href="classes/App-Http-Controllers-TimeRecordController.html#method_exportExcel" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">598</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">exportExcel</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$id</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_exportPdf">
+        exportPdf()
+        <a href="classes/App-Http-Controllers-TimeRecordController.html#method_exportPdf" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">589</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">exportPdf</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$id</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getTimeLogs">
+        getTimeLogs()
+        <a href="classes/App-Http-Controllers-TimeRecordController.html#method_getTimeLogs" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">113</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getTimeLogs</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$employeeId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$startDate</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$endDate</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$employeeId</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$startDate</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$endDate</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_index">
         index()
         <a href="classes/App-Http-Controllers-TimeRecordController.html#method_index" class="headerlink"><i class="fas fa-link"></i></a>
@@ -444,7 +626,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">17</span>
+    <span class="phpdocumentor-element-found-in__line">28</span>
 
     </aside>
 
@@ -452,13 +634,23 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">index</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">index</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Illuminate\Http\Request">Request</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
     
-    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$request</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\Illuminate\Http\Request">Request</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
     
 
     
@@ -479,7 +671,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">346</span>
+    <span class="phpdocumentor-element-found-in__line">541</span>
 
     </aside>
 
@@ -530,7 +722,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">122</span>
+    <span class="phpdocumentor-element-found-in__line">239</span>
 
     </aside>
 
@@ -575,7 +767,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">135</span>
 
     </aside>
 
@@ -620,7 +812,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">151</span>
+    <span class="phpdocumentor-element-found-in__line">355</span>
 
     </aside>
 
@@ -672,7 +864,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">300</span>
+    <span class="phpdocumentor-element-found-in__line">487</span>
 
     </aside>
 
@@ -702,6 +894,54 @@
     
 
     
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_canEditTimeRecord">
+        canEditTimeRecord()
+        <a href="classes/App-Http-Controllers-TimeRecordController.html#method_canEditTimeRecord" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/TimeRecordController.php"><a href="files/app-http-controllers-timerecordcontroller.html"><abbr title="app/Http/Controllers/TimeRecordController.php">TimeRecordController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">336</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">canEditTimeRecord</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/App-Models-TimeRecord.html"><abbr title="\App\Models\TimeRecord">TimeRecord</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timeRecord</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$timeRecord</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/App-Models-TimeRecord.html"><abbr title="\App\Models\TimeRecord">TimeRecord</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
 </article>
             </section>
 
@@ -820,12 +1060,16 @@
                                             <li class=""><a href="classes/App-Http-Controllers-TimeRecordController.html#method_create">create()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-TimeRecordController.html#method_destroy">destroy()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-TimeRecordController.html#method_edit">edit()</a></li>
+                                            <li class=""><a href="classes/App-Http-Controllers-TimeRecordController.html#method_exportExcel">exportExcel()</a></li>
+                                            <li class=""><a href="classes/App-Http-Controllers-TimeRecordController.html#method_exportPdf">exportPdf()</a></li>
+                                            <li class=""><a href="classes/App-Http-Controllers-TimeRecordController.html#method_getTimeLogs">getTimeLogs()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-TimeRecordController.html#method_index">index()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-TimeRecordController.html#method_reject">reject()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-TimeRecordController.html#method_show">show()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-TimeRecordController.html#method_store">store()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-TimeRecordController.html#method_update">update()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-TimeRecordController.html#method_authorizeCompany">authorizeCompany()</a></li>
+                                            <li class=""><a href="classes/App-Http-Controllers-TimeRecordController.html#method_canEditTimeRecord">canEditTimeRecord()</a></li>
                                     </ul>
             </li>
                     </ul>

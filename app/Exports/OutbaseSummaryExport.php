@@ -4,9 +4,7 @@ namespace App\Exports;
 
 use App\Models\OutbaseRequest;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromView;
-use Illuminate\Support\Facades\DB;
 
 class OutbaseSummaryExport implements FromView
 {
@@ -57,7 +55,7 @@ class OutbaseSummaryExport implements FromView
                 $employee = $group->first()->employee;
                 return [
                     'department'     => $employee->department->name ?? 'N/A',
-                    'employee'       => $employee->user->name ?? 'N/A',
+                    'employee'       => $employee->user->name       ?? 'N/A',
                     'outbase_count'  => $group->count(),
                 ];
             })
@@ -82,15 +80,15 @@ class OutbaseSummaryExport implements FromView
         }
 
         return view('reports.outbase_summary_excel', [
-            'data' => $summary,
+            'data'    => $summary,
             'company' => $this->company->name,
-            'period' => $this->getPeriod(),
+            'period'  => $this->getPeriod(),
         ]);
     }
     protected function getPeriod(): string
     {
         $dateFrom = $this->filters['date_from'] ?? null;
-        $dateTo = $this->filters['date_to'] ?? null;
+        $dateTo   = $this->filters['date_to']   ?? null;
 
         if ($dateFrom && $dateTo) {
             try {

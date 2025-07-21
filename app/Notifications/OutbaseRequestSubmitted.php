@@ -27,7 +27,7 @@ class OutbaseRequestSubmitted extends Notification
     {
         $employeeName = $this->outbaseRequest->employee->user->name ?? 'An employee';
 
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject('New Outbase Request Submitted')
             ->greeting("Hello {$notifiable->name},")
             ->line("{$employeeName} submitted an outbase request.")

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -40,189 +42,26 @@ class CompanyController extends Controller
     /**
      * Store a newly created company in storage and attach the user.
      */
+
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'industry' => 'nullable|string|max:255',
-            'address'  => 'nullable|string|max:255',
-            'phone'    => 'nullable|string|max:20',
-            'offset_valid_after_days' => 'nullable|integer|min:0|max:365',
-            'offset_valid_before_days' => 'nullable|integer|min:0|max:365',
-        ]);
+        $validated = $this->validateCompanyData($request);
 
-        // Check if there is already an existing admin role
-        $adminRoleExists = \App\Models\Role::whereRaw('LOWER(name) = ?', ['admin'])->exists();
-
-        if ($adminRoleExists) {
-            $user = auth()->user();
-            $isAdmin = $user->roles()->whereRaw('LOWER(name) = ?', ['admin'])->exists();
-
-            if (!$isAdmin) {
-                return redirect()->route('companies.index')
-                    ->withErrors(['error' => 'Only admin users can create new companies.']);
-            }
+        if ($this->adminRoleExists() && !$this->isCurrentUserAdmin()) {
+            return redirect()->route('companies.index')
+                ->withErrors(['error' => 'Only admin users can create new companies.']);
         }
 
         DB::beginTransaction();
 
         try {
             $company = Company::create($validated);
-            $company->users()->attach(auth()->id());
+            $this->assignUserToCompany($company);
 
-            $adminRole = \App\Models\Role::create([
-                'name' => 'Admin',
-                'description' => 'Administrator role',
-                'company_id' => $company->id,
-            ]);
-
-            auth()->user()->roles()->attach($adminRole->id, ['company_id' => $company->id]);
-
-            $hrSupervisorRole = \App\Models\Role::create([
-                'name' => 'HR Supervisor',
-                'description' => 'Manages Departments',
-                'company_id' => $company->id,
-            ]);
-
-            $employeeRole = \App\Models\Role::create([
-                'name' => 'Employee',
-                'description' => 'Basic employee access',
-                'company_id' => $company->id,
-            ]);
-
-            $hrModules = [
-                'department', 'team', 'employee', 'shift',
-                'employee_shift', 'payroll_period', 'time_log', 'leave_balance'
-            ];
-            $employeeModules = [
-                'leave_request', 'overtime_request',
-                'outbase_request', 'offset_request', 'time_record',
-            ];
-            $actions = ['browse', 'create', 'read', 'update', 'delete'];
-
-            $hrPermissionIds = collect();
-            foreach ($hrModules as $module) {
-                foreach ($actions as $action) {
-                    $perm = \App\Models\Permission::create([
-                        'name' => "{$module}.{$action}",
-                        'description' => ucfirst(str_replace('.', ' ', "{$module}.{$action}")),
-                        'company_id' => $company->id,
-                    ]);
-                    $hrPermissionIds->push($perm->id);
-                }
-            }
-
-            $employeePermissionIds = collect();
-            foreach ($employeeModules as $module) {
-                foreach ($actions as $action) {
-                    $perm = \App\Models\Permission::create([
-                        'name' => "{$module}.{$action}",
-                        'description' => ucfirst(str_replace('.', ' ', "{$module}.{$action}")),
-                        'company_id' => $company->id,
-                    ]);
-                    $employeePermissionIds->push($perm->id);
-                }
-            }
-
-            $hrSupervisorRole->permissions()->attach(
-                $hrPermissionIds->mapWithKeys(fn($id) => [$id => ['company_id' => $company->id]])->toArray()
-            );
-
-            $employeeRole->permissions()->attach(
-                $employeePermissionIds->mapWithKeys(fn($id) => [$id => ['company_id' => $company->id]])->toArray()
-            );
-
-            auth()->user()->roles()->attach($hrSupervisorRole->id, ['company_id' => $company->id]);
-            auth()->user()->roles()->attach($employeeRole->id, ['company_id' => $company->id]);
-
-            // Additional permissions via helper method
-            $permissionsToAttach = collect([
-                ['overtime_request.browse_all', 'Can view all overtime requests for the company'],
-                ['overtime_request.browse', 'Can browse own overtime requests'],
-                ['overtime_request.read', 'Can read own overtime request details'],
-                ['leave_request.browse_all', 'Can view all leave requests for the company'],
-                ['leave_request.browse', 'Can browse own leave requests'],
-                ['leave_request.read', 'Can read own leave request details'],
-                ['outbase_request.browse_all', 'Can view all outbase requests for the company'],
-                ['outbase_request.browse', 'Can browse own outbase requests'],
-                ['outbase_request.read', 'Can read own outbase request details'],
-                ['offset_request.browse_all', 'Can view all offset requests for the company'],
-                ['offset_request.browse', 'Can browse own offset requests'],
-                ['offset_request.read', 'Can read own offset request details'],
-                ['time_record.browse_all', 'Can view all time records for the company'],
-                ['time_record.browse', 'Can browse own time records'],
-                ['time_record.read', 'Can read own time record details'],
-            ]);
-
-            $attachMap = [];
-            foreach ($permissionsToAttach as [$name, $description]) {
-                $perm = $this->getOrCreatePermission($name, $description, $company->id);
-                $attachMap[$perm->id] = ['company_id' => $company->id];
-            }
-
-            $adminRole->permissions()->syncWithoutDetaching($attachMap);
-            $hrSupervisorRole->permissions()->syncWithoutDetaching($attachMap);
-
-            // Report permissions
-            $reportPermissions = [
-                ['reports.dtr_status_by_team', 'view time record report', 'Employee DTR Status by Department & Team', ['admin', 'hr supervisor', 'department head']],
-                ['reports.leave_utilization', 'view leave report', 'Leave Utilization Summary', ['admin', 'hr supervisor', 'department head']],
-                ['reports.overtime_offset_comparison', 'view overtime report', 'Overtime vs Offset Report', ['admin', 'hr supervisor', 'department head']],
-                ['reports.late_undertime', 'view attendance report', 'Late and Undertime Report', ['admin', 'hr supervisor', 'department head']],
-                ['reports.leave_status_overview', 'view leave report', 'Leave Requests by Status', ['admin', 'hr supervisor', 'department head']],
-                ['reports.outbase_summary', 'view outbase report', 'Outbase Request Summary', ['admin', 'hr supervisor', 'department head']],
-                ['reports.offset_tracker', 'view offset report', 'Offset Usage and Expiry Tracker', ['admin', 'hr supervisor', 'employee']],
-                ['reports.leave_summary', 'view leave report', 'Leave Summary Report', ['admin', 'hr supervisor', 'employee']],
-                ['reports.overtime_history', 'view overtime report', 'Filed Overtime Report', ['admin', 'hr supervisor', 'employee']],
-                ['reports.leave_timeline', 'view leave report', 'Approved Leaves Timeline', ['admin', 'hr supervisor', 'employee']],
-                ['reports.outbase_history', 'view outbase report', 'Outbase Request Report', ['admin', 'hr supervisor', 'employee']],
-                ['reports.offset_summary', 'view offset report', 'Offset Request Summary', ['admin', 'hr supervisor', 'employee']],
-            ];
-
-            $rolesMap = [
-                'admin' => $adminRole,
-                'hr supervisor' => $hrSupervisorRole,
-                'employee' => $employeeRole,
-            ];
-
-            foreach ($reportPermissions as [$route, $permName, $desc, $roleKeys]) {
-                $perm = $this->getOrCreatePermission($permName, $desc, $company->id);
-                foreach ($roleKeys as $roleKey) {
-                    if (isset($rolesMap[$roleKey])) {
-                        $rolesMap[$roleKey]->permissions()->syncWithoutDetaching([
-                            $perm->id => ['company_id' => $company->id],
-                        ]);
-                    }
-                }
-            }
-
-            $departmentHeadRole = \App\Models\Role::create([
-                'name' => 'Department Head',
-                'description' => 'Manages employees within their department',
-                'company_id' => $company->id,
-            ]);
-
-            // Add to roles map for easier assignment later
-            $rolesMap['department head'] = $departmentHeadRole;
-
-            foreach ($reportPermissions as [$route, $permName, $desc, $roleKeys]) {
-                $perm = $this->getOrCreatePermission($permName, $desc, $company->id);
-
-                foreach ($roleKeys as $roleKey) {
-                    if (isset($rolesMap[$roleKey])) {
-                        $rolesMap[$roleKey]->permissions()->syncWithoutDetaching([
-                            $perm->id => ['company_id' => $company->id],
-                        ]);
-                    }
-                }
-            }
-
-            session(['active_company_id' => $company->id]);
-
-            auth()->user()->preference()->updateOrCreate(
-                ['user_id' => auth()->id()],
-                ['company_id' => $company->id]
-            );
+            $roles = $this->createDefaultRoles($company);
+            $this->assignBasePermissions($company, $roles);
+            $this->assignReportPermissions($company, $roles);
+            $this->setUserPreferences($company);
 
             DB::commit();
 
@@ -233,7 +72,7 @@ class CompanyController extends Controller
             DB::rollBack();
 
             Log::error('Failed to create company', [
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
                 'user_id' => auth()->id(),
             ]);
 
@@ -241,9 +80,172 @@ class CompanyController extends Controller
         }
     }
 
-    private function getOrCreatePermission(string $name, string $description, int $companyId)
+    private function validateCompanyData(Request $request)
     {
-        return \App\Models\Permission::firstOrCreate(
+        return $request->validate([
+            'name'                     => 'required|string|max:255',
+            'industry'                 => 'nullable|string|max:255',
+            'address'                  => 'nullable|string|max:255',
+            'phone'                    => 'nullable|string|max:20',
+            'offset_valid_after_days'  => 'nullable|integer|min:0|max:365',
+            'offset_valid_before_days' => 'nullable|integer|min:0|max:365',
+        ]);
+    }
+
+    private function adminRoleExists(): bool
+    {
+        return Role::whereRaw('LOWER(name) = ?', ['admin'])->exists();
+    }
+
+    private function isCurrentUserAdmin(): bool
+    {
+        return auth()->user()
+            ->roles()
+            ->whereRaw('LOWER(name) = ?', ['admin'])
+            ->exists();
+    }
+
+    private function assignUserToCompany(Company $company): void
+    {
+        $company->users()->attach(auth()->id());
+    }
+
+    private function createDefaultRoles(Company $company): array
+    {
+        $roles = [
+            'admin' => Role::create([
+                'name'        => 'Admin',
+                'description' => 'Administrator role',
+                'company_id'  => $company->id,
+            ]),
+            'hr supervisor' => Role::create([
+                'name'        => 'HR Supervisor',
+                'description' => 'Manages Departments',
+                'company_id'  => $company->id,
+            ]),
+            'employee' => Role::create([
+                'name'        => 'Employee',
+                'description' => 'Basic employee access',
+                'company_id'  => $company->id,
+            ]),
+            'department head' => Role::create([
+                'name'        => 'Department Head',
+                'description' => 'Manages employees within their department',
+                'company_id'  => $company->id,
+            ]),
+            'account manager' => Role::create([
+                'name'        => 'Account Manager',
+                'description' => 'Manages clients and their details',
+                'company_id'  => $company->id,
+            ]),
+        ];
+
+        // Attach essential roles to current user
+        foreach (['admin', 'hr supervisor', 'employee', 'account manager'] as $roleKey) {
+            auth()->user()->roles()->attach($roles[$roleKey]->id, ['company_id' => $company->id]);
+        }
+
+        return $roles;
+    }
+
+    private function assignBasePermissions(Company $company, array $roles): void
+    {
+        $permissionsMap = [
+            'hr supervisor' => ['modules' => [
+                'department', 'team', 'employee', 'shift',
+                'employee_shift', 'payroll_period', 'time_log', 'leave_balance',
+            ]],
+            'employee' => ['modules' => [
+                'leave_request', 'overtime_request',
+                'outbase_request', 'offset_request', 'time_record',
+            ]],
+            'account manager' => ['modules' => ['client']],
+        ];
+
+        $actions = ['browse', 'create', 'read', 'update', 'delete'];
+
+        foreach ($permissionsMap as $role => $config) {
+            $permissionIds = collect();
+
+            foreach ($config['modules'] as $module) {
+                foreach ($actions as $action) {
+                    $perm = Permission::create([
+                        'name'        => "{$module}.{$action}",
+                        'description' => ucfirst(str_replace('.', ' ', "{$module}.{$action}")),
+                        'company_id'  => $company->id,
+                    ]);
+                    $permissionIds->push($perm->id);
+                }
+            }
+
+            $roles[$role]->permissions()->attach(
+                $permissionIds->mapWithKeys(fn ($id) => [$id => ['company_id' => $company->id]])->toArray()
+            );
+        }
+
+        // Shared permissions (browse_all, read, etc.)
+        $sharedPermissions = collect([
+            ['overtime_request.browse_all', 'Can view all overtime requests for the company'],
+            ['leave_request.browse_all', 'Can view all leave requests for the company'],
+            ['outbase_request.browse_all', 'Can view all outbase requests for the company'],
+            ['offset_request.browse_all', 'Can view all offset requests for the company'],
+            ['time_record.browse_all', 'Can view all time records for the company'],
+        ]);
+
+        foreach ($sharedPermissions as [$name, $desc]) {
+            $perm = $this->getOrCreatePermission($name, $desc, $company->id);
+            foreach (['admin', 'hr supervisor'] as $roleKey) {
+                $roles[$roleKey]->permissions()->syncWithoutDetaching([
+                    $perm->id => ['company_id' => $company->id]
+                ]);
+            }
+        }
+    }
+
+    private function assignReportPermissions(Company $company, array $roles): void
+    {
+        $reportPermissions = [
+            ['reports.dtr_status_by_team', 'view time record report', 'Employee DTR Status by Department & Team', ['admin', 'hr supervisor', 'department head']],
+            ['reports.leave_utilization', 'view leave report', 'Leave Utilization Summary', ['admin', 'hr supervisor', 'department head']],
+            ['reports.overtime_offset_comparison', 'view overtime report', 'Overtime vs Offset Report', ['admin', 'hr supervisor', 'department head']],
+            ['reports.late_undertime', 'view attendance report', 'Late and Undertime Report', ['admin', 'hr supervisor', 'department head']],
+            ['reports.leave_status_overview', 'view leave report', 'Leave Requests by Status', ['admin', 'hr supervisor', 'department head']],
+            ['reports.outbase_summary', 'view outbase report', 'Outbase Request Summary', ['admin', 'hr supervisor', 'department head']],
+            ['reports.offset_tracker', 'view offset report', 'Offset Usage and Expiry Tracker', ['admin', 'hr supervisor', 'employee']],
+            ['reports.leave_summary', 'view leave report', 'Leave Summary Report', ['admin', 'hr supervisor', 'employee']],
+            ['reports.overtime_history', 'view overtime report', 'Filed Overtime Report', ['admin', 'hr supervisor', 'employee']],
+            ['reports.leave_timeline', 'view leave report', 'Approved Leaves Timeline', ['admin', 'hr supervisor', 'employee']],
+            ['reports.outbase_history', 'view outbase report', 'Outbase Request Report', ['admin', 'hr supervisor', 'employee']],
+            ['reports.offset_summary', 'view offset report', 'Offset Request Summary', ['admin', 'hr supervisor', 'employee']],
+            // example for account manager (optional, if you have client-related reports)
+            ['reports.client_summary', 'view client report', 'Client Summary Report', ['admin', 'account manager']],
+        ];
+
+        foreach ($reportPermissions as [$route, $permName, $desc, $roleKeys]) {
+            $perm = $this->getOrCreatePermission($permName, $desc, $company->id);
+            foreach ($roleKeys as $roleKey) {
+                if (isset($roles[$roleKey])) {
+                    $roles[$roleKey]->permissions()->syncWithoutDetaching([
+                        $perm->id => ['company_id' => $company->id],
+                    ]);
+                }
+            }
+        }
+    }
+
+    private function setUserPreferences(Company $company): void
+    {
+        session(['active_company_id' => $company->id]);
+
+        auth()->user()->preference()->updateOrCreate(
+            ['user_id' => auth()->id()],
+            ['company_id' => $company->id]
+        );
+    }
+
+    private function getOrCreatePermission(string $name, string $description, int $companyId): Permission
+    {
+        return Permission::firstOrCreate(
             ['name' => $name, 'company_id' => $companyId],
             ['description' => $description]
         );
@@ -277,11 +279,11 @@ class CompanyController extends Controller
         $this->authorizeCompany($company, true); // ✅ Only admin can update
 
         $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'industry' => 'nullable|string|max:255',
-            'address'  => 'nullable|string|max:255',
-            'phone'    => 'nullable|string|max:20',
-            'offset_valid_after_days' => 'nullable|integer|min:0|max:365',
+            'name'                     => 'required|string|max:255',
+            'industry'                 => 'nullable|string|max:255',
+            'address'                  => 'nullable|string|max:255',
+            'phone'                    => 'nullable|string|max:20',
+            'offset_valid_after_days'  => 'nullable|integer|min:0|max:365',
             'offset_valid_before_days' => 'nullable|integer|min:0|max:365',
         ]);
 

@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\EmployeeShift;
 use App\Models\Company;
 use App\Models\Employee;
+use App\Models\EmployeeShift;
 use App\Models\Shift;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,8 +19,8 @@ class EmployeeShiftFactory extends Factory
     {
         return [
             'employee_id' => Employee::factory(),
-            'shift_id' => Shift::factory(),
-            'company_id' => Company::factory(),
+            'shift_id'    => Shift::factory(),
+            'company_id'  => Company::factory(),
         ];
     }
 }

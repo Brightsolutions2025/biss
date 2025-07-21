@@ -19,10 +19,10 @@ class CompanyFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'     => $this->faker->company,
-            'industry' => $this->faker->word,
-            'address'  => $this->faker->address,
-            'phone'    => $this->faker->phoneNumber,
+            'name'                     => $this->faker->company,
+            'industry'                 => $this->faker->word,
+            'address'                  => $this->faker->address,
+            'phone'                    => $this->faker->phoneNumber,
             'offset_valid_after_days'  => 90,
             'offset_valid_before_days' => 0,
         ];

@@ -15,9 +15,9 @@ class LeaveSummaryExcelExport implements FromView
 
     public function __construct($user, $company, $year)
     {
-        $this->user = $user;
+        $this->user    = $user;
         $this->company = $company;
-        $this->year = $year;
+        $this->year    = $year;
     }
 
     public function view(): View
@@ -36,15 +36,15 @@ class LeaveSummaryExcelExport implements FromView
             ->where('status', 'approved')
             ->sum('number_of_days');
 
-        $beginning = $leaveBalance?->beginning_balance ?? 0;
-        $remaining = max(0, $beginning - $used);
+        $beginning   = $leaveBalance?->beginning_balance ?? 0;
+        $remaining   = max(0, $beginning - $used);
         $utilization = $beginning > 0 ? round(($used / $beginning) * 100, 1) : 0;
 
         $leaveBalances = collect([[
-            'employee_name'     => $employee->user->name ?? 'N/A',
+            'employee_name'     => $employee->user->name       ?? 'N/A',
             'department_name'   => $employee->department->name ?? null,
-            'team_name'         => $employee->team->name ?? null,
-            'approver_name'     => $employee->approver->name ?? null,
+            'team_name'         => $employee->team->name       ?? null,
+            'approver_name'     => $employee->approver->name   ?? null,
             'beginning_balance' => $beginning,
             'used'              => $used,
             'remaining'         => $remaining,
@@ -60,9 +60,9 @@ class LeaveSummaryExcelExport implements FromView
 
         return view('reports.leave_summary_excel', [
             'leaveBalances' => $leaveBalances,
-            'leaveDetails' => $leaveDetails,
-            'year' => $this->year,
-            'companyName' => $this->company->name,
+            'leaveDetails'  => $leaveDetails,
+            'year'          => $this->year,
+            'companyName'   => $this->company->name,
         ]);
     }
 }

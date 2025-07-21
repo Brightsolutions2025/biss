@@ -21,12 +21,12 @@ class RoleTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->company = Company::factory()->create();
         $this->user->companies()->attach($this->company->id);
 
         UserPreference::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -62,8 +62,8 @@ class RoleTest extends TestCase
         $permissions = Permission::factory()->count(2)->create(['company_id' => $this->company->id]);
 
         $data = [
-            'name' => 'Manager',
-            'description' => 'Manages things',
+            'name'             => 'Manager',
+            'description'      => 'Manages things',
             'permissionsInput' => $permissions->pluck('id')->implode(','),
         ];
 
@@ -71,7 +71,7 @@ class RoleTest extends TestCase
 
         $response->assertRedirect(route('roles.index'));
         $this->assertDatabaseHas('roles', [
-            'name' => 'Manager',
+            'name'       => 'Manager',
             'company_id' => $this->company->id,
         ]);
     }
@@ -101,14 +101,14 @@ class RoleTest extends TestCase
     /** @test */
     public function it_updates_a_role()
     {
-        $role = Role::factory()->create(['company_id' => $this->company->id]);
+        $role        = Role::factory()->create(['company_id' => $this->company->id]);
         $permissions = Permission::factory()->count(2)->create(['company_id' => $this->company->id]);
 
         $this->actingAs($this->user);
 
         $data = [
-            'name' => 'Updated Role',
-            'description' => 'Updated description',
+            'name'             => 'Updated Role',
+            'description'      => 'Updated description',
             'permissionsInput' => $permissions->pluck('id')->implode(','),
         ];
 
@@ -116,7 +116,7 @@ class RoleTest extends TestCase
 
         $response->assertRedirect(route('roles.index'));
         $this->assertDatabaseHas('roles', [
-            'id' => $role->id,
+            'id'   => $role->id,
             'name' => 'Updated Role',
         ]);
     }

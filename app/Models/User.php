@@ -122,7 +122,7 @@ class User extends Authenticatable
     }
     public function hasAnyRole($roles, $companyId = null)
     {
-        $roles = is_array($roles) ? $roles : [$roles];
+        $roles     = is_array($roles) ? $roles : [$roles];
         $companyId = $companyId ?? $this->preference->company_id ?? null;
 
         return $this->roles()

@@ -14,16 +14,16 @@ class OffsetSummaryExport implements FromView
     public function __construct($offsetRequests, $startDate, $endDate)
     {
         $this->offsetRequests = $offsetRequests;
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
+        $this->startDate      = $startDate;
+        $this->endDate        = $endDate;
     }
 
     public function view(): View
     {
         return view('reports.offset_summary_excel', [
             'offsetRequests' => $this->offsetRequests,
-            'startDate' => $this->startDate,
-            'endDate' => $this->endDate,
+            'startDate'      => $this->startDate,
+            'endDate'        => $this->endDate,
         ]);
     }
 }

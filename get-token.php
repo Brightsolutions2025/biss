@@ -15,7 +15,7 @@ $client->setPrompt('consent');
 
 $authUrl = $client->createAuthUrl();
 echo "Open the following link in your browser:\n$authUrl\n\n";
-echo "Enter verification code: ";
+echo 'Enter verification code: ';
 $authCode = trim(fgets(STDIN));
 
 $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
@@ -27,7 +27,7 @@ if (isset($accessToken['error'])) {
 }
 
 if (isset($accessToken['refresh_token'])) {
-    echo "Refresh Token: " . $accessToken['refresh_token'] . "\n";
+    echo 'Refresh Token: ' . $accessToken['refresh_token'] . "\n";
 } else {
     echo "No refresh token received.\n";
 }

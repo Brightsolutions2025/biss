@@ -61,6 +61,10 @@
 </h4>
     <ul class="phpdocumentor-list">
                     <li>
+                <a href="namespaces/app-console.html" class="">Console</a>
+                
+            </li>
+                    <li>
                 <a href="namespaces/app-exports.html" class="">Exports</a>
                 
             </li>
@@ -69,7 +73,15 @@
                 
             </li>
                     <li>
+                <a href="namespaces/app-mail.html" class="">Mail</a>
+                
+            </li>
+                    <li>
                 <a href="namespaces/app-models.html" class="">Models</a>
+                
+            </li>
+                    <li>
+                <a href="namespaces/app-notifications.html" class="">Notifications</a>
                 
             </li>
                     <li>
@@ -138,7 +150,7 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">12</span>
+    <span class="phpdocumentor-element-found-in__line">13</span>
 
     </aside>
 
@@ -200,6 +212,12 @@
 <dd>Show the form for editing the specified leave request.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/App-Http-Controllers-LeaveRequestController.html#method_fetchApprovedByDate">fetchApprovedByDate()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/App-Http-Controllers-LeaveRequestController.html#method_index">index()</a>
     <span>
                                 &nbsp;: mixed    </span>
@@ -246,6 +264,12 @@
 </dt>
 <dd>Private helper to ensure user belongs to the leave request&#039;s company.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/App-Http-Controllers-LeaveRequestController.html#method_canEditLeaveRequest">canEditLeaveRequest()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/App-Http-Controllers-LeaveRequestController.html#method_validateLeave">validateLeave()</a>
     <span>
@@ -280,7 +304,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">252</span>
+    <span class="phpdocumentor-element-found-in__line">479</span>
 
     </aside>
 
@@ -331,7 +355,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">31</span>
+    <span class="phpdocumentor-element-found-in__line">74</span>
 
     </aside>
 
@@ -366,7 +390,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">148</span>
+    <span class="phpdocumentor-element-found-in__line">315</span>
 
     </aside>
 
@@ -411,7 +435,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">101</span>
+    <span class="phpdocumentor-element-found-in__line">208</span>
 
     </aside>
 
@@ -448,6 +472,64 @@
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_fetchApprovedByDate">
+        fetchApprovedByDate()
+        <a href="classes/App-Http-Controllers-LeaveRequestController.html#method_fetchApprovedByDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">581</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">fetchApprovedByDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$employeeId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$start</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$end</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$employeeId</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$start</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$end</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_index">
         index()
         <a href="classes/App-Http-Controllers-LeaveRequestController.html#method_index" class="headerlink"><i class="fas fa-link"></i></a>
@@ -456,7 +538,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">17</span>
+    <span class="phpdocumentor-element-found-in__line">18</span>
 
     </aside>
 
@@ -464,13 +546,23 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">index</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">index</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Illuminate\Http\Request">Request</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
     
-    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$request</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\Illuminate\Http\Request">Request</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
     
 
     
@@ -491,7 +583,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">291</span>
+    <span class="phpdocumentor-element-found-in__line">524</span>
 
     </aside>
 
@@ -542,7 +634,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">91</span>
+    <span class="phpdocumentor-element-found-in__line">178</span>
 
     </aside>
 
@@ -587,7 +679,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">91</span>
 
     </aside>
 
@@ -632,7 +724,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">111</span>
+    <span class="phpdocumentor-element-found-in__line">241</span>
 
     </aside>
 
@@ -684,7 +776,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">335</span>
+    <span class="phpdocumentor-element-found-in__line">573</span>
 
     </aside>
 
@@ -728,7 +820,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">181</span>
+    <span class="phpdocumentor-element-found-in__line">377</span>
 
     </aside>
 
@@ -762,6 +854,54 @@
                     <article
         class="phpdocumentor-element
             -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_canEditLeaveRequest">
+        canEditLeaveRequest()
+        <a href="classes/App-Http-Controllers-LeaveRequestController.html#method_canEditLeaveRequest" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">302</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">canEditLeaveRequest</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/App-Models-LeaveRequest.html"><abbr title="\App\Models\LeaveRequest">LeaveRequest</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$leaveRequest</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$leaveRequest</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/App-Models-LeaveRequest.html"><abbr title="\App\Models\LeaveRequest">LeaveRequest</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
             -private
                                                         "
 >
@@ -773,14 +913,14 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/LeaveRequestController.php"><a href="files/app-http-controllers-leaverequestcontroller.html"><abbr title="app/Http/Controllers/LeaveRequestController.php">LeaveRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">187</span>
+    <span class="phpdocumentor-element-found-in__line">385</span>
 
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">validateLeave</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Illuminate\Http\Request">Request</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">validateLeave</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Illuminate\Http\Request">Request</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$excludeId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -792,6 +932,13 @@
                 <span class="phpdocumentor-signature__argument__name">$request</span>
                 : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\Illuminate\Http\Request">Request</abbr></span>
                             </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$excludeId</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
@@ -920,6 +1067,7 @@
                                             <li class=""><a href="classes/App-Http-Controllers-LeaveRequestController.html#method_create">create()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-LeaveRequestController.html#method_destroy">destroy()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-LeaveRequestController.html#method_edit">edit()</a></li>
+                                            <li class=""><a href="classes/App-Http-Controllers-LeaveRequestController.html#method_fetchApprovedByDate">fetchApprovedByDate()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-LeaveRequestController.html#method_index">index()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-LeaveRequestController.html#method_reject">reject()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-LeaveRequestController.html#method_show">show()</a></li>
@@ -927,6 +1075,7 @@
                                             <li class=""><a href="classes/App-Http-Controllers-LeaveRequestController.html#method_update">update()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-LeaveRequestController.html#method_authorizeCompany">authorizeCompany()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-LeaveRequestController.html#method_authorizeLeaveRequest">authorizeLeaveRequest()</a></li>
+                                            <li class=""><a href="classes/App-Http-Controllers-LeaveRequestController.html#method_canEditLeaveRequest">canEditLeaveRequest()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-LeaveRequestController.html#method_validateLeave">validateLeave()</a></li>
                                     </ul>
             </li>

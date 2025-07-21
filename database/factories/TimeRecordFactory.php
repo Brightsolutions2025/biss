@@ -6,7 +6,6 @@ use App\Models\Company;
 use App\Models\Employee;
 use App\Models\PayrollPeriod;
 use App\Models\TimeRecord;
-use App\Models\TimeRecordLine;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -38,7 +37,7 @@ class TimeRecordFactory extends Factory
     public function approved(): static
     {
         return $this->state(fn () => [
-            'status' => 'approved',
+            'status'        => 'approved',
             'approval_date' => now()->toDateString(),
         ]);
     }
@@ -46,7 +45,7 @@ class TimeRecordFactory extends Factory
     public function rejected(): static
     {
         return $this->state(fn () => [
-            'status' => 'rejected',
+            'status'           => 'rejected',
             'rejection_reason' => 'Insufficient justification.',
         ]);
     }

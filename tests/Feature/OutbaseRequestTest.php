@@ -27,11 +27,11 @@ class OutbaseRequestTest extends TestCase
         parent::setUp();
 
         $this->company = Company::factory()->create();
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->user->companies()->attach($this->company->id);
 
         UserPreference::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -46,15 +46,15 @@ class OutbaseRequestTest extends TestCase
             'outbase_request.update',
             'outbase_request.delete',
         ])->map(fn ($name) => Permission::create([
-            'name' => $name,
+            'name'       => $name,
             'company_id' => $this->company->id,
         ]));
 
         $role->permissions()->attach($permissions->pluck('id'), ['company_id' => $this->company->id]);
 
         $this->employee = Employee::factory()->create([
-            'company_id' => $this->company->id,
-            'user_id' => $this->user->id,
+            'company_id'  => $this->company->id,
+            'user_id'     => $this->user->id,
             'approver_id' => $this->user->id, // Self-approver for testing
         ]);
     }
@@ -63,7 +63,7 @@ class OutbaseRequestTest extends TestCase
     public function it_displays_outbase_request_index()
     {
         OutbaseRequest::factory()->count(2)->create([
-            'company_id' => $this->company->id,
+            'company_id'  => $this->company->id,
             'employee_id' => $this->employee->id,
         ]);
 
@@ -91,12 +91,12 @@ class OutbaseRequestTest extends TestCase
 
         $data = [
             'employee_id' => $this->employee->id,
-            'date' => now()->toDateString(),
-            'time_start' => '08:00',
-            'time_end' => '17:00',
-            'location' => 'Client Site',
-            'reason' => 'Client visit',
-            'files' => [UploadedFile::fake()->create('doc.pdf')],
+            'date'        => now()->toDateString(),
+            'time_start'  => '08:00',
+            'time_end'    => '17:00',
+            'location'    => 'Client Site',
+            'reason'      => 'Client visit',
+            'files'       => [UploadedFile::fake()->create('doc.pdf')],
         ];
 
         $response = $this->post(route('outbase_requests.store'), $data);
@@ -104,7 +104,7 @@ class OutbaseRequestTest extends TestCase
         $response->assertRedirect(route('outbase_requests.index'));
         $this->assertDatabaseHas('outbase_requests', [
             'employee_id' => $this->employee->id,
-            'reason' => 'Client visit',
+            'reason'      => 'Client visit',
         ]);
     }
 
@@ -113,7 +113,7 @@ class OutbaseRequestTest extends TestCase
     {
         $outbaseRequest = OutbaseRequest::factory()->create([
             'employee_id' => $this->employee->id,
-            'company_id' => $this->company->id,
+            'company_id'  => $this->company->id,
         ]);
 
         $this->actingAs($this->user)
@@ -127,8 +127,8 @@ class OutbaseRequestTest extends TestCase
     {
         $outbaseRequest = OutbaseRequest::factory()->create([
             'employee_id' => $this->employee->id,
-            'company_id' => $this->company->id,
-            'status' => 'pending',
+            'company_id'  => $this->company->id,
+            'status'      => 'pending',
         ]);
 
         $this->actingAs($this->user)
@@ -144,27 +144,27 @@ class OutbaseRequestTest extends TestCase
 
         $outbaseRequest = OutbaseRequest::factory()->create([
             'employee_id' => $this->employee->id,
-            'company_id' => $this->company->id,
-            'status' => 'pending',
+            'company_id'  => $this->company->id,
+            'status'      => 'pending',
         ]);
 
         $this->actingAs($this->user);
 
         $data = [
             'employee_id' => $this->employee->id,
-            'date' => now()->toDateString(),
-            'time_start' => '09:00',
-            'time_end' => '18:00',
-            'location' => 'Updated Location',
-            'reason' => 'Updated Reason',
-            'files' => [UploadedFile::fake()->create('newfile.pdf')],
+            'date'        => now()->toDateString(),
+            'time_start'  => '09:00',
+            'time_end'    => '18:00',
+            'location'    => 'Updated Location',
+            'reason'      => 'Updated Reason',
+            'files'       => [UploadedFile::fake()->create('newfile.pdf')],
         ];
 
         $response = $this->put(route('outbase_requests.update', $outbaseRequest), $data);
 
         $response->assertRedirect(route('outbase_requests.index'));
         $this->assertDatabaseHas('outbase_requests', [
-            'id' => $outbaseRequest->id,
+            'id'       => $outbaseRequest->id,
             'location' => 'Updated Location',
         ]);
     }
@@ -174,8 +174,8 @@ class OutbaseRequestTest extends TestCase
     {
         $outbaseRequest = OutbaseRequest::factory()->create([
             'employee_id' => $this->employee->id,
-            'company_id' => $this->company->id,
-            'status' => 'pending',
+            'company_id'  => $this->company->id,
+            'status'      => 'pending',
         ]);
 
         $this->actingAs($this->user);

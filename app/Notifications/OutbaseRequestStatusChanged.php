@@ -4,8 +4,8 @@ namespace App\Notifications;
 
 use App\Models\OutbaseRequest;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class OutbaseRequestStatusChanged extends Notification
 {
@@ -17,7 +17,7 @@ class OutbaseRequestStatusChanged extends Notification
     public function __construct(OutbaseRequest $outbaseRequest, $status)
     {
         $this->outbaseRequest = $outbaseRequest;
-        $this->status = $status;
+        $this->status         = $status;
     }
 
     public function via($notifiable)
@@ -27,14 +27,14 @@ class OutbaseRequestStatusChanged extends Notification
 
     public function toMail($notifiable)
     {
-        $statusLabel = ucfirst($this->status);
+        $statusLabel   = ucfirst($this->status);
         $statusMessage = match ($this->status) {
             'approved' => 'has been approved. Congratulations!',
             'rejected' => 'was rejected. Please contact your supervisor if you need clarification.',
-            default => 'was updated.',
+            default    => 'was updated.',
         };
 
-        $mail = (new MailMessage)
+        $mail = (new MailMessage())
             ->subject("Outbase Request {$statusLabel}")
             ->greeting("Hi {$notifiable->name},")
             ->line("Your outbase request dated {$this->outbaseRequest->date} {$statusMessage}")

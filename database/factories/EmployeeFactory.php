@@ -20,12 +20,12 @@ class EmployeeFactory extends Factory
     {
         return [
             'employee_number' => $this->faker->unique()->numerify('EMP###'),
-            'first_name' => $this->faker->firstName,
-            'last_name' => $this->faker->lastName,
-            'company_id' => Company::factory(),
-            'department_id' => Department::factory(),
-            'team_id' => Team::factory(),
-            'user_id' => User::factory(),
+            'first_name'      => $this->faker->firstName,
+            'last_name'       => $this->faker->lastName,
+            'company_id'      => Company::factory(),
+            'department_id'   => Department::factory(),
+            'team_id'         => Team::factory(),
+            'user_id'         => User::factory(),
         ];
     }
 }

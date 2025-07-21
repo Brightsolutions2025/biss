@@ -48,7 +48,7 @@ class UserPreferenceController extends Controller
             $preference = UserPreference::updateOrCreate(
                 ['user_id' => $user->id],
                 [
-                    'company_id'  => $validated['company_id'] ?? null,
+                    'company_id'  => $validated['company_id']  ?? null,
                     'preferences' => $validated['preferences'] ?? [],
                 ]
             );

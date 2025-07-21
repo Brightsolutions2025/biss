@@ -2,12 +2,9 @@
 
 namespace App\Exports;
 
-use App\Models\LeaveRequest;
 use App\Models\LeaveBalance;
-use Illuminate\Contracts\Support\Responsable;
+use App\Models\LeaveRequest;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
@@ -19,9 +16,9 @@ class LeaveSummaryExport implements FromCollection, WithHeadings
 
     public function __construct($user, $company, $year)
     {
-        $this->user = $user;
+        $this->user    = $user;
         $this->company = $company;
-        $this->year = $year;
+        $this->year    = $year;
     }
 
     public function collection(): Collection
@@ -39,16 +36,16 @@ class LeaveSummaryExport implements FromCollection, WithHeadings
             ->where('status', 'approved')
             ->sum('number_of_days');
 
-        $beginning = $leaveBalance?->beginning_balance ?? 0;
-        $remaining = max(0, $beginning - $used);
+        $beginning   = $leaveBalance?->beginning_balance ?? 0;
+        $remaining   = max(0, $beginning - $used);
         $utilization = $beginning > 0 ? round(($used / $beginning) * 100, 1) : 0;
 
         return collect([
             [
                 'Employee'           => $employee->user->name,
                 'Department'         => $employee->department->name ?? '',
-                'Team'               => $employee->team->name ?? '',
-                'Approver'           => $employee->approver->name ?? '',
+                'Team'               => $employee->team->name       ?? '',
+                'Approver'           => $employee->approver->name   ?? '',
                 'Year'               => $this->year,
                 'Beginning Balance'  => $beginning,
                 'Used'               => $used,

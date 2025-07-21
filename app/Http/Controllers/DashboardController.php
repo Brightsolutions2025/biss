@@ -2,26 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Employee;
 use App\Models\Department;
-use App\Models\Team;
 use App\Models\LeaveRequest;
-use App\Models\OvertimeRequest;
 use App\Models\OffsetRequest;
 use App\Models\OutbaseRequest;
-use App\Models\TimeLog;
-use App\Models\TimeRecord;
+use App\Models\OvertimeRequest;
 use App\Models\TimeRecordLine;
-use App\Models\PayrollPeriod;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         if (!$company) {
@@ -30,12 +24,12 @@ class DashboardController extends Controller
 
         $validated = $request->validate([
             'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'end_date'   => 'nullable|date|after_or_equal:start_date',
         ]);
 
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $startYear = Carbon::parse($request->start_date)->year;
-            $endYear = Carbon::parse($request->end_date)->year;
+            $endYear   = Carbon::parse($request->end_date)->year;
 
             if ($startYear !== $endYear) {
                 return back()->withErrors([
@@ -45,14 +39,14 @@ class DashboardController extends Controller
         }
 
         $startDate = $validated['start_date'] ?? now()->startOfMonth()->toDateString();
-        $endDate = $validated['end_date'] ?? now()->toDateString();
-        $year = Carbon::parse($endDate)->year;
+        $endDate   = $validated['end_date']   ?? now()->toDateString();
+        $year      = Carbon::parse($endDate)->year;
 
         $employee = $user->employee;
 
         $data = [
             'startDate' => $startDate,
-            'endDate' => $endDate,
+            'endDate'   => $endDate,
         ];
 
         if ($user->hasRole('Employee') && $employee && $employee->company_id === $company->id) {
@@ -88,7 +82,7 @@ class DashboardController extends Controller
                 ->sum();
 
             $data += [
-                'employeeLeaveBalance' => max(0, $remaining),
+                'employeeLeaveBalance'   => max(0, $remaining),
                 'employeeUpcomingLeaves' => $employee->leaveRequests()
                     ->where('company_id', $company->id)
                     ->where('status', 'approved')

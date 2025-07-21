@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\PayrollPeriod;
 use App\Models\TimeLog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
 
 class TimeLogController extends Controller
 {
@@ -20,7 +20,7 @@ class TimeLogController extends Controller
         if (!auth()->user()->hasPermission('time_log.browse')) {
             abort(403, 'Unauthorized to browse time logs.');
         }
-        
+
         $company = auth()->user()->preference->company;
 
         $query = TimeLog::where('company_id', $company->id);
@@ -112,7 +112,7 @@ class TimeLogController extends Controller
         if (!auth()->user()->hasPermission('time_log.create')) {
             abort(403, 'Unauthorized to create time logs.');
         }
-        
+
         $companyId = auth()->user()->preference->company_id;
 
         if (!$companyId) {
@@ -203,11 +203,11 @@ class TimeLogController extends Controller
         if (!auth()->user()->hasPermission('time_log.update')) {
             abort(403, 'Unauthorized to update time logs.');
         }
-        
+
         $companyId = auth()->user()->preference->company_id;
 
         try {
-            $attendanceTime = null;
+            $attendanceTime      = null;
             $attendanceTimeInput = $request->input('attendance_time');
 
             if (!empty($attendanceTimeInput) && is_string($attendanceTimeInput)) {
@@ -292,9 +292,9 @@ class TimeLogController extends Controller
                 'about_the_record'   => $validated['about_the_record'],
                 'attendance_result'  => $validated['attendance_result'],
                 'attendance_address' => $validated['attendance_address'],
-                'note'               => $validated['note'] ?? '',
+                'note'               => $validated['note']              ?? '',
                 'attendance_method'  => $validated['attendance_method'] ?? '',
-                'attendance_photo'   => $validated['attendance_photo'] ?? '',
+                'attendance_photo'   => $validated['attendance_photo']  ?? '',
             ]);
 
             $timeLog->attendance_time = $attendanceTime;

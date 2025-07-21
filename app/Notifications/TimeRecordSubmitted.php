@@ -4,8 +4,8 @@ namespace App\Notifications;
 
 use App\Models\TimeRecord;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class TimeRecordSubmitted extends Notification
 {
@@ -26,11 +26,11 @@ class TimeRecordSubmitted extends Notification
     public function toMail($notifiable)
     {
         $employeeName = $this->timeRecord->employee->user->name ?? 'An employee';
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject('New Time Record Submitted')
             ->greeting("Hello {$notifiable->name},")
             ->line("{$employeeName} submitted a time record.")
-            ->line("Payroll Period: " . $this->timeRecord->payrollPeriod->name)
+            ->line('Payroll Period: ' . $this->timeRecord->payrollPeriod->name)
             ->action('View Time Record', route('time_records.show', $this->timeRecord->id))
             ->line('Please review and take action.');
     }

@@ -25,11 +25,11 @@ class TimeLogTest extends TestCase
         parent::setUp();
 
         $this->company = Company::factory()->create();
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->user->companies()->attach($this->company->id);
 
         UserPreference::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -43,7 +43,7 @@ class TimeLogTest extends TestCase
             'time_log.update',
             'time_log.delete',
         ])->map(fn ($name) => Permission::create([
-            'name' => $name,
+            'name'       => $name,
             'company_id' => $this->company->id,
         ]));
 
@@ -56,7 +56,7 @@ class TimeLogTest extends TestCase
     public function it_displays_time_log_index()
     {
         TimeLog::factory()->count(3)->create([
-            'company_id' => $this->company->id,
+            'company_id'        => $this->company->id,
             'payroll_period_id' => $this->payrollPeriod->id,
         ]);
 
@@ -104,7 +104,7 @@ class TimeLogTest extends TestCase
         $response->assertRedirect(route('time_logs.index'));
         $this->assertDatabaseHas('time_logs', [
             'employee_name' => 'John Doe',
-            'company_id' => $this->company->id,
+            'company_id'    => $this->company->id,
         ]);
     }
 
@@ -112,7 +112,7 @@ class TimeLogTest extends TestCase
     public function it_shows_a_time_log()
     {
         $timeLog = TimeLog::factory()->create([
-            'company_id' => $this->company->id,
+            'company_id'        => $this->company->id,
             'payroll_period_id' => $this->payrollPeriod->id,
         ]);
 
@@ -127,7 +127,7 @@ class TimeLogTest extends TestCase
     public function it_displays_time_log_edit_form()
     {
         $timeLog = TimeLog::factory()->create([
-            'company_id' => $this->company->id,
+            'company_id'        => $this->company->id,
             'payroll_period_id' => $this->payrollPeriod->id,
         ]);
 
@@ -141,7 +141,7 @@ class TimeLogTest extends TestCase
     public function it_updates_a_time_log()
     {
         $timeLog = TimeLog::factory()->create([
-            'company_id' => $this->company->id,
+            'company_id'        => $this->company->id,
             'payroll_period_id' => $this->payrollPeriod->id,
         ]);
 
@@ -170,7 +170,7 @@ class TimeLogTest extends TestCase
 
         $response->assertRedirect(route('time_logs.index'));
         $this->assertDatabaseHas('time_logs', [
-            'id' => $timeLog->id,
+            'id'            => $timeLog->id,
             'employee_name' => 'Jane Smith',
         ]);
     }
@@ -179,7 +179,7 @@ class TimeLogTest extends TestCase
     public function it_deletes_a_time_log()
     {
         $timeLog = TimeLog::factory()->create([
-            'company_id' => $this->company->id,
+            'company_id'        => $this->company->id,
             'payroll_period_id' => $this->payrollPeriod->id,
         ]);
 
@@ -206,14 +206,14 @@ class TimeLogTest extends TestCase
 
         $response = $this->post(route('time_logs.import'), [
             'payroll_period_id' => $this->payrollPeriod->id,
-            'csv_file' => $file,
+            'csv_file'          => $file,
         ]);
 
         $response->assertRedirect(); // adjust to actual redirect if needed
         $this->assertDatabaseHas('time_logs', [
             'employee_name' => 'John Doe',
-            'employee_id' => 'E123',
-            'company_id' => $this->company->id,
+            'employee_id'   => 'E123',
+            'company_id'    => $this->company->id,
         ]);
     }
 }

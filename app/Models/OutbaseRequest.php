@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class OutbaseRequest extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = [];
 
     /**
@@ -46,7 +46,7 @@ class OutbaseRequest extends Model
     {
         return $query->where('status', 'approved');
     }
-    
+
     public function files()
     {
         return $this->morphMany(File::class, 'fileable');

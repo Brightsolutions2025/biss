@@ -18,7 +18,7 @@ class OutbaseRequestFactory extends Factory
     public function definition(): array
     {
         $startTime = $this->faker->time('H:i');
-        $endTime = $this->faker->dateTimeBetween("+1 hour", "+3 hours")->format('H:i');
+        $endTime   = $this->faker->dateTimeBetween('+1 hour', '+3 hours')->format('H:i');
 
         return [
             'company_id'       => Company::factory(),

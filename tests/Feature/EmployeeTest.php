@@ -24,11 +24,11 @@ class EmployeeTest extends TestCase
         parent::setUp();
 
         $this->company = Company::factory()->create();
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->user->companies()->attach($this->company->id);
 
         UserPreference::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -42,7 +42,7 @@ class EmployeeTest extends TestCase
             'employee.update',
             'employee.delete',
         ])->map(fn ($name) => \App\Models\Permission::create([
-            'name' => $name,
+            'name'       => $name,
             'company_id' => $this->company->id,
         ]));
 
@@ -74,23 +74,23 @@ class EmployeeTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $department = Department::factory()->create(['company_id' => $this->company->id]);
-        $team = Team::factory()->create(['company_id' => $this->company->id, 'department_id' => $department->id]);
+        $department   = Department::factory()->create(['company_id' => $this->company->id]);
+        $team         = Team::factory()->create(['company_id' => $this->company->id, 'department_id' => $department->id]);
         $employeeUser = User::factory()->create();
 
         $response = $this->post(route('employees.store'), [
-            'user_id' => $employeeUser->id,
+            'user_id'         => $employeeUser->id,
             'employee_number' => 'EMP001',
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'department_id' => $department->id,
-            'team_id' => $team->id,
+            'first_name'      => 'John',
+            'last_name'       => 'Doe',
+            'department_id'   => $department->id,
+            'team_id'         => $team->id,
         ]);
 
         $response->assertRedirect(route('employees.index'));
         $this->assertDatabaseHas('employees', [
             'employee_number' => 'EMP001',
-            'user_id' => $employeeUser->id,
+            'user_id'         => $employeeUser->id,
         ]);
     }
 
@@ -127,15 +127,15 @@ class EmployeeTest extends TestCase
         $this->actingAs($this->user);
 
         $response = $this->put(route('employees.update', $employee), [
-            'user_id' => $employee->user_id,
+            'user_id'         => $employee->user_id,
             'employee_number' => $employee->employee_number,
-            'first_name' => 'Updated',
-            'last_name' => $employee->last_name,
+            'first_name'      => 'Updated',
+            'last_name'       => $employee->last_name,
         ]);
 
         $response->assertRedirect(route('employees.index'));
         $this->assertDatabaseHas('employees', [
-            'id' => $employee->id,
+            'id'         => $employee->id,
             'first_name' => 'Updated',
         ]);
     }

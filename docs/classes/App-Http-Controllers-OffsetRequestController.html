@@ -61,6 +61,10 @@
 </h4>
     <ul class="phpdocumentor-list">
                     <li>
+                <a href="namespaces/app-console.html" class="">Console</a>
+                
+            </li>
+                    <li>
                 <a href="namespaces/app-exports.html" class="">Exports</a>
                 
             </li>
@@ -69,7 +73,15 @@
                 
             </li>
                     <li>
+                <a href="namespaces/app-mail.html" class="">Mail</a>
+                
+            </li>
+                    <li>
                 <a href="namespaces/app-models.html" class="">Models</a>
+                
+            </li>
+                    <li>
+                <a href="namespaces/app-notifications.html" class="">Notifications</a>
                 
             </li>
                     <li>
@@ -138,7 +150,7 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">12</span>
+    <span class="phpdocumentor-element-found-in__line">15</span>
 
     </aside>
 
@@ -163,8 +175,40 @@
 
 
 
+<h4 id="toc-constants">
+    Constants
+    <a href="classes/App-Http-Controllers-OffsetRequestController.html#toc-constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/App-Http-Controllers-OffsetRequestController.html#constant_OT_OFFSET_VALID_AFTER_DAYS">OT_OFFSET_VALID_AFTER_DAYS</a>
+    <span>
+        &nbsp;= &#039;offset_valid_after_days&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/App-Http-Controllers-OffsetRequestController.html#constant_OT_OFFSET_VALID_BEFORE_DAYS">OT_OFFSET_VALID_BEFORE_DAYS</a>
+    <span>
+        &nbsp;= &#039;offset_valid_before_days&#039;                            </span>
+</dt>
+
+    </dl>
 
 
+<h4 id="toc-properties">
+    Properties
+    <a href="classes/App-Http-Controllers-OffsetRequestController.html#toc-properties" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/App-Http-Controllers-OffsetRequestController.html#property_offsetValidity">$offsetValidity</a>
+    <span>
+                        &nbsp;: array&lt;string|int, mixed&gt;            </span>
+</dt>
+
+    </dl>
 
 <h4 id="toc-methods">
     Methods
@@ -172,6 +216,12 @@
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/App-Http-Controllers-OffsetRequestController.html#method___construct">__construct()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/App-Http-Controllers-OffsetRequestController.html#method_approve">approve()</a>
     <span>
@@ -192,6 +242,12 @@
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/App-Http-Controllers-OffsetRequestController.html#method_edit">edit()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/App-Http-Controllers-OffsetRequestController.html#method_fetchApprovedByDate">fetchApprovedByDate()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
@@ -232,13 +288,131 @@
                                 &nbsp;: mixed    </span>
 </dt>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/App-Http-Controllers-OffsetRequestController.html#method_canEditOffsetRequest">canEditOffsetRequest()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+
     </dl>
 
 
 
         
+    <section class="phpdocumentor-constants">
+        <h3 class="phpdocumentor-elements__header" id="constants">
+            Constants
+            <a href="classes/App-Http-Controllers-OffsetRequestController.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_OT_OFFSET_VALID_AFTER_DAYS">
+        OT_OFFSET_VALID_AFTER_DAYS
+        <a href="classes/App-Http-Controllers-OffsetRequestController.html#constant_OT_OFFSET_VALID_AFTER_DAYS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">17</span>
+
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">OT_OFFSET_VALID_AFTER_DAYS</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;offset_valid_after_days&#039;</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_OT_OFFSET_VALID_BEFORE_DAYS">
+        OT_OFFSET_VALID_BEFORE_DAYS
+        <a href="classes/App-Http-Controllers-OffsetRequestController.html#constant_OT_OFFSET_VALID_BEFORE_DAYS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">18</span>
+
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">OT_OFFSET_VALID_BEFORE_DAYS</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;offset_valid_before_days&#039;</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+            </section>
 
         
+    <section class="phpdocumentor-properties">
+        <h3 class="phpdocumentor-elements__header" id="properties">
+            Properties
+            <a href="classes/App-Http-Controllers-OffsetRequestController.html#properties" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_offsetValidity">
+        $offsetValidity
+        <a href="classes/App-Http-Controllers-OffsetRequestController.html#property_offsetValidity" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">19</span>
+
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+    <span class="phpdocumentor-signature__name">$offsetValidity</span>
+     = <span class="phpdocumentor-signature__default-value">[]</span></code>
+
+    
+    
+    
+
+    
+
+</article>
+            </section>
 
             <section class="phpdocumentor-methods">
         <h3 class="phpdocumentor-elements__header" id="methods">
@@ -246,6 +420,40 @@
             <a href="classes/App-Http-Controllers-OffsetRequestController.html#methods" class="headerlink"><i class="fas fa-link"></i></a>
 
         </h3>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method___construct">
+        __construct()
+        <a href="classes/App-Http-Controllers-OffsetRequestController.html#method___construct" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">21</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+    
+</article>
                     <article
         class="phpdocumentor-element
             -method
@@ -260,7 +468,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">260</span>
+    <span class="phpdocumentor-element-found-in__line">664</span>
 
     </aside>
 
@@ -311,7 +519,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">24</span>
+    <span class="phpdocumentor-element-found-in__line">97</span>
 
     </aside>
 
@@ -345,7 +553,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">227</span>
+    <span class="phpdocumentor-element-found-in__line">598</span>
 
     </aside>
 
@@ -389,7 +597,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">122</span>
+    <span class="phpdocumentor-element-found-in__line">346</span>
 
     </aside>
 
@@ -425,6 +633,64 @@
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_fetchApprovedByDate">
+        fetchApprovedByDate()
+        <a href="classes/App-Http-Controllers-OffsetRequestController.html#method_fetchApprovedByDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">761</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">fetchApprovedByDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$employeeId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$start</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$end</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$employeeId</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$start</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$end</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_index">
         index()
         <a href="classes/App-Http-Controllers-OffsetRequestController.html#method_index" class="headerlink"><i class="fas fa-link"></i></a>
@@ -433,20 +699,30 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">14</span>
+    <span class="phpdocumentor-element-found-in__line">40</span>
 
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">index</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">index</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Illuminate\Http\Request">Request</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
     
-    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$request</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\Illuminate\Http\Request">Request</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
     
 
     
@@ -467,7 +743,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">300</span>
+    <span class="phpdocumentor-element-found-in__line">711</span>
 
     </aside>
 
@@ -518,7 +794,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">107</span>
+    <span class="phpdocumentor-element-found-in__line">315</span>
 
     </aside>
 
@@ -562,7 +838,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">132</span>
 
     </aside>
 
@@ -606,7 +882,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">139</span>
+    <span class="phpdocumentor-element-found-in__line">402</span>
 
     </aside>
 
@@ -657,7 +933,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">254</span>
+    <span class="phpdocumentor-element-found-in__line">656</span>
 
     </aside>
 
@@ -686,6 +962,54 @@
     
 
     
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_canEditOffsetRequest">
+        canEditOffsetRequest()
+        <a href="classes/App-Http-Controllers-OffsetRequestController.html#method_canEditOffsetRequest" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="app/Http/Controllers/OffsetRequestController.php"><a href="files/app-http-controllers-offsetrequestcontroller.html"><abbr title="app/Http/Controllers/OffsetRequestController.php">OffsetRequestController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">389</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">canEditOffsetRequest</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/App-Models-OffsetRequest.html"><abbr title="\App\Models\OffsetRequest">OffsetRequest</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$offsetRequest</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$offsetRequest</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/App-Models-OffsetRequest.html"><abbr title="\App\Models\OffsetRequest">OffsetRequest</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
 </article>
             </section>
 
@@ -792,24 +1116,42 @@
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                                                                <li><a href="classes/App-Http-Controllers-OffsetRequestController.html#toc-methods">Methods</a></li>
+                                        <li><a href="classes/App-Http-Controllers-OffsetRequestController.html#toc-constants">Constants</a></li>
+                                                            <li><a href="classes/App-Http-Controllers-OffsetRequestController.html#toc-properties">Properties</a></li>
+                                                            <li><a href="classes/App-Http-Controllers-OffsetRequestController.html#toc-methods">Methods</a></li>
                                     </ul>
             </li>
+                            <li class="phpdocumentor-on-this-page-section__title">Constants</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#constant_OT_OFFSET_VALID_AFTER_DAYS">OT_OFFSET_VALID_AFTER_DAYS</a></li>
+                                                    <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#constant_OT_OFFSET_VALID_BEFORE_DAYS">OT_OFFSET_VALID_BEFORE_DAYS</a></li>
+                                            </ul>
+                </li>
             
+                            <li class="phpdocumentor-on-this-page-section__title">Properties</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#property_offsetValidity">$offsetValidity</a></li>
+                                            </ul>
+                </li>
             
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                            <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#method___construct">__construct()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#method_approve">approve()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#method_create">create()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#method_destroy">destroy()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#method_edit">edit()</a></li>
+                                            <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#method_fetchApprovedByDate">fetchApprovedByDate()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#method_index">index()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#method_reject">reject()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#method_show">show()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#method_store">store()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#method_update">update()</a></li>
                                             <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#method_authorizeCompany">authorizeCompany()</a></li>
+                                            <li class=""><a href="classes/App-Http-Controllers-OffsetRequestController.html#method_canEditOffsetRequest">canEditOffsetRequest()</a></li>
                                     </ul>
             </li>
                     </ul>

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\PayrollPeriod;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class PayrollPeriodController extends Controller
 {
@@ -57,10 +57,10 @@ class PayrollPeriodController extends Controller
         $companyId = auth()->user()->preference->company_id;
 
         $validated = $request->validate([
-            'start_date' => 'required|date',
-            'end_date'   => 'required|date|after_or_equal:start_date',
+            'start_date'            => 'required|date',
+            'end_date'              => 'required|date|after_or_equal:start_date',
             'dtr_submission_due_at' => 'nullable|date',
-            'timezone' => 'required|timezone',
+            'timezone'              => 'required|timezone',
         ]);
 
         $dtrDueAt = null;
@@ -88,9 +88,9 @@ class PayrollPeriodController extends Controller
 
         try {
             $payrollPeriod = PayrollPeriod::create([
-                'company_id' => $companyId,
-                'start_date' => $validated['start_date'],
-                'end_date'   => $validated['end_date'],
+                'company_id'            => $companyId,
+                'start_date'            => $validated['start_date'],
+                'end_date'              => $validated['end_date'],
                 'dtr_submission_due_at' => $dtrDueAt ?? null,
             ]);
 
@@ -157,10 +157,10 @@ class PayrollPeriodController extends Controller
         }
 
         $validated = $request->validate([
-            'start_date' => 'required|date',
-            'end_date'   => 'required|date|after_or_equal:start_date',
+            'start_date'            => 'required|date',
+            'end_date'              => 'required|date|after_or_equal:start_date',
             'dtr_submission_due_at' => 'nullable|date',
-            'timezone' => 'required|timezone',
+            'timezone'              => 'required|timezone',
         ]);
 
         // Convert datetime-local input from selected timezone to UTC
@@ -188,8 +188,8 @@ class PayrollPeriodController extends Controller
 
         try {
             $payrollPeriod->update([
-                'start_date' => $validated['start_date'],
-                'end_date'   => $validated['end_date'],
+                'start_date'            => $validated['start_date'],
+                'end_date'              => $validated['end_date'],
                 'dtr_submission_due_at' => $dtrDueAt,
             ]);
 
@@ -255,7 +255,7 @@ class PayrollPeriodController extends Controller
     protected function authorizePayrollPeriod(PayrollPeriod $payrollPeriod)
     {
         $companyId = $payrollPeriod->company_id;
-        $user = auth()->user();
+        $user      = auth()->user();
 
         // Ensure the user is assigned to the company
         if (!$user->companies->contains($companyId)) {

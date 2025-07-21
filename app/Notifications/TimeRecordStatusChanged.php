@@ -4,8 +4,8 @@ namespace App\Notifications;
 
 use App\Models\TimeRecord;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class TimeRecordStatusChanged extends Notification
 {
@@ -17,7 +17,7 @@ class TimeRecordStatusChanged extends Notification
     public function __construct(TimeRecord $timeRecord, $status)
     {
         $this->timeRecord = $timeRecord;
-        $this->status = $status;
+        $this->status     = $status;
     }
 
     public function via($notifiable)
@@ -27,14 +27,14 @@ class TimeRecordStatusChanged extends Notification
 
     public function toMail($notifiable)
     {
-        $statusLabel = ucfirst($this->status);
+        $statusLabel   = ucfirst($this->status);
         $statusMessage = match ($this->status) {
             'approved' => 'has been approved. Great job!',
             'rejected' => 'was rejected. Please contact your supervisor.',
-            default => 'was updated.'
+            default    => 'was updated.'
         };
 
-        $mail = (new MailMessage)
+        $mail = (new MailMessage())
             ->subject("Time Record {$statusLabel}")
             ->greeting("Hi {$notifiable->name},")
             ->line("Your time record for payroll period '{$this->timeRecord->payrollPeriod->name}' {$statusMessage}");

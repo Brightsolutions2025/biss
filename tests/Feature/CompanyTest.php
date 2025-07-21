@@ -6,8 +6,6 @@ use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\MessageBag;
-use Illuminate\Support\ViewErrorBag;
 use Tests\TestCase;
 
 class CompanyTest extends TestCase

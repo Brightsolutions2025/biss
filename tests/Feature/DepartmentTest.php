@@ -22,11 +22,11 @@ class DepartmentTest extends TestCase
         parent::setUp();
 
         $this->company = Company::factory()->create();
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->user->companies()->attach($this->company->id);
 
         UserPreference::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -42,7 +42,7 @@ class DepartmentTest extends TestCase
             'department.delete',
         ])->map(function ($name) {
             return \App\Models\Permission::create([
-                'name' => $name,
+                'name'       => $name,
                 'company_id' => $this->company->id,
             ]);
         });
@@ -76,7 +76,7 @@ class DepartmentTest extends TestCase
         $this->actingAs($this->user);
 
         $data = [
-            'name' => 'HR Department',
+            'name'        => 'HR Department',
             'description' => 'Handles HR tasks',
         ];
 
@@ -84,7 +84,7 @@ class DepartmentTest extends TestCase
 
         $response->assertRedirect(route('departments.index'));
         $this->assertDatabaseHas('departments', [
-            'name' => 'HR Department',
+            'name'       => 'HR Department',
             'company_id' => $this->company->id,
         ]);
     }
@@ -115,20 +115,20 @@ class DepartmentTest extends TestCase
     public function it_updates_a_department()
     {
         $department = Department::factory()->create([
-            'name' => 'Old Name',
+            'name'       => 'Old Name',
             'company_id' => $this->company->id,
         ]);
 
         $this->actingAs($this->user);
 
         $response = $this->put(route('departments.update', $department), [
-            'name' => 'Updated Name',
+            'name'        => 'Updated Name',
             'description' => 'Updated description',
         ]);
 
         $response->assertRedirect(route('departments.index'));
         $this->assertDatabaseHas('departments', [
-            'id' => $department->id,
+            'id'   => $department->id,
             'name' => 'Updated Name',
         ]);
     }

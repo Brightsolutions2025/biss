@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
-use App\Models\LeaveRequest;
 use App\Models\File;
+use App\Models\LeaveRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Carbon;
 
 class LeaveRequestController extends Controller
 {
@@ -21,7 +21,7 @@ class LeaveRequestController extends Controller
             abort(403, 'Unauthorized to browse leave requests.');
         }
 
-        $user = auth()->user();
+        $user      = auth()->user();
         $companyId = $user->preference->company_id;
 
         $query = LeaveRequest::with(['employee.user'])
@@ -191,7 +191,7 @@ class LeaveRequestController extends Controller
         // - they own the request
         // - OR they are an assigned approver
         if (!$user->hasPermission('leave_request.browse_all')) {
-            $isOwner = $leaveRequest->employee_id === $employeeId;
+            $isOwner    = $leaveRequest->employee_id === $employeeId;
             $isApprover = $leaveRequest->approver_id === $employeeId; // or use relationship
 
             if (!$isOwner && !$isApprover) {
@@ -222,8 +222,8 @@ class LeaveRequestController extends Controller
         // If user lacks browse_all, ensure they are owner or approver
         if (!$user->hasPermission('leave_request.browse_all')) {
             $employeeId = $user->employee?->id;
-            $isOwner = $employeeId && $leaveRequest->employee_id === $employeeId;
-            $isApprover = $user->id === $leaveRequest->employee->approver_id;
+            $isOwner    = $employeeId && $leaveRequest->employee_id === $employeeId;
+            $isApprover = $user->id                                 === $leaveRequest->employee->approver_id;
 
             if (!$isOwner && !$isApprover) {
                 abort(403, 'You are not allowed to edit this leave request.');
@@ -301,9 +301,9 @@ class LeaveRequestController extends Controller
 
     protected function canEditLeaveRequest(LeaveRequest $leaveRequest): bool
     {
-        $user = auth()->user();
-        $isApprover = $user->id === $leaveRequest->employee->approver_id;
-        $isOwner = $user->employee?->id === $leaveRequest->employee_id;
+        $user       = auth()->user();
+        $isApprover = $user->id            === $leaveRequest->employee->approver_id;
+        $isOwner    = $user->employee?->id === $leaveRequest->employee_id;
 
         // Approver can always edit; employee can edit only if not final
         return $isApprover || ($isOwner && !in_array($leaveRequest->status, ['approved', 'rejected']));
@@ -385,7 +385,7 @@ class LeaveRequestController extends Controller
     private function validateLeave(Request $request, $excludeId = null)
     {
         $companyId = auth()->user()->preference->company_id;
-        $employee = Employee::where('user_id', auth()->id())
+        $employee  = Employee::where('user_id', auth()->id())
             ->where('company_id', $companyId)
             ->firstOrFail();
         return $request->validate([
@@ -398,7 +398,7 @@ class LeaveRequestController extends Controller
                     }
 
                     $start = Carbon::parse($request->start_date);
-                    $end = Carbon::parse($request->end_date);
+                    $end   = Carbon::parse($request->end_date);
 
                     $hasOverlap = LeaveRequest::where('employee_id', $employee->id)
                         ->whereIn('status', ['pending', 'approved'])
@@ -430,7 +430,7 @@ class LeaveRequestController extends Controller
                     }
 
                     $start = Carbon::parse($request->start_date);
-                    $end = Carbon::parse($request->end_date);
+                    $end   = Carbon::parse($request->end_date);
 
                     if ($start->year !== $end->year) {
                         $fail('Start date and end date must be within the same calendar year.');
@@ -471,8 +471,8 @@ class LeaveRequestController extends Controller
                     }
                 },
             ],
-            'reason' => 'required|string|max:255',
-            'files' => 'array|max:5', // Max 5 files total
+            'reason'  => 'required|string|max:255',
+            'files'   => 'array|max:5', // Max 5 files total
             'files.*' => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx', // 5MB per file
         ]);
     }
@@ -489,8 +489,8 @@ class LeaveRequestController extends Controller
         DB::beginTransaction();
 
         try {
-            $leaveRequest->status      = 'approved';
-            $leaveRequest->approver_id = auth()->id();
+            $leaveRequest->status        = 'approved';
+            $leaveRequest->approver_id   = auth()->id();
             $leaveRequest->approval_date = Carbon::now('Asia/Manila');
             $leaveRequest->save();
 
@@ -580,9 +580,9 @@ class LeaveRequestController extends Controller
     }
     public function fetchApprovedByDate($employeeId, $start, $end)
     {
-        $employee = \App\Models\Employee::findOrFail($employeeId);
+        $employee  = \App\Models\Employee::findOrFail($employeeId);
         $companyId = $employee->company_id;
-        $year = \Carbon\Carbon::parse($start)->year;
+        $year      = \Carbon\Carbon::parse($start)->year;
 
         // Get leave balance for the year
         $leaveBalance = \App\Models\LeaveBalance::where('employee_id', $employeeId)
@@ -606,7 +606,7 @@ class LeaveRequestController extends Controller
         $dailyLeaves = [];
 
         foreach ($leaveRequests as $leave) {
-            $period = \Carbon\CarbonPeriod::create($leave->start_date, $leave->end_date);
+            $period    = \Carbon\CarbonPeriod::create($leave->start_date, $leave->end_date);
             $daysCount = $period->count();
 
             // ✅ Skip zero-day leave ranges (for integrity and safety)
@@ -630,7 +630,7 @@ class LeaveRequestController extends Controller
         }
 
         // Step 2: Deduct leaves that happened BEFORE the $start date
-        $priorDates = array_filter(array_keys($dailyLeaves), fn($date) => \Carbon\Carbon::parse($date)->lessThan($start));
+        $priorDates     = array_filter(array_keys($dailyLeaves), fn ($date) => \Carbon\Carbon::parse($date)->lessThan($start));
         $preUsedCredits = 0;
 
         foreach ($priorDates as $date) {
@@ -640,12 +640,12 @@ class LeaveRequestController extends Controller
         $remaining = max(0, $availableCredits - $preUsedCredits);
 
         // Step 3: Loop through each date in the requested range and compute running balance
-        $period = \Carbon\CarbonPeriod::create($start, $end);
+        $period                 = \Carbon\CarbonPeriod::create($start, $end);
         $remainingCreditsByDate = [];
-        $result = [];
+        $result                 = [];
 
         foreach ($period as $date) {
-            $dateStr = $date->toDateString();
+            $dateStr    = $date->toDateString();
             $leaveValue = $dailyLeaves[$dateStr] ?? 0;
 
             $withPay = $remaining >= $leaveValue;
@@ -667,7 +667,7 @@ class LeaveRequestController extends Controller
         return response()->json([
             'dates'                      => $result,
             'remaining_credits'          => round($remaining, 2),
-            'remaining_credits_by_date' => $remainingCreditsByDate,
+            'remaining_credits_by_date'  => $remainingCreditsByDate,
             'original_balance'           => $availableCredits,
             'pre_used_credits'           => round($preUsedCredits, 2),
         ]);

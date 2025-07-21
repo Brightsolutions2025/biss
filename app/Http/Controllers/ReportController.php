@@ -3,16 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Exports\DtrStatusExport;
-use App\Models\{Employee, PayrollPeriod, TimeRecord, OvertimeRequest, OffsetOvertime, OffsetRequest};
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Models\LeaveBalance;
-use App\Models\LeaveRequest;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Gate;
 use App\Exports\LeaveUtilizationExport;
 use App\Exports\OvertimeOffsetExport;
+use App\Models\{Employee, PayrollPeriod, TimeRecord};
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
@@ -247,7 +244,7 @@ class ReportController extends Controller
         if (!$user->hasPermission('view time record report')) {
             abort(403, 'Unauthorized to download DTR reports.');
         }
-        
+
         $companyId       = auth()->user()->preference->company_id;
         $payrollPeriodId = $request->input('payroll_period_id');
 
@@ -267,14 +264,14 @@ class ReportController extends Controller
     }
     public function leaveUtilization(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         if (!$user->hasPermission('view leave report')) {
             abort(403, 'Unauthorized to view leave reports.');
         }
 
-        $yearFilter = $request->input('year');
+        $yearFilter       = $request->input('year');
         $departmentFilter = $request->input('department_id');
 
         $leaveBalancesQuery = \App\Models\LeaveBalance::with(['employee.user', 'employee.department'])
@@ -301,7 +298,7 @@ class ReportController extends Controller
                 ->sum('number_of_days');
 
             return [
-                'employee_name' => $balance->employee->user->name ?? 'N/A',
+                'employee_name' => $balance->employee->user->name       ?? 'N/A',
                 'department'    => $balance->employee->department->name ?? 'Unassigned',
                 'year'          => $balance->year,
                 'beginning'     => $balance->beginning_balance,
@@ -312,24 +309,24 @@ class ReportController extends Controller
 
         // Needed for the filter dropdowns
         $departments = \App\Models\Department::where('company_id', $company->id)->get();
-        $years = \App\Models\LeaveBalance::where('company_id', $company->id)
+        $years       = \App\Models\LeaveBalance::where('company_id', $company->id)
             ->select('year')->distinct()->pluck('year')->sortDesc();
 
         return view('reports.leave_utilization', compact('leaveBalances', 'departments', 'years', 'yearFilter', 'departmentFilter'));
     }
     public function leaveUtilizationPdf(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
         if (!$user->hasPermission('view leave report')) {
             abort(403, 'Unauthorized to view leave reports.');
         }
 
-        $data = $this->getLeaveUtilizationData($request, $company);
+        $data          = $this->getLeaveUtilizationData($request, $company);
         $periodCovered = $this->getPeriodText($request);
 
         $pdf = Pdf::loadView('reports.leave_utilization_pdf', [
-            'company' => $company,
+            'company'       => $company,
             'leaveBalances' => $data,
             'periodCovered' => $periodCovered,
         ])->setPaper('A4', 'portrait');
@@ -339,13 +336,13 @@ class ReportController extends Controller
 
     public function leaveUtilizationExcel(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
         if (!$user->hasPermission('view leave report')) {
             abort(403, 'Unauthorized to view leave reports.');
         }
 
-        $data = $this->getLeaveUtilizationData($request, $company);
+        $data          = $this->getLeaveUtilizationData($request, $company);
         $periodCovered = $this->getPeriodText($request);
 
         return Excel::download(
@@ -355,7 +352,7 @@ class ReportController extends Controller
     }
     protected function getLeaveUtilizationData(Request $request, $company)
     {
-        $yearFilter = $request->input('year');
+        $yearFilter       = $request->input('year');
         $departmentFilter = $request->input('department_id');
 
         $query = \App\Models\LeaveBalance::with(['employee.user', 'employee.department'])
@@ -382,7 +379,7 @@ class ReportController extends Controller
                 ->sum('number_of_days');
 
             return [
-                'employee_name' => $balance->employee->user->name ?? 'N/A',
+                'employee_name' => $balance->employee->user->name       ?? 'N/A',
                 'department'    => $balance->employee->department->name ?? 'Unassigned',
                 'year'          => $balance->year,
                 'beginning'     => $balance->beginning_balance,
@@ -393,9 +390,9 @@ class ReportController extends Controller
     }
     protected function getPeriodText(Request $request): string
     {
-        $year = $request->input('year');
+        $year         = $request->input('year');
         $departmentId = $request->input('department_id');
-        $parts = [];
+        $parts        = [];
 
         if ($year) {
             $parts[] = "Year: $year";
@@ -412,7 +409,7 @@ class ReportController extends Controller
     }
     public function overtimeOffsetComparison(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         if (!$user->hasPermission('view overtime report')) {
@@ -420,7 +417,7 @@ class ReportController extends Controller
         }
 
         $departmentId = $request->input('department_id');
-        $employeeId = $request->input('employee_id');
+        $employeeId   = $request->input('employee_id');
 
         $employeesQuery = \App\Models\Employee::with('user', 'department')
             ->where('company_id', $company->id);
@@ -444,9 +441,9 @@ class ReportController extends Controller
                 ->whereDate('date', '<=', $asOf)
                 ->get();
 
-            $totalOvertime = $overtimeRequests->sum('number_of_hours');
+            $totalOvertime   = $overtimeRequests->sum('number_of_hours');
             $expiredOvertime = $overtimeRequests->where('expires_at', '<', $asOf)->sum('number_of_hours');
-            $validOvertime = $totalOvertime - $expiredOvertime;
+            $validOvertime   = $totalOvertime - $expiredOvertime;
 
             $totalOffset = \App\Models\OffsetOvertime::where('company_id', $company->id)
                 ->whereHas('offsetRequest', function ($q) use ($employee, $asOf) {
@@ -457,7 +454,7 @@ class ReportController extends Controller
                 ->sum('used_hours');
 
             return [
-                'employee_name'        => $employee->user->name ?? 'N/A',
+                'employee_name'        => $employee->user->name       ?? 'N/A',
                 'department'           => $employee->department->name ?? 'Unassigned',
                 'overtime_hours'       => $totalOvertime,
                 'expired_hours'        => $expiredOvertime,
@@ -467,7 +464,7 @@ class ReportController extends Controller
             ];
         });
 
-        $departments = \App\Models\Department::where('company_id', $company->id)->get();
+        $departments     = \App\Models\Department::where('company_id', $company->id)->get();
         $employeeOptions = \App\Models\Employee::with('user')->where('company_id', $company->id)->get();
 
         return view('reports.overtime_offset_comparison', compact('employees', 'departments', 'employeeOptions'));
@@ -480,7 +477,7 @@ class ReportController extends Controller
         }
 
         $data = $this->generateOvertimeOffsetData($request);
-        $pdf = PDF::loadView('reports.overtime_offset_pdf', $data);
+        $pdf  = PDF::loadView('reports.overtime_offset_pdf', $data);
         return $pdf->download('Overtime_vs_Offset_Report.pdf');
     }
 
@@ -498,12 +495,12 @@ class ReportController extends Controller
     }
     public function generateOvertimeOffsetData(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
-        $asOf = $request->input('as_of', now()->toDateString());
+        $asOf         = $request->input('as_of', now()->toDateString());
         $departmentId = $request->input('department_id');
-        $employeeId = $request->input('employee_id');
+        $employeeId   = $request->input('employee_id');
 
         $employeesQuery = \App\Models\Employee::with('user', 'department')
             ->where('company_id', $company->id);
@@ -543,7 +540,7 @@ class ReportController extends Controller
 
             return [
                 'company_name'          => $company->name,
-                'employee_name'         => $employee->user->name ?? 'N/A',
+                'employee_name'         => $employee->user->name       ?? 'N/A',
                 'department'            => $employee->department->name ?? 'Unassigned',
                 'overtime_hours'        => $totalOvertime,
                 'expired_hours'         => $expiredOvertime,
@@ -555,7 +552,7 @@ class ReportController extends Controller
 
         return [
             'employees' => $employees,
-            'asOf' => $asOf,
+            'asOf'      => $asOf,
         ];
     }
     protected function restrictToDepartmentHead($query)

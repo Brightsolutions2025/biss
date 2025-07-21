@@ -2,17 +2,17 @@
 
 namespace App\Mail;
 
+use App\Models\Employee;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Employee;
 
 class DtrReminderEmail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public $employee;
     public $status;
@@ -20,8 +20,8 @@ class DtrReminderEmail extends Mailable
 
     public function __construct(Employee $employee, $status, $payrollPeriod)
     {
-        $this->employee = $employee;
-        $this->status = $status;
+        $this->employee      = $employee;
+        $this->status        = $status;
         $this->payrollPeriod = $payrollPeriod;
     }
 

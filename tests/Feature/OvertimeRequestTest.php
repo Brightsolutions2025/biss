@@ -27,11 +27,11 @@ class OvertimeRequestTest extends TestCase
         parent::setUp();
 
         $this->company = Company::factory()->create();
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->user->companies()->attach($this->company->id);
 
         UserPreference::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -46,7 +46,7 @@ class OvertimeRequestTest extends TestCase
             'overtime_request.update',
             'overtime_request.delete',
         ])->map(fn ($name) => Permission::create([
-            'name' => $name,
+            'name'       => $name,
             'company_id' => $this->company->id,
         ]));
 
@@ -54,7 +54,7 @@ class OvertimeRequestTest extends TestCase
 
         $this->employee = Employee::factory()->create([
             'company_id' => $this->company->id,
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
         ]);
     }
 
@@ -62,7 +62,7 @@ class OvertimeRequestTest extends TestCase
     public function it_displays_overtime_request_index()
     {
         OvertimeRequest::factory()->count(2)->create([
-            'company_id' => $this->company->id,
+            'company_id'  => $this->company->id,
             'employee_id' => $this->employee->id,
         ]);
 
@@ -112,7 +112,7 @@ class OvertimeRequestTest extends TestCase
     public function it_shows_an_overtime_request()
     {
         $overtime = OvertimeRequest::factory()->create([
-            'company_id' => $this->company->id,
+            'company_id'  => $this->company->id,
             'employee_id' => $this->employee->id,
         ]);
 
@@ -129,9 +129,9 @@ class OvertimeRequestTest extends TestCase
         $this->employee->update(['approver_id' => $this->user->id]);
 
         $overtime = OvertimeRequest::factory()->create([
-            'company_id' => $this->company->id,
+            'company_id'  => $this->company->id,
             'employee_id' => $this->employee->id,
-            'status' => 'pending', // Make sure it's editable
+            'status'      => 'pending', // Make sure it's editable
         ]);
 
         $this->actingAs($this->user)
@@ -146,9 +146,9 @@ class OvertimeRequestTest extends TestCase
         $this->employee->update(['approver_id' => $this->user->id]);
 
         $overtime = OvertimeRequest::factory()->create([
-            'company_id' => $this->company->id,
+            'company_id'  => $this->company->id,
             'employee_id' => $this->employee->id,
-            'status' => 'pending',
+            'status'      => 'pending',
         ]);
 
         $this->actingAs($this->user);
@@ -178,7 +178,7 @@ class OvertimeRequestTest extends TestCase
     public function it_deletes_an_overtime_request()
     {
         $overtime = OvertimeRequest::factory()->create([
-            'company_id' => $this->company->id,
+            'company_id'  => $this->company->id,
             'employee_id' => $this->employee->id,
         ]);
 

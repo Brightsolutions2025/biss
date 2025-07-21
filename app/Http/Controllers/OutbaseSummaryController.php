@@ -2,30 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OutbaseRequest;
-use App\Models\Employee;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use PDF; // If using Barryvdh\DomPDF\Facade\Pdf
-use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\OutbaseSummaryExport;
+use App\Models\Employee;
+use App\Models\OutbaseRequest;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth; // If using Barryvdh\DomPDF\Facade\Pdf
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 class OutbaseSummaryController extends Controller
 {
     public function index(Request $request)
     {
-        $user = Auth::user();
+        $user    = Auth::user();
         $company = $user->preference->company;
 
         if (! $user->hasPermission('view outbase report')) {
             abort(403, 'Unauthorized to view outbase reports.');
         }
 
-        $dateFrom = $request->input('date_from');
-        $dateTo = $request->input('date_to');
+        $dateFrom     = $request->input('date_from');
+        $dateTo       = $request->input('date_to');
         $departmentId = $request->input('department_id');
-        $employeeId = $request->input('employee_id');
+        $employeeId   = $request->input('employee_id');
 
         $query = OutbaseRequest::with(['employee.user', 'employee.department'])
             ->where('company_id', $company->id)
@@ -60,14 +60,14 @@ class OutbaseSummaryController extends Controller
             });
         });
 
-        $flatData = collect();
+        $flatData  = collect();
         $locations = collect();
 
         foreach ($grouped as $department => $employees) {
             foreach ($employees as $employee => $count) {
                 $flatData->push([
-                    'department' => $department,
-                    'employee' => $employee,
+                    'department'    => $department,
+                    'employee'      => $employee,
                     'outbase_count' => $count
                 ]);
 
@@ -86,9 +86,10 @@ class OutbaseSummaryController extends Controller
 
         // Filter options
         $departments = \App\Models\Department::where('company_id', $company->id)->orderBy('name')->get();
-        $employees = Employee::with('user')
+        $employees   = Employee::with('user')
             ->where('company_id', $company->id)
-            ->orderBy(Employee::select('name')
+            ->orderBy(
+                Employee::select('name')
                 ->join('users', 'users.id', '=', 'employees.user_id')
                 ->whereColumn('employees.id', 'employees.id')
                 ->limit(1)
@@ -96,17 +97,17 @@ class OutbaseSummaryController extends Controller
             ->get();
 
         return view('reports.outbase_summary', [
-            'data' => $flatData,
-            'locations' => $locations,
-            'period' => $periodCovered,
-            'company' => $company->name,
+            'data'        => $flatData,
+            'locations'   => $locations,
+            'period'      => $periodCovered,
+            'company'     => $company->name,
             'departments' => $departments,
-            'employees' => $employees,
+            'employees'   => $employees,
         ]);
     }
     public function exportExcel(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         if (!$user->hasPermission('view outbase report')) {
@@ -124,9 +125,9 @@ class OutbaseSummaryController extends Controller
             }
         }
 
-        $filters = $request->only(['date_from', 'date_to', 'department_id', 'employee_id', 'location', 'sort']);
+        $filters              = $request->only(['date_from', 'date_to', 'department_id', 'employee_id', 'location', 'sort']);
         $filters['date_from'] = $filters['date_from'] ?? now()->startOfMonth()->toDateString();
-        $filters['date_to'] = $filters['date_to'] ?? now()->endOfMonth()->toDateString();
+        $filters['date_to']   = $filters['date_to']   ?? now()->endOfMonth()->toDateString();
 
         return Excel::download(
             new OutbaseSummaryExport($filters, $company),
@@ -136,7 +137,7 @@ class OutbaseSummaryController extends Controller
 
     public function exportPdf(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
         if (! $user->hasPermission('view outbase report')) {
             abort(403, 'Unauthorized to view outbase reports.');
@@ -145,10 +146,10 @@ class OutbaseSummaryController extends Controller
         $data = $this->getFilteredOutbaseData($request, $company);
 
         $pdf = Pdf::loadView('reports.outbase_summary_pdf', [
-            'data' => $data['flatData'],
+            'data'      => $data['flatData'],
             'locations' => $data['locations'],
-            'period' => $data['periodCovered'],
-            'company' => $company->name,
+            'period'    => $data['periodCovered'],
+            'company'   => $company->name,
         ])->setPaper('a4', 'landscape');
 
         return $pdf->download('outbase_summary_report.pdf');
@@ -180,14 +181,14 @@ class OutbaseSummaryController extends Controller
             })->map->count();
         });
 
-        $flatData = collect();
+        $flatData  = collect();
         $locations = collect();
 
         foreach ($grouped as $department => $employees) {
             foreach ($employees as $employee => $count) {
                 $flatData->push([
-                    'department' => $department,
-                    'employee' => $employee,
+                    'department'    => $department,
+                    'employee'      => $employee,
                     'outbase_count' => $count,
                 ]);
 
@@ -200,13 +201,13 @@ class OutbaseSummaryController extends Controller
         }
 
         $dateFrom = $request->input('date_from', now()->startOfMonth()->toDateString());
-        $dateTo = $request->input('date_to', now()->endOfMonth()->toDateString());
+        $dateTo   = $request->input('date_to', now()->endOfMonth()->toDateString());
 
         $periodCovered = 'from ' . Carbon::parse($dateFrom)->format('F d, Y') . ' to ' . Carbon::parse($dateTo)->format('F d, Y');
 
         return [
-            'flatData' => $flatData,
-            'locations' => $locations,
+            'flatData'      => $flatData,
+            'locations'     => $locations,
             'periodCovered' => $periodCovered,
         ];
     }

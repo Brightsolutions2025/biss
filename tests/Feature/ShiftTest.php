@@ -22,11 +22,11 @@ class ShiftTest extends TestCase
         parent::setUp();
 
         $this->company = Company::factory()->create();
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->user->companies()->attach($this->company->id);
 
         UserPreference::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -40,7 +40,7 @@ class ShiftTest extends TestCase
             'shift.update',
             'shift.delete',
         ])->map(fn ($name) => \App\Models\Permission::create([
-            'name' => $name,
+            'name'       => $name,
             'company_id' => $this->company->id,
         ]));
 
@@ -73,9 +73,9 @@ class ShiftTest extends TestCase
         $this->actingAs($this->user);
 
         $response = $this->post(route('shifts.store'), [
-            'name' => 'Morning Shift',
-            'time_in' => '08:00',
-            'time_out' => '16:00',
+            'name'           => 'Morning Shift',
+            'time_in'        => '08:00',
+            'time_out'       => '16:00',
             'is_night_shift' => false,
         ]);
 
@@ -109,22 +109,22 @@ class ShiftTest extends TestCase
     public function it_updates_a_shift()
     {
         $shift = Shift::factory()->create([
-            'name' => 'Old Name',
+            'name'       => 'Old Name',
             'company_id' => $this->company->id,
         ]);
 
         $this->actingAs($this->user);
 
         $response = $this->put(route('shifts.update', $shift), [
-            'name' => 'Updated Name',
-            'time_in' => $shift->time_in,
-            'time_out' => $shift->time_out,
+            'name'           => 'Updated Name',
+            'time_in'        => $shift->time_in,
+            'time_out'       => $shift->time_out,
             'is_night_shift' => $shift->is_night_shift,
         ]);
 
         $response->assertRedirect(route('shifts.index'));
         $this->assertDatabaseHas('shifts', [
-            'id' => $shift->id,
+            'id'   => $shift->id,
             'name' => 'Updated Name',
         ]);
     }

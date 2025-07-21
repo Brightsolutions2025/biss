@@ -17,14 +17,14 @@ class PayrollPeriodFactory extends Factory
     public function definition(): array
     {
         $startDate = Carbon::instance($this->faker->dateTimeBetween('-2 months', 'now'));
-        $endDate = (clone $startDate)->addDays(15);
+        $endDate   = (clone $startDate)->addDays(15);
 
         return [
-            'company_id' => Company::factory(),
-            'start_date' => $startDate->toDateString(),
-            'end_date' => $endDate->toDateString(),
+            'company_id'            => Company::factory(),
+            'start_date'            => $startDate->toDateString(),
+            'end_date'              => $endDate->toDateString(),
             'dtr_submission_due_at' => $endDate->copy()->addDay()->toDateTimeString(),
-            'reminder_sent_at' => null, // Or use: $this->faker->optional()->dateTimeBetween($startDate, $endDate)
+            'reminder_sent_at'      => null, // Or use: $this->faker->optional()->dateTimeBetween($startDate, $endDate)
         ];
     }
 }

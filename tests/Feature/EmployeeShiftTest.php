@@ -25,11 +25,11 @@ class EmployeeShiftTest extends TestCase
         parent::setUp();
 
         $this->company = Company::factory()->create();
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->user->companies()->attach($this->company->id);
 
         UserPreference::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id'    => $this->user->id,
             'company_id' => $this->company->id,
         ]);
 
@@ -43,7 +43,7 @@ class EmployeeShiftTest extends TestCase
             'employee_shift.update',
             'employee_shift.delete',
         ])->map(fn ($name) => Permission::create([
-            'name' => $name,
+            'name'       => $name,
             'company_id' => $this->company->id,
         ]));
 
@@ -76,17 +76,17 @@ class EmployeeShiftTest extends TestCase
         $this->actingAs($this->user);
 
         $employee = Employee::factory()->create(['company_id' => $this->company->id]);
-        $shift = Shift::factory()->create(['company_id' => $this->company->id]);
+        $shift    = Shift::factory()->create(['company_id' => $this->company->id]);
 
         $response = $this->post(route('employee_shifts.store'), [
             'employee_id' => $employee->id,
-            'shift_id' => $shift->id,
+            'shift_id'    => $shift->id,
         ]);
 
         $response->assertRedirect(route('employee_shifts.index'));
         $this->assertDatabaseHas('employee_shifts', [
             'employee_id' => $employee->id,
-            'shift_id' => $shift->id,
+            'shift_id'    => $shift->id,
         ]);
     }
 
@@ -116,18 +116,18 @@ class EmployeeShiftTest extends TestCase
     public function it_updates_an_employee_shift()
     {
         $employeeShift = EmployeeShift::factory()->create(['company_id' => $this->company->id]);
-        $newShift = Shift::factory()->create(['company_id' => $this->company->id]);
+        $newShift      = Shift::factory()->create(['company_id' => $this->company->id]);
 
         $this->actingAs($this->user);
 
         $response = $this->put(route('employee_shifts.update', $employeeShift), [
             'employee_id' => $employeeShift->employee_id,
-            'shift_id' => $newShift->id,
+            'shift_id'    => $newShift->id,
         ]);
 
         $response->assertRedirect(route('employee_shifts.index'));
         $this->assertDatabaseHas('employee_shifts', [
-            'id' => $employeeShift->id,
+            'id'       => $employeeShift->id,
             'shift_id' => $newShift->id,
         ]);
     }

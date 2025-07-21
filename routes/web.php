@@ -1,13 +1,26 @@
 <?php
 
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CompanyUserController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeShiftController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\FiledOvertimeReportController;
+use App\Http\Controllers\LateUndertimeReportController;
 use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\LeaveStatusOverviewController;
+use App\Http\Controllers\LeaveSummaryReportController;
+use App\Http\Controllers\LeaveTimelineReportController;
 use App\Http\Controllers\OffsetRequestController;
+use App\Http\Controllers\OffsetSummaryReportController;
+use App\Http\Controllers\OffsetTrackerController;
+use App\Http\Controllers\OutbaseReportController;
 use App\Http\Controllers\OutbaseRequestController;
+use App\Http\Controllers\OutbaseSummaryController;
 use App\Http\Controllers\OvertimeRequestController;
 use App\Http\Controllers\PayrollPeriodController;
 use App\Http\Controllers\PermissionController;
@@ -16,24 +29,11 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TicketTypeController;
 use App\Http\Controllers\TimeLogController;
 use App\Http\Controllers\TimeRecordController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPreferenceController;
-use App\Http\Controllers\CompanyUserController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\OffsetTrackerController;
-use App\Http\Controllers\LeaveSummaryReportController;
-use App\Http\Controllers\FiledOvertimeReportController;
-use App\Http\Controllers\LeaveTimelineReportController;
-use App\Http\Controllers\OffsetSummaryReportController;
-use App\Http\Controllers\OutbaseReportController;
-use App\Http\Controllers\LateUndertimeReportController;
-use App\Http\Controllers\LeaveStatusOverviewController;
-use App\Http\Controllers\OutbaseSummaryController;
-use App\Http\Controllers\FileController;
-use App\Http\Controllers\TicketTypeController;
-use App\Http\Controllers\ClientController;
 use App\Http\Middleware\EnsureUserHasCompany;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
@@ -72,7 +72,7 @@ Route::middleware('auth', EnsureUserHasCompany::class)->group(function () {
         ->name('reports.dtr-status-by-team.pdf');
     Route::get('/reports/dtr-status-by-team/excel', [ReportController::class, 'downloadExcel'])
         ->name('reports.dtr-status-by-team.excel');
-        
+
     // 2. Leave Utilization Summary
     Route::get('/reports/leave-utilization', [ReportController::class, 'leaveUtilization'])->name('reports.leave_utilization');
     Route::get('/reports/leave-utilization/pdf', [ReportController::class, 'leaveUtilizationPdf'])->name('reports.leave_utilization.pdf');
@@ -117,7 +117,7 @@ Route::middleware('auth', EnsureUserHasCompany::class)->group(function () {
     Route::get('/reports/offset-tracker', [OffsetTrackerController::class, 'index'])->name('reports.offset_tracker');
     Route::get('/reports/offset-tracker/pdf', [OffsetTrackerController::class, 'offsetTrackerPdf'])->name('reports.offset_tracker.pdf');
     Route::get('/reports/offset-tracker/excel', [OffsetTrackerController::class, 'offsetTrackerExcel'])->name('reports.offset_tracker.excel');
-    
+
     // 11. Leave Summary Report
     Route::get('/reports/leave-summary', [LeaveSummaryReportController::class, 'index'])->name('reports.leave_summary');
     Route::get('/reports/leave-summary/pdf', [LeaveSummaryReportController::class, 'leaveSummaryPdf'])->name('reports.leave_summary.pdf');

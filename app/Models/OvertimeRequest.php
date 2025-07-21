@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class OvertimeRequest extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = [];
 
     /**
@@ -53,7 +53,7 @@ class OvertimeRequest extends Model
                     $overtime->expires_at = \Carbon\Carbon::parse($overtime->date);
                 } else {
                     $company = \App\Models\Company::find($overtime->company_id);
-                    $days = $company->offset_valid_after_days ?? 90;
+                    $days    = $company->offset_valid_after_days ?? 90;
 
                     $overtime->expires_at = \Carbon\Carbon::parse($overtime->date)->addDays($days);
                 }
@@ -68,7 +68,7 @@ class OvertimeRequest extends Model
                     $overtime->expires_at = \Carbon\Carbon::parse($overtime->date);
                 } else {
                     $company = \App\Models\Company::find($overtime->company_id);
-                    $days = $company->offset_valid_after_days ?? 90;
+                    $days    = $company->offset_valid_after_days ?? 90;
 
                     $overtime->expires_at = \Carbon\Carbon::parse($overtime->date)->addDays($days);
                 }

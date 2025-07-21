@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\TimeRecordLine;
-use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\LateUndertimeExport;
+use App\Models\TimeRecordLine;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class LateUndertimeReportController extends Controller
 {
     public function index(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         if (!$user->hasPermission('view attendance report')) {
@@ -22,7 +21,7 @@ class LateUndertimeReportController extends Controller
 
         // Apply default dates if not provided
         $dateFrom = $request->input('date_from', now()->startOfMonth()->toDateString());
-        $dateTo = $request->input('date_to', now()->endOfMonth()->toDateString());
+        $dateTo   = $request->input('date_to', now()->endOfMonth()->toDateString());
 
         $query = TimeRecordLine::with(['timeRecord.employee.user', 'timeRecord.employee.department'])
             ->where('company_id', $company->id)
@@ -31,7 +30,7 @@ class LateUndertimeReportController extends Controller
                 $q->where('late_minutes', '>', 0)
                   ->orWhere('undertime_minutes', '>', 0);
             });
-        
+
         $query = $this->restrictToDepartmentHead($query);
 
         if ($request->filled('department_id')) {
@@ -49,19 +48,19 @@ class LateUndertimeReportController extends Controller
         $records = $query->get();
 
         $grouped = $records
-            ->groupBy(fn($line) => optional($line->timeRecord->employee->department)->name ?? 'Unassigned')
+            ->groupBy(fn ($line) => optional($line->timeRecord->employee->department)->name ?? 'Unassigned')
             ->map(function ($group) use ($request) {
-                return $group->groupBy(fn($line) => optional($line->timeRecord->employee->user)->name)
+                return $group->groupBy(fn ($line) => optional($line->timeRecord->employee->user)->name)
                     ->map(function ($records) use ($request) {
-                        $late = $records->sum('late_minutes');
+                        $late      = $records->sum('late_minutes');
                         $undertime = $records->sum('undertime_minutes');
 
-                        $minLate = (float) $request->input('min_late', 0);
+                        $minLate      = (float) $request->input('min_late', 0);
                         $minUndertime = (float) $request->input('min_undertime', 0);
 
                         return ($late >= $minLate || $undertime >= $minUndertime)
                             ? [
-                                'late_minutes' => $late,
+                                'late_minutes'      => $late,
                                 'undertime_minutes' => $undertime,
                             ]
                             : null;
@@ -69,14 +68,14 @@ class LateUndertimeReportController extends Controller
             })->filter(); // Remove empty departments
 
         return view('reports.late_undertime', [
-            'grouped' => $grouped,
+            'grouped'  => $grouped,
             'dateFrom' => $dateFrom,
-            'dateTo' => $dateTo,
+            'dateTo'   => $dateTo,
         ]);
     }
     public function exportPdf(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         if (!$user->hasPermission('view attendance report')) {
@@ -90,7 +89,7 @@ class LateUndertimeReportController extends Controller
                 $q->where('late_minutes', '>', 0)
                 ->orWhere('undertime_minutes', '>', 0);
             });
-        
+
         $query = $this->restrictToDepartmentHead($query);
 
         if ($request->filled('date_from')) {
@@ -116,28 +115,28 @@ class LateUndertimeReportController extends Controller
         $records = $query->get();
 
         $grouped = $records
-            ->groupBy(fn($line) => optional($line->timeRecord->employee->department)->name ?? 'Unassigned')
+            ->groupBy(fn ($line) => optional($line->timeRecord->employee->department)->name ?? 'Unassigned')
             ->map(function ($group) use ($request) {
-                return $group->groupBy(fn($line) => optional($line->timeRecord->employee->user)->name)
+                return $group->groupBy(fn ($line) => optional($line->timeRecord->employee->user)->name)
                     ->map(function ($records) {
                         return [
-                            'late_minutes' => $records->sum('late_minutes'),
+                            'late_minutes'      => $records->sum('late_minutes'),
                             'undertime_minutes' => $records->sum('undertime_minutes'),
                         ];
                     });
             });
 
         $pdf = Pdf::loadView('reports.late_undertime_pdf', [
-            'grouped' => $grouped,
+            'grouped'   => $grouped,
             'date_from' => $request->date_from,
-            'date_to' => $request->date_to,
+            'date_to'   => $request->date_to,
         ]);
 
         return $pdf->download('late-undertime-report.pdf');
     }
     public function exportExcel(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         if (!$user->hasPermission('view attendance report')) {
@@ -177,12 +176,12 @@ class LateUndertimeReportController extends Controller
         $records = $query->get();
 
         $grouped = $records
-            ->groupBy(fn($line) => optional($line->timeRecord->employee->department)->name ?? 'Unassigned')
+            ->groupBy(fn ($line) => optional($line->timeRecord->employee->department)->name ?? 'Unassigned')
             ->map(function ($group) {
-                return $group->groupBy(fn($line) => optional($line->timeRecord->employee->user)->name)
+                return $group->groupBy(fn ($line) => optional($line->timeRecord->employee->user)->name)
                     ->map(function ($records) {
                         return [
-                            'late_minutes' => $records->sum('late_minutes'),
+                            'late_minutes'      => $records->sum('late_minutes'),
                             'undertime_minutes' => $records->sum('undertime_minutes'),
                         ];
                     });

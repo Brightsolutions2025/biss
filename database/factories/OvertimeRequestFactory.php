@@ -17,9 +17,9 @@ class OvertimeRequestFactory extends Factory
 
     public function definition(): array
     {
-        $date = $this->faker->date();
+        $date      = $this->faker->date();
         $startTime = $this->faker->dateTimeBetween("$date 17:00:00", "$date 20:00:00");
-        $endTime = (clone $startTime)->modify('+2 hours');
+        $endTime   = (clone $startTime)->modify('+2 hours');
 
         return [
             'company_id'        => Company::factory(),

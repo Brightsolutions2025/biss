@@ -5,12 +5,12 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use ZipArchive;
 use Symfony\Component\Process\Process;
+use ZipArchive;
 
 class BackupRestoreCommand extends Command
 {
-    protected $signature = 'backup:restore {--filename=}';
+    protected $signature   = 'backup:restore {--filename=}';
     protected $description = 'Restore Laravel app and DB from a Spatie-style backup ZIP';
 
     public function handle(): int
@@ -29,17 +29,17 @@ class BackupRestoreCommand extends Command
             return 1;
         }
 
-        $this->info("📦 Extracting backup ZIP...");
+        $this->info('📦 Extracting backup ZIP...');
         $restorePath = storage_path('app/backup-restore-temp');
         File::deleteDirectory($restorePath);
         File::makeDirectory($restorePath);
 
-        $zip = new ZipArchive;
+        $zip = new ZipArchive();
         if ($zip->open($backupPath) === true) {
             $zip->extractTo($restorePath);
             $zip->close();
         } else {
-            $this->error("❌ Failed to extract ZIP file.");
+            $this->error('❌ Failed to extract ZIP file.');
             return 1;
         }
 
@@ -48,11 +48,11 @@ class BackupRestoreCommand extends Command
             ->first(fn ($file) => str_ends_with($file->getFilename(), '.sql'));
 
         if (!$sqlDump) {
-            $this->error("❌ No .sql file found in db-dumps/");
+            $this->error('❌ No .sql file found in db-dumps/');
             return 1;
         }
 
-        $this->info("🧠 Restoring database from: " . $sqlDump->getFilename());
+        $this->info('🧠 Restoring database from: ' . $sqlDump->getFilename());
 
         $dbHost = config('database.connections.mysql.host');
         $dbUser = config('database.connections.mysql.username');
@@ -66,25 +66,25 @@ class BackupRestoreCommand extends Command
         $process->run();
 
         if (!$process->isSuccessful()) {
-            $this->error("❌ DB Restore Failed: " . $process->getErrorOutput());
+            $this->error('❌ DB Restore Failed: ' . $process->getErrorOutput());
             return 1;
         }
 
-        $this->info("✅ Database restored successfully.");
+        $this->info('✅ Database restored successfully.');
 
         // Optionally restore files
         if (File::exists("{$restorePath}/.env")) {
             File::copy("{$restorePath}/.env", base_path('.env'));
-            $this->info("📄 Restored .env file.");
+            $this->info('📄 Restored .env file.');
         }
 
         if (File::exists("{$restorePath}/var/www/html/biss/storage")) {
             File::copyDirectory("{$restorePath}/var/www/html/biss/storage", storage_path());
-            $this->info("📁 Restored storage/ folder.");
+            $this->info('📁 Restored storage/ folder.');
         }
 
 
-        $this->info("🎉 Restore complete!");
+        $this->info('🎉 Restore complete!');
 
         return 0;
     }

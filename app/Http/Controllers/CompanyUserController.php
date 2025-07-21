@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
-use App\Models\User;
 use App\Models\CompanyUser;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -38,10 +38,10 @@ class CompanyUserController extends Controller
      */
     public function create()
     {
-        $companies = Company::all();
-        $company = auth()->user()->preference->company;
+        $companies       = Company::all();
+        $company         = auth()->user()->preference->company;
         $assignedUserIds = $company->users()->pluck('user_id')->toArray();
-        $users = User::all();
+        $users           = User::all();
         //$users = CompanyUser::with(['user', 'company'])->get();
 
         return view('company_users.create', compact('company', 'assignedUserIds', 'companies', 'users'));
@@ -54,7 +54,7 @@ class CompanyUserController extends Controller
     {
         $validated = $request->validate([
             'company_id' => 'required|exists:companies,id',
-            'user_id' => 'required|exists:users,id',
+            'user_id'    => 'required|exists:users,id',
         ]);
 
         DB::beginTransaction();
@@ -69,8 +69,8 @@ class CompanyUserController extends Controller
             DB::commit();
 
             Log::info('Company users updated', [
-                'company_id' => $company->id,
-                'user_id' => auth()->id(),
+                'company_id'    => $company->id,
+                'user_id'       => auth()->id(),
                 'assigned_user' => $validated['user_id'],
             ]);
 
@@ -79,7 +79,7 @@ class CompanyUserController extends Controller
             DB::rollBack();
 
             Log::error('Failed to assign users to company', [
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
                 'user_id' => auth()->id(),
             ]);
 
@@ -95,7 +95,7 @@ class CompanyUserController extends Controller
     public function edit(CompanyUser $companyUser)
     {
         $companies = Company::all();
-        $users = User::all();
+        $users     = User::all();
 
         return view('company_users.edit', compact('companyUser', 'companies', 'users'));
     }
@@ -104,7 +104,7 @@ class CompanyUserController extends Controller
     {
         $validated = $request->validate([
             'company_id' => 'required|exists:companies,id',
-            'user_id' => 'required|exists:users,id',
+            'user_id'    => 'required|exists:users,id',
         ]);
 
         DB::beginTransaction();
@@ -119,7 +119,7 @@ class CompanyUserController extends Controller
             // Attach new relationship
             DB::table('company_user')->insert([
                 'company_id' => $validated['company_id'],
-                'user_id' => $validated['user_id'],
+                'user_id'    => $validated['user_id'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -128,10 +128,10 @@ class CompanyUserController extends Controller
 
             Log::info('CompanyUser updated', [
                 'old_company_id' => $companyUser->company_id,
-                'old_user_id' => $companyUser->user_id,
+                'old_user_id'    => $companyUser->user_id,
                 'new_company_id' => $validated['company_id'],
-                'new_user_id' => $validated['user_id'],
-                'action_by' => auth()->id(),
+                'new_user_id'    => $validated['user_id'],
+                'action_by'      => auth()->id(),
             ]);
 
             return redirect()->route('company_users.index')->with('success', 'Assignment updated successfully.');
@@ -139,7 +139,7 @@ class CompanyUserController extends Controller
             DB::rollBack();
 
             Log::error('Failed to update company-user assignment', [
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
                 'user_id' => auth()->id(),
             ]);
 
@@ -163,8 +163,8 @@ class CompanyUserController extends Controller
 
             Log::info('User removed from company', [
                 'company_id' => $companyUser->company_id,
-                'user_id' => $companyUser->user_id,
-                'action_by' => auth()->id(),
+                'user_id'    => $companyUser->user_id,
+                'action_by'  => auth()->id(),
             ]);
 
             return redirect()->route('company_users.index')->with('success', 'User removed from company successfully.');
@@ -172,10 +172,10 @@ class CompanyUserController extends Controller
             DB::rollBack();
 
             Log::error('Failed to remove user from company', [
-                'error' => $e->getMessage(),
+                'error'      => $e->getMessage(),
                 'company_id' => $companyUser->company_id,
-                'user_id' => $companyUser->user_id,
-                'action_by' => auth()->id(),
+                'user_id'    => $companyUser->user_id,
+                'action_by'  => auth()->id(),
             ]);
 
             return back()->withErrors($e->getMessage());

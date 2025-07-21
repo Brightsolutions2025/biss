@@ -4,8 +4,8 @@ namespace App\Notifications;
 
 use App\Models\OffsetRequest;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class OffsetRequestStatusChanged extends Notification
 {
@@ -17,7 +17,7 @@ class OffsetRequestStatusChanged extends Notification
     public function __construct(OffsetRequest $offsetRequest, $status)
     {
         $this->offsetRequest = $offsetRequest;
-        $this->status = $status;
+        $this->status        = $status;
     }
 
     public function via($notifiable)
@@ -30,12 +30,12 @@ class OffsetRequestStatusChanged extends Notification
         $statusLabel = ucfirst($this->status);
 
         $statusMessage = match ($this->status) {
-            'approved' => "has been approved.",
-            'rejected' => "was rejected.",
-            default    => "was updated.",
+            'approved' => 'has been approved.',
+            'rejected' => 'was rejected.',
+            default    => 'was updated.',
         };
 
-        $mail = (new MailMessage)
+        $mail = (new MailMessage())
             ->subject("Offset Request {$statusLabel}")
             ->greeting("Hi {$notifiable->name},")
             ->line("Your offset request dated {$this->offsetRequest->date} {$statusMessage}")

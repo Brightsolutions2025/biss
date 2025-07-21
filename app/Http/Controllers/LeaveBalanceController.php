@@ -68,7 +68,7 @@ class LeaveBalanceController extends Controller
         }
 
         $companyId = auth()->user()->preference->company_id;
-        $year = $request->input('year');
+        $year      = $request->input('year');
 
         DB::beginTransaction();
 
@@ -82,7 +82,7 @@ class LeaveBalanceController extends Controller
                                     ->where('year', $year);
                     }),
                 ],
-                'year' => 'required|integer|min:2000|max:2100',
+                'year'              => 'required|integer|min:2000|max:2100',
                 'beginning_balance' => 'nullable|integer|min:0',
             ], [
                 'employee_id.unique' => 'There is already a beginning balance record for this employee in the selected year.',

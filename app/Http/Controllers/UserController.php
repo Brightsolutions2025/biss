@@ -111,7 +111,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         $companyId = auth()->user()->preference->company_id;
-        $roles = $user->rolesForCompany($companyId); // uses the method above
+        $roles     = $user->rolesForCompany($companyId); // uses the method above
 
         return view('users.show', compact('user', 'roles'));
     }
@@ -137,7 +137,7 @@ class UserController extends Controller
 
         $validated = $request->validate([
             'name'       => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email'      => 'required|email|unique:users,email,' . $user->id,
             'password'   => 'nullable|string|min:8',
             'role_ids'   => 'nullable|array',
             'role_ids.*' => 'exists:roles,id',
@@ -147,7 +147,7 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
-            $user->name = $validated['name'];
+            $user->name  = $validated['name'];
             $user->email = $validated['email'];
             if (!empty($validated['password'])) {
                 $user->password = bcrypt($validated['password']);
@@ -163,7 +163,7 @@ class UserController extends Controller
             if (! $exists) {
                 DB::table('company_user')->insert([
                     'company_id' => $companyId,
-                    'user_id' => $user->id,
+                    'user_id'    => $user->id,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);

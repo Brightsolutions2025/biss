@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class LeaveRequest extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = [];
 
     /**
@@ -42,7 +42,7 @@ class LeaveRequest extends Model
     {
         return route('leave_requests.show', $this);
     }
-    
+
     public function files()
     {
         return $this->morphMany(File::class, 'fileable');

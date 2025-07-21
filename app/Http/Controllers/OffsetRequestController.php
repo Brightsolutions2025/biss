@@ -5,18 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\OffsetRequest;
 use App\Models\OvertimeRequest;
+use App\Notifications\OffsetRequestStatusChanged;
+use App\Notifications\OffsetRequestSubmitted;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Notifications\OffsetRequestSubmitted;
-use App\Notifications\OffsetRequestStatusChanged;
-use Illuminate\Support\Carbon;
 
 class OffsetRequestController extends Controller
 {
     public const OT_OFFSET_VALID_AFTER_DAYS  = 'offset_valid_after_days';
     public const OT_OFFSET_VALID_BEFORE_DAYS = 'offset_valid_before_days';
-    protected array $offsetValidity = [];
+    protected array $offsetValidity          = [];
 
     public function __construct()
     {
@@ -26,7 +26,7 @@ class OffsetRequestController extends Controller
             $company = $user->preference->company;
 
             $this->offsetValidity = [
-                self::OT_OFFSET_VALID_AFTER_DAYS  => $company->offset_valid_after_days ?? 90,
+                self::OT_OFFSET_VALID_AFTER_DAYS  => $company->offset_valid_after_days  ?? 90,
                 self::OT_OFFSET_VALID_BEFORE_DAYS => $company->offset_valid_before_days ?? 26,
             ];
         } else {
@@ -161,15 +161,15 @@ class OffsetRequestController extends Controller
             'overtime_requests'              => 'required|array|min:1',
             'overtime_requests.*.id'         => 'required|exists:overtime_requests,id',
             'overtime_requests.*.used_hours' => 'required|numeric|min:0.5',
-            'files' => 'array|max:5',
-            'files.*' => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
+            'files'                          => 'array|max:5',
+            'files.*'                        => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
         ]);
 
         // === Custom Validation Logic ===
 
         // 1. Compute time difference in hours
-        $start = \Carbon\Carbon::createFromFormat('H:i', $validated['time_start']);
-        $end   = \Carbon\Carbon::createFromFormat('H:i', $validated['time_end']);
+        $start       = \Carbon\Carbon::createFromFormat('H:i', $validated['time_start']);
+        $end         = \Carbon\Carbon::createFromFormat('H:i', $validated['time_end']);
         $diffInHours = $start->floatDiffInRealHours($end); // float, like 1.75
 
         if (round($diffInHours, 2) !== round($validated['number_of_hours'], 2)) {
@@ -208,13 +208,13 @@ class OffsetRequestController extends Controller
             if (round($proposedTotal, 2) > round($otRequest->number_of_hours, 2)) {
                 return back()->withErrors([
                     'overtime_requests' => "The overtime request on {$otRequest->date} only has " .
-                        number_format($otRequest->number_of_hours - $alreadyUsed, 2) . 
-                        " hour(s) available, but you're trying to use " . number_format($ot['used_hours'], 2) . " hour(s)."
+                        number_format($otRequest->number_of_hours - $alreadyUsed, 2) .
+                        " hour(s) available, but you're trying to use " . number_format($ot['used_hours'], 2) . ' hour(s).'
                 ])->withInput();
             }
 
             // Check if offset request date is within 90 days of the overtime request date
-            $offsetDate = \Carbon\Carbon::parse($validated['date']);
+            $offsetDate   = \Carbon\Carbon::parse($validated['date']);
             $overtimeDate = \Carbon\Carbon::parse($otRequest->date);
 
             // 🆕 Added validation: Overtime date must be strictly before offset date
@@ -240,7 +240,7 @@ class OffsetRequestController extends Controller
                 $offsetDate->isAfter($overtimeDate->copy()->addDays($this->offsetValidity[self::OT_OFFSET_VALID_AFTER_DAYS]))
             ) {
                 return back()->withErrors([
-                    'overtime_requests' => "The offset date must be within " . $this->offsetValidity[self::OT_OFFSET_VALID_AFTER_DAYS] . " days *after* the overtime request dated {$overtimeDate->toDateString()}."
+                    'overtime_requests' => 'The offset date must be within ' . $this->offsetValidity[self::OT_OFFSET_VALID_AFTER_DAYS] . " days *after* the overtime request dated {$overtimeDate->toDateString()}."
                 ])->withInput();
             }
         }
@@ -293,10 +293,10 @@ class OffsetRequestController extends Controller
 
             Log::info('Offset request created', [
                 'offset_request_id' => $offsetRequest->id,
-                'user_id' => auth()->id(),
-                'employee_id' => $validated['employee_id'],
-                'date' => $validated['date'],
-                'hours' => $validated['number_of_hours'],
+                'user_id'           => auth()->id(),
+                'employee_id'       => $validated['employee_id'],
+                'date'              => $validated['date'],
+                'hours'             => $validated['number_of_hours'],
             ]);
 
             return redirect()->route('offset_requests.index')->with('success', 'Offset request submitted.');
@@ -327,7 +327,7 @@ class OffsetRequestController extends Controller
         $employeeId = $user->employee?->id;
 
         if (!$user->hasPermission('offset_request.browse_all')) {
-            $isOwner = $offsetRequest->employee_id === $employeeId;
+            $isOwner    = $offsetRequest->employee_id           === $employeeId;
             $isApprover = $offsetRequest->employee->approver_id === $employeeId;
 
             if (!$isOwner && !$isApprover) {
@@ -389,7 +389,7 @@ class OffsetRequestController extends Controller
     protected function canEditOffsetRequest(OffsetRequest $offsetRequest): bool
     {
         $employeeId = auth()->user()->employee?->id;
-        $isOwner = $offsetRequest->employee_id === $employeeId;
+        $isOwner    = $offsetRequest->employee_id           === $employeeId;
         $isApprover = $offsetRequest->employee->approver_id === $employeeId;
 
         if ($isApprover) {
@@ -431,15 +431,15 @@ class OffsetRequestController extends Controller
             'overtime_requests'              => 'required|array|min:1',
             'overtime_requests.*.id'         => 'required|exists:overtime_requests,id',
             'overtime_requests.*.used_hours' => 'required|numeric|min:0.5',
-            'files' => 'array|max:5',
-            'files.*' => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
+            'files'                          => 'array|max:5',
+            'files.*'                        => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
         ]);
 
         // === Custom Validation Logic ===
 
         // 1. Validate time diff
-        $start = \Carbon\Carbon::createFromFormat('H:i', $validated['time_start']);
-        $end = \Carbon\Carbon::createFromFormat('H:i', $validated['time_end']);
+        $start       = \Carbon\Carbon::createFromFormat('H:i', $validated['time_start']);
+        $end         = \Carbon\Carbon::createFromFormat('H:i', $validated['time_end']);
         $diffInHours = $start->floatDiffInRealHours($end);
 
         if (round($diffInHours, 2) !== round($validated['number_of_hours'], 2)) {
@@ -503,7 +503,7 @@ class OffsetRequestController extends Controller
                 $offsetDate->isAfter($overtimeDate->copy()->addDays($this->offsetValidity[self::OT_OFFSET_VALID_AFTER_DAYS]))
             ) {
                 return back()->withErrors([
-                    'overtime_requests' => "The offset date must be within " . $this->offsetValidity[self::OT_OFFSET_VALID_AFTER_DAYS] . " days *after* the overtime request dated {$overtimeDate->toDateString()}."
+                    'overtime_requests' => 'The offset date must be within ' . $this->offsetValidity[self::OT_OFFSET_VALID_AFTER_DAYS] . " days *after* the overtime request dated {$overtimeDate->toDateString()}."
                 ])->withInput();
             }
         }
@@ -578,7 +578,7 @@ class OffsetRequestController extends Controller
                 'id'            => $offsetRequest->id,
                 'user_id'       => auth()->id(),
                 'employee_id'   => $validated['employee_id'],
-                'overtime_ids' => collect($validated['overtime_requests'])->pluck('id')->all(),
+                'overtime_ids'  => collect($validated['overtime_requests'])->pluck('id')->all(),
             ]);
 
             return redirect()->route('offset_requests.index')->with('success', 'Offset request updated.');
@@ -609,7 +609,7 @@ class OffsetRequestController extends Controller
 
         // Restrict non-global users to their own or subordinate records
         if (!$user->hasPermission('offset_request.browse_all')) {
-            $isOwner = $offsetRequest->employee_id === $employeeId;
+            $isOwner    = $offsetRequest->employee_id           === $employeeId;
             $isApprover = $offsetRequest->employee->approver_id === $employeeId;
 
             if (! $isOwner && ! $isApprover) {
@@ -677,7 +677,7 @@ class OffsetRequestController extends Controller
             $offsetRequest->status           = 'approved';
             $offsetRequest->approver_id      = auth()->id();
             $offsetRequest->rejection_reason = null; // clear rejection if previously set
-            $offsetRequest->approval_date = Carbon::now('Asia/Manila');
+            $offsetRequest->approval_date    = Carbon::now('Asia/Manila');
             $offsetRequest->save();
 
             $employeeUser = $offsetRequest->employee->user;

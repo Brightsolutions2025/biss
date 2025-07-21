@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\OutbaseRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Carbon;
 
 class OutbaseRequestController extends Controller
 {
@@ -20,7 +20,7 @@ class OutbaseRequestController extends Controller
             abort(403, 'Unauthorized to browse outbase requests.');
         }
 
-        $user = auth()->user();
+        $user      = auth()->user();
         $companyId = $user->preference->company_id;
 
         $query = OutbaseRequest::with('employee.user')
@@ -101,8 +101,8 @@ class OutbaseRequestController extends Controller
             'time_end'    => 'required|date_format:H:i|after:time_start',
             'location'    => 'required|string|max:255',
             'reason'      => 'required|string',
-            'files' => 'array|max:5',
-            'files.*' => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
+            'files'       => 'array|max:5',
+            'files.*'     => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
         ]);
 
         DB::beginTransaction();
@@ -171,7 +171,7 @@ class OutbaseRequestController extends Controller
         if (!auth()->user()->hasPermission('outbase_request.read')) {
             abort(403, 'Unauthorized to view outbase request.');
         }
-        
+
         $employeeId = $user->employee?->id;
 
         if (!$user->hasPermission('outbase_request.browse_all')) {
@@ -202,7 +202,7 @@ class OutbaseRequestController extends Controller
         if (!$user->hasPermission('outbase_request.update')) {
             abort(403, 'Unauthorized to edit outbase request.');
         }
-        
+
         if (!$this->canEditOutbaseRequest($outbaseRequest)) {
             abort(403, 'You are not allowed to edit this outbase request.');
         }
@@ -210,8 +210,8 @@ class OutbaseRequestController extends Controller
         // If user doesn't have 'browse_all', enforce ownership or approver rights
         if (!$user->hasPermission('outbase_request.browse_all')) {
             $employeeId = $user->employee?->id;
-            $isOwner = $employeeId && $outbaseRequest->employee_id === $employeeId;
-            $isApprover = auth()->id() === $outbaseRequest->employee->approver_id;
+            $isOwner    = $employeeId && $outbaseRequest->employee_id === $employeeId;
+            $isApprover = auth()->id()                                === $outbaseRequest->employee->approver_id;
 
             if (!$isOwner && !$isApprover) {
                 abort(403, 'You are not allowed to edit this outbase request.');
@@ -223,9 +223,9 @@ class OutbaseRequestController extends Controller
 
     protected function canEditOutbaseRequest(OutbaseRequest $outbaseRequest): bool
     {
-        $user = auth()->user();
+        $user       = auth()->user();
         $employeeId = $user->employee?->id;
-        $isOwner = $employeeId === $outbaseRequest->employee_id;
+        $isOwner    = $employeeId  === $outbaseRequest->employee_id;
         $isApprover = auth()->id() === $outbaseRequest->employee->approver_id;
 
         // Allow approver to edit at any status; employee only if pending
@@ -263,8 +263,8 @@ class OutbaseRequestController extends Controller
                 'time_end'         => 'required|date_format:H:i|after:time_start',
                 'location'         => 'required|string|max:255',
                 'reason'           => 'required|string',
-                'files' => 'array|max:5',
-                'files.*' => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
+                'files'            => 'array|max:5',
+                'files.*'          => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
             ]);
 
             $employee = Employee::findOrFail($validated['employee_id']);
@@ -401,8 +401,8 @@ class OutbaseRequestController extends Controller
         DB::beginTransaction();
 
         try {
-            $outbaseRequest->status      = 'approved';
-            $outbaseRequest->approver_id = auth()->id();
+            $outbaseRequest->status        = 'approved';
+            $outbaseRequest->approver_id   = auth()->id();
             $outbaseRequest->approval_date = Carbon::now('Asia/Manila');
             $outbaseRequest->save();
 

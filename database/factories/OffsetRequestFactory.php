@@ -18,21 +18,21 @@ class OffsetRequestFactory extends Factory
     public function definition(): array
     {
         $startTime = $this->faker->time('H:i:s');
-        $endTime = date('H:i:s', strtotime($startTime) + 2 * 3600); // +2 hours
+        $endTime   = date('H:i:s', strtotime($startTime) + 2 * 3600); // +2 hours
 
         return [
-            'company_id' => Company::factory(),
-            'employee_id' => Employee::factory(),
-            'date' => $this->faker->dateTimeBetween('-1 month', 'now')->format('Y-m-d'),
+            'company_id'                   => Company::factory(),
+            'employee_id'                  => Employee::factory(),
+            'date'                         => $this->faker->dateTimeBetween('-1 month', 'now')->format('Y-m-d'),
             'project_or_event_description' => $this->faker->sentence(6),
-            'time_start' => $startTime,
-            'time_end' => $endTime,
-            'number_of_hours' => 2.00,
-            'reason' => $this->faker->optional()->sentence(),
-            'status' => $this->faker->randomElement(['pending', 'approved', 'rejected']),
-            'approver_id' => User::factory(),
-            'approval_date' => $this->faker->optional()->date(),
-            'rejection_reason' => $this->faker->optional()->sentence(),
+            'time_start'                   => $startTime,
+            'time_end'                     => $endTime,
+            'number_of_hours'              => 2.00,
+            'reason'                       => $this->faker->optional()->sentence(),
+            'status'                       => $this->faker->randomElement(['pending', 'approved', 'rejected']),
+            'approver_id'                  => User::factory(),
+            'approval_date'                => $this->faker->optional()->date(),
+            'rejection_reason'             => $this->faker->optional()->sentence(),
         ];
     }
 }

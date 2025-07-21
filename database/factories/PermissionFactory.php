@@ -12,9 +12,9 @@ class PermissionFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->word(),
+            'name'        => $this->faker->unique()->word(),
             'description' => $this->faker->sentence(),
-            'company_id' => \App\Models\Company::factory(),
+            'company_id'  => \App\Models\Company::factory(),
         ];
     }
 }

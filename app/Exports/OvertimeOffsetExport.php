@@ -2,10 +2,9 @@
 
 namespace App\Exports;
 
-use App\Models\Employee;
 use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Concerns\FromView;
 
 class OvertimeOffsetExport implements FromView
 {
@@ -19,7 +18,7 @@ class OvertimeOffsetExport implements FromView
     public function view(): View
     {
         $controller = new \App\Http\Controllers\ReportController();
-        $data = $controller->generateOvertimeOffsetData($this->request);
+        $data       = $controller->generateOvertimeOffsetData($this->request);
 
         return view('reports.overtime_offset_excel', $data);
     }

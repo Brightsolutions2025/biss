@@ -46,7 +46,7 @@ class RoleController extends Controller
 
         // ✅ Safe parsing of permissionsInput (comma-separated string)
         $permissionsInputRaw = $request->input('permissionsInput');
-        $permissionIds = $permissionsInputRaw
+        $permissionIds       = $permissionsInputRaw
             ? array_filter(array_map('intval', explode(',', $permissionsInputRaw)))
             : [];
 
@@ -110,7 +110,7 @@ class RoleController extends Controller
         $this->authorizeCompany($role->company_id);
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name,' . $role->id . ',id,company_id,' . $companyId,
+            'name'          => 'required|string|max:255|unique:roles,name,' . $role->id . ',id,company_id,' . $companyId,
             'description'   => 'nullable|string|max:1000',
             'permissions'   => 'array',
             'permissions.*' => 'exists:permissions,id',
@@ -118,7 +118,7 @@ class RoleController extends Controller
 
         // ✅ Safe parsing of permissionsInput (comma-separated string)
         $permissionsInputRaw = $request->input('permissionsInput');
-        $permissionIds = $permissionsInputRaw
+        $permissionIds       = $permissionsInputRaw
             ? array_filter(array_map('intval', explode(',', $permissionsInputRaw)))
             : [];
 

@@ -17,9 +17,9 @@ class LeaveBalanceFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
-            'employee_id' => Employee::factory(),
-            'year' => $this->faker->numberBetween(2020, 2030),
+            'company_id'        => Company::factory(),
+            'employee_id'       => Employee::factory(),
+            'year'              => $this->faker->numberBetween(2020, 2030),
             'beginning_balance' => $this->faker->numberBetween(0, 30),
         ];
     }

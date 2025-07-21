@@ -148,7 +148,7 @@ return new class () extends Migration {
 
             $table->comment('Stores user-selected preferences like active company');
         });
-        
+
         // Departments
         Schema::create('departments', function (Blueprint $table) {
             $table->id();

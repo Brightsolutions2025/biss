@@ -38,13 +38,13 @@ class OvertimeRequestSubmitted extends Notification
     {
         $employeeName = $this->overtimeRequest->employee->user->name ?? 'An employee';
 
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject('New Overtime Request Submitted')
             ->greeting("Hello {$notifiable->name},")
             ->line("{$employeeName} submitted an overtime request.")
-            ->line("Date: " . $this->overtimeRequest->date)
-            ->line("From: " . $this->overtimeRequest->time_start . " to " . $this->overtimeRequest->time_end)
-            ->line("Reason: " . $this->overtimeRequest->reason)
+            ->line('Date: ' . $this->overtimeRequest->date)
+            ->line('From: ' . $this->overtimeRequest->time_start . ' to ' . $this->overtimeRequest->time_end)
+            ->line('Reason: ' . $this->overtimeRequest->reason)
             ->action('View Request', url(route('overtime_requests.show', $this->overtimeRequest->id)))
             ->line('Please review and take action.');
     }

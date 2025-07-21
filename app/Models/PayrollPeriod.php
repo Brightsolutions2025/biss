@@ -2,20 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class PayrollPeriod extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = [];
-    protected $dates = ['start_date', 'end_date'];
-    protected $casts = [
+    protected $dates   = ['start_date', 'end_date'];
+    protected $casts   = [
         'dtr_submission_due_at' => 'datetime',
-        'reminder_sent_at' => 'datetime',
-        'start_date' => 'date',
-        'end_date' => 'date',
+        'reminder_sent_at'      => 'datetime',
+        'start_date'            => 'date',
+        'end_date'              => 'date',
     ];
 
     /**

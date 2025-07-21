@@ -11,12 +11,13 @@ class LeaveUtilizationExport implements FromView
         public $company,
         public $leaveBalances,
         public $periodCovered
-    ) {}
+    ) {
+    }
 
     public function view(): View
     {
         return view('reports.leave_utilization_excel', [
-            'company' => $this->company,
+            'company'       => $this->company,
             'leaveBalances' => $this->leaveBalances,
             'periodCovered' => $this->periodCovered,
         ]);

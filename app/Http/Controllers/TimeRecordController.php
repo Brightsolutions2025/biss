@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TimeRecordExport;
 use App\Models\Employee;
+use App\Models\LeaveRequest;
+use App\Models\OffsetRequest;
+use App\Models\OutbaseRequest;
+use App\Models\OvertimeRequest;
 use App\Models\PayrollPeriod;
 use App\Models\TimeLog;
 use App\Models\TimeRecord;
-use App\Models\LeaveRequest;
-use App\Models\OvertimeRequest;
-use App\Models\OffsetRequest;
-use App\Models\OutbaseRequest;
+use App\Notifications\TimeRecordStatusChanged;
+use App\Notifications\TimeRecordSubmitted;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Notifications\TimeRecordSubmitted;
-use App\Notifications\TimeRecordStatusChanged;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\TimeRecordExport;
-use Illuminate\Support\Carbon;
 
 class TimeRecordController extends Controller
 {
@@ -109,7 +109,7 @@ class TimeRecordController extends Controller
 
         return view('time_records.create', compact('employee', 'payrollPeriods'));
     }
-    
+
     public function getTimeLogs($employeeId, $startDate, $endDate)
     {
         $logs = TimeLog::where('employee_name', auth()->user()->name)
@@ -120,7 +120,7 @@ class TimeRecordController extends Controller
             ->mapWithKeys(function ($logsForDay, $date) {
                 return [
                     $date => [
-                        'Clock In' => optional($logsForDay->first())->attendance_time,
+                        'Clock In'  => optional($logsForDay->first())->attendance_time,
                         'Clock Out' => optional($logsForDay->count() > 1 ? $logsForDay->last() : null)->attendance_time,
                     ]
                 ];
@@ -139,28 +139,28 @@ class TimeRecordController extends Controller
         }
 
         $validated = $request->validate([
-            'employee_id'                             => 'required|exists:employees,id',
-            'payroll_period_id'                       => 'required|exists:payroll_periods,id',
-            'time_record_lines'                       => 'required|array|min:1',
-            'time_record_lines.*.date'                => 'required|date',
-            'time_record_lines.*.clock_in'            => 'nullable|date_format:H:i',
-            'time_record_lines.*.clock_out'           => 'nullable|date_format:H:i',
-            'time_record_lines.*.late_minutes'        => 'nullable|numeric|min:0',
-            'time_record_lines.*.undertime_minutes'   => 'nullable|numeric|min:0',
-            'time_record_lines.*.overtime_time_start' => 'nullable|date_format:H:i',
-            'time_record_lines.*.overtime_time_end'   => 'nullable|date_format:H:i',
-            'time_record_lines.*.overtime_hours'      => 'nullable|numeric|min:0',
-            'time_record_lines.*.offset_time_start'   => 'nullable|date_format:H:i',
-            'time_record_lines.*.offset_time_end'     => 'nullable|date_format:H:i',
-            'time_record_lines.*.offset_hours'        => 'nullable|numeric|min:0',
-            'time_record_lines.*.outbase_time_start'  => 'nullable|date_format:H:i',
-            'time_record_lines.*.outbase_time_end'    => 'nullable|date_format:H:i',
-            'time_record_lines.*.leave_days'          => 'nullable|numeric|min:0',
+            'employee_id'                                 => 'required|exists:employees,id',
+            'payroll_period_id'                           => 'required|exists:payroll_periods,id',
+            'time_record_lines'                           => 'required|array|min:1',
+            'time_record_lines.*.date'                    => 'required|date',
+            'time_record_lines.*.clock_in'                => 'nullable|date_format:H:i',
+            'time_record_lines.*.clock_out'               => 'nullable|date_format:H:i',
+            'time_record_lines.*.late_minutes'            => 'nullable|numeric|min:0',
+            'time_record_lines.*.undertime_minutes'       => 'nullable|numeric|min:0',
+            'time_record_lines.*.overtime_time_start'     => 'nullable|date_format:H:i',
+            'time_record_lines.*.overtime_time_end'       => 'nullable|date_format:H:i',
+            'time_record_lines.*.overtime_hours'          => 'nullable|numeric|min:0',
+            'time_record_lines.*.offset_time_start'       => 'nullable|date_format:H:i',
+            'time_record_lines.*.offset_time_end'         => 'nullable|date_format:H:i',
+            'time_record_lines.*.offset_hours'            => 'nullable|numeric|min:0',
+            'time_record_lines.*.outbase_time_start'      => 'nullable|date_format:H:i',
+            'time_record_lines.*.outbase_time_end'        => 'nullable|date_format:H:i',
+            'time_record_lines.*.leave_days'              => 'nullable|numeric|min:0',
             'time_record_lines.*.remaining_leave_credits' => 'nullable|numeric|min:0',
             'time_record_lines.*.leave_with_pay'          => 'nullable|boolean',
-            'time_record_lines.*.remarks'             => 'nullable|string|max:255',
-            'files' => 'array|max:5',
-            'files.*' => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
+            'time_record_lines.*.remarks'                 => 'nullable|string|max:255',
+            'files'                                       => 'array|max:5',
+            'files.*'                                     => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
         ]);
 
         $companyId = auth()->user()->preference->company_id;
@@ -176,24 +176,24 @@ class TimeRecordController extends Controller
 
             foreach ($validated['time_record_lines'] as $line) {
                 $timeRecord->lines()->create([
-                    'company_id'          => $companyId,
-                    'date'                => $line['date'],
-                    'clock_in'            => $line['clock_in']            ?? null,
-                    'clock_out'           => $line['clock_out']           ?? null,
-                    'late_minutes'        => $line['late_minutes']        ?? 0,
-                    'undertime_minutes'   => $line['undertime_minutes']   ?? 0,
-                    'overtime_time_start' => $line['overtime_time_start'] ?? null,
-                    'overtime_time_end'   => $line['overtime_time_end']   ?? null,
-                    'overtime_hours'      => $line['overtime_hours']      ?? 0,
-                    'offset_time_start'   => $line['offset_time_start']   ?? null,
-                    'offset_time_end'     => $line['offset_time_end']     ?? null,
-                    'offset_hours'        => $line['offset_hours']        ?? 0,
-                    'outbase_time_start'  => $line['outbase_time_start']  ?? null,
-                    'outbase_time_end'    => $line['outbase_time_end']    ?? null,
-                    'leave_days'          => $line['leave_days']          ?? 0,
+                    'company_id'              => $companyId,
+                    'date'                    => $line['date'],
+                    'clock_in'                => $line['clock_in']                ?? null,
+                    'clock_out'               => $line['clock_out']               ?? null,
+                    'late_minutes'            => $line['late_minutes']            ?? 0,
+                    'undertime_minutes'       => $line['undertime_minutes']       ?? 0,
+                    'overtime_time_start'     => $line['overtime_time_start']     ?? null,
+                    'overtime_time_end'       => $line['overtime_time_end']       ?? null,
+                    'overtime_hours'          => $line['overtime_hours']          ?? 0,
+                    'offset_time_start'       => $line['offset_time_start']       ?? null,
+                    'offset_time_end'         => $line['offset_time_end']         ?? null,
+                    'offset_hours'            => $line['offset_hours']            ?? 0,
+                    'outbase_time_start'      => $line['outbase_time_start']      ?? null,
+                    'outbase_time_end'        => $line['outbase_time_end']        ?? null,
+                    'leave_days'              => $line['leave_days']              ?? 0,
                     'remaining_leave_credits' => $line['remaining_leave_credits'] ?? null,
-                    'leave_with_pay'          => $line['leave_with_pay'] ?? false,
-                    'remarks'             => $line['remarks']             ?? null,
+                    'leave_with_pay'          => $line['leave_with_pay']          ?? false,
+                    'remarks'                 => $line['remarks']                 ?? null,
                 ]);
             }
 
@@ -263,9 +263,9 @@ class TimeRecordController extends Controller
 
         $employeeId = $timeRecord->employee_id;
 
-        $dates = $timeRecord->lines->pluck('date');
+        $dates     = $timeRecord->lines->pluck('date');
         $startDate = $dates->min();
-        $endDate = $dates->max();
+        $endDate   = $dates->max();
 
         $overtimeRequests = OvertimeRequest::where('employee_id', $employeeId)
             ->whereBetween('date', [$startDate, $endDate])
@@ -286,7 +286,8 @@ class TimeRecordController extends Controller
             ->whereBetween('date', [$startDate, $endDate])
             ->get();
 
-        return view('time_records.show', compact('timeRecord',
+        return view('time_records.show', compact(
+            'timeRecord',
             'overtimeRequests',
             'leaveRequests',
             'outbaseRequests',
@@ -314,8 +315,8 @@ class TimeRecordController extends Controller
         // If user doesn't have 'browse_all', enforce ownership or approver rights
         if (!$user->hasPermission('time_record.browse_all')) {
             $employeeId = $user->employee?->id;
-            $isOwner = $employeeId && $timeRecord->employee_id === $employeeId;
-            $isApprover = $user->id === $timeRecord->employee->approver_id;
+            $isOwner    = $employeeId && $timeRecord->employee_id === $employeeId;
+            $isApprover = $user->id                               === $timeRecord->employee->approver_id;
 
             if (!$isOwner && !$isApprover) {
                 abort(403, 'You are not allowed to edit this time record.');
@@ -334,10 +335,12 @@ class TimeRecordController extends Controller
 
     protected function canEditTimeRecord(TimeRecord $timeRecord): bool
     {
-        $isApprover = auth()->id() === $timeRecord->employee->approver_id;
+        $isApprover = auth()->id()                  === $timeRecord->employee->approver_id;
         $isEmployee = auth()->user()->employee?->id === $timeRecord->employee_id;
 
-        if ($isApprover) return true;
+        if ($isApprover) {
+            return true;
+        }
 
         if ($isEmployee && !in_array($timeRecord->status, ['approved', 'rejected'])) {
             return true;
@@ -365,8 +368,8 @@ class TimeRecordController extends Controller
             'time_record_lines'               => 'required|array|min:1',
             'time_record_lines.*.id'          => 'required|exists:time_record_lines,id',
             'time_record_lines.*.remarks'     => 'nullable|string|max:255',
-            'files' => 'array|max:5',
-            'files.*' => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
+            'files'                           => 'array|max:5',
+            'files.*'                         => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
         ]);
 
         DB::beginTransaction();
@@ -505,7 +508,7 @@ class TimeRecordController extends Controller
             $timeRecord->status           = 'approved';
             $timeRecord->approver_id      = auth()->id();
             $timeRecord->rejection_reason = null;
-            $timeRecord->approval_date = Carbon::now('Asia/Manila');
+            $timeRecord->approval_date    = Carbon::now('Asia/Manila');
             $timeRecord->save();
 
             $employeeUser = $timeRecord->employee->user;

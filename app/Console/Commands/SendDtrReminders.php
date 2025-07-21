@@ -2,15 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\DtrReminderEmail;
+use App\Models\{Employee, PayrollPeriod, TimeRecord};
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\DtrReminderEmail;
-use App\Models\{PayrollPeriod, Employee, TimeRecord};
-use Carbon\Carbon;
 
 class SendDtrReminders extends Command
 {
-    protected $signature = 'dtr:send-reminders';
+    protected $signature   = 'dtr:send-reminders';
     protected $description = 'Send DTR reminder emails to employees with Not Submitted or Submitted status';
 
     public function handle()

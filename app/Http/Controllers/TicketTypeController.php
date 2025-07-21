@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\TicketType;
-use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -14,7 +13,7 @@ class TicketTypeController extends Controller
         $user = auth()->user();
 
         if (!$user->hasPermission('ticket_type.browse')) {
-//            abort(403, 'Unauthorized to browse ticket types.');
+            //            abort(403, 'Unauthorized to browse ticket types.');
         }
 
         $companyId = $user->preference->company_id;
@@ -35,7 +34,7 @@ class TicketTypeController extends Controller
     public function create()
     {
         if (!auth()->user()->hasPermission('ticket_type.create')) {
-  //          abort(403, 'Unauthorized to create ticket types.');
+            //          abort(403, 'Unauthorized to create ticket types.');
         }
 
         return view('ticket_types.create');
@@ -44,7 +43,7 @@ class TicketTypeController extends Controller
     public function store(Request $request)
     {
         if (!auth()->user()->hasPermission('ticket_type.create')) {
-    //        abort(403, 'Unauthorized to create ticket types.');
+            //        abort(403, 'Unauthorized to create ticket types.');
         }
 
         $validated = $request->validate([
@@ -55,7 +54,7 @@ class TicketTypeController extends Controller
         ]);
 
         $validated['company_id'] = auth()->user()->preference->company_id;
-        $validated['is_active']  = $validated['is_active'] ?? true;
+        $validated['is_active']  = $validated['is_active']  ?? true;
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
 
         $ticketType = TicketType::create($validated);
@@ -73,7 +72,7 @@ class TicketTypeController extends Controller
         $this->authorizeCompany($ticketType->company_id);
 
         if (!auth()->user()->hasPermission('ticket_type.read')) {
-      //      abort(403, 'Unauthorized to view ticket types.');
+            //      abort(403, 'Unauthorized to view ticket types.');
         }
 
         return view('ticket_types.show', compact('ticketType'));
@@ -84,7 +83,7 @@ class TicketTypeController extends Controller
         $this->authorizeCompany($ticketType->company_id);
 
         if (!auth()->user()->hasPermission('ticket_type.update')) {
-        //    abort(403, 'Unauthorized to edit ticket types.');
+            //    abort(403, 'Unauthorized to edit ticket types.');
         }
 
         return view('ticket_types.edit', compact('ticketType'));
@@ -95,7 +94,7 @@ class TicketTypeController extends Controller
         $this->authorizeCompany($ticketType->company_id);
 
         if (!auth()->user()->hasPermission('ticket_type.update')) {
-          //  abort(403, 'Unauthorized to update ticket types.');
+            //  abort(403, 'Unauthorized to update ticket types.');
         }
 
         $validated = $request->validate([
