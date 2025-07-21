@@ -405,95 +405,14 @@ return new class () extends Migration {
             $table->string('file_name')->nullable(); // original uploaded name
             $table->timestamps();
         });
-        /*
-        Schema::create('payslips', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('company_id')->constrained()->onDelete('cascade');
-            $table->foreignId('payroll_period_id')->constrained()->onDelete('cascade');
-            $table->foreignId('employee_id')->constrained()->onDelete('cascade');
-            $table->string('reference_number')->nullable()->unique();
-            $table->decimal('basic_pay', 10, 2)->default(0);
-            $table->decimal('overtime_pay', 10, 2)->default(0);
-            $table->decimal('holiday_pay', 10, 2)->default(0);
-            $table->decimal('allowances', 10, 2)->default(0);
-            $table->decimal('bonuses', 10, 2)->default(0);
-            $table->decimal('deductions', 10, 2)->default(0);
-            $table->decimal('net_pay', 10, 2)->default(0);
-            $table->string('status')->default('generated'); // generated, adjusted, released
-            $table->text('remarks')->nullable();
-            $table->timestamps();
-        });
-
-        // For detailed line items per payslip
-        Schema::create('payslip_items', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('company_id')->constrained()->onDelete('cascade');
-            $table->foreignId('payslip_id')->constrained()->onDelete('cascade');
-            $table->string('type'); // earning or deduction
-            $table->string('label'); // e.g., SSS, Rice Allowance
-            $table->decimal('amount', 10, 2);
-            $table->timestamps();
-        });
-
-        Schema::create('government_contributions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('company_id')->constrained()->onDelete('cascade');
-            $table->foreignId('payslip_id')->constrained()->onDelete('cascade');
-            $table->string('type'); // SSS, PhilHealth, Pag-IBIG, etc.
-            $table->decimal('employee_share', 10, 2);
-            $table->decimal('employer_share', 10, 2);
-            $table->timestamps();
-        });
-
-        // Benefits
-        Schema::create('employee_benefits', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('company_id')->constrained()->onDelete('cascade');
-            $table->foreignId('employee_id')->constrained()->onDelete('cascade');
-            $table->string('type');
-            $table->decimal('amount', 10, 2);
-            $table->date('effective_date');
-            $table->text('notes')->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('employee_loans', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('company_id')->constrained()->onDelete('cascade');
-            $table->foreignId('employee_id')->constrained()->onDelete('cascade');
-            $table->string('loan_type');
-            $table->decimal('amount', 10, 2);
-            $table->integer('terms');
-            $table->decimal('monthly_payment', 10, 2);
-            $table->decimal('balance', 10, 2);
-            $table->date('start_date');
-            $table->timestamps();
-        });
-
-        Schema::create('employee_reimbursements', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('company_id')->constrained()->onDelete('cascade');
-            $table->foreignId('employee_id')->constrained()->onDelete('cascade');
-            $table->decimal('amount', 10, 2);
-            $table->string('purpose');
-            $table->date('date_submitted');
-            $table->string('status')->default('pending');
-            $table->timestamps();
-        });
-        */
     }
 
     public function down(): void
     {
         // Drop pivot and main tables in reverse order
+        Schema::dropIfExists('files');
         Schema::dropIfExists('time_record_lines');
         Schema::dropIfExists('time_records');
-        //Schema::dropIfExists('payroll_periods');
-        //Schema::dropIfExists('employee_reimbursements');
-        //Schema::dropIfExists('employee_loans');
-        //Schema::dropIfExists('employee_benefits');
-        //Schema::dropIfExists('government_contributions');
-        //Schema::dropIfExists('payslips');
         Schema::dropIfExists('offset_requests');
         Schema::dropIfExists('outbase_requests');
         Schema::dropIfExists('leave_requests');
@@ -502,7 +421,6 @@ return new class () extends Migration {
         Schema::dropIfExists('time_logs');
         Schema::dropIfExists('employee_shifts');
         Schema::dropIfExists('shifts');
-        Schema::dropIfExists('employee_documents');
         Schema::dropIfExists('employees');
         Schema::dropIfExists('teams');
         Schema::dropIfExists('departments');
