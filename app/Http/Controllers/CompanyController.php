@@ -159,7 +159,7 @@ class CompanyController extends Controller
                 'leave_request', 'overtime_request',
                 'outbase_request', 'offset_request', 'time_record',
             ]],
-            'account manager' => ['modules' => ['client']],
+            'account manager' => ['modules' => ['client', 'client_contact']],
         ];
 
         $actions = ['browse', 'create', 'read', 'update', 'delete'];

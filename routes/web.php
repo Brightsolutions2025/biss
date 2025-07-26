@@ -34,6 +34,7 @@ use App\Http\Controllers\TimeLogController;
 use App\Http\Controllers\TimeRecordController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPreferenceController;
+use App\Http\Controllers\ClientContactController;
 use App\Http\Middleware\EnsureUserHasCompany;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
@@ -61,6 +62,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth', EnsureUserHasCompany::class)->group(function () {
+    Route::resource('client_contacts', ClientContactController::class);
     Route::resource('clients', ClientController::class);
 
     Route::delete('/files/{file}', [FileController::class, 'destroy'])->name('files.destroy');

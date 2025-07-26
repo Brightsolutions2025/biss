@@ -26,6 +26,14 @@ class Client extends Model
     }
 
     /**
+     * Get the contacts for the client.
+     */
+    public function contacts()
+    {
+        return $this->hasMany(ClientContact::class);
+    }
+
+    /**
      * Route model binding or resource route helper.
      */
     public function path()
