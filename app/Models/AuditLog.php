@@ -22,4 +22,10 @@ class AuditLog extends Model
     protected $casts = [
         'changes' => 'array',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'performed_by');
+    }
+
 }
