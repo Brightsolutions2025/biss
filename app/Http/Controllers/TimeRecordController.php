@@ -335,10 +335,12 @@ class TimeRecordController extends Controller
 
     protected function canEditTimeRecord(TimeRecord $timeRecord): bool
     {
+        $user = auth()->user();
         $isApprover = auth()->id()                  === $timeRecord->employee->approver_id;
         $isEmployee = auth()->user()->employee?->id === $timeRecord->employee_id;
+        $isHrSupervisor = $user->hasAnyRole('HR Supervisor', $timeRecord->company_id);
 
-        if ($isApprover) {
+        if ($isApprover || $isHrSupervisor) {
             return true;
         }
 
@@ -367,6 +369,10 @@ class TimeRecordController extends Controller
         $validated = $request->validate([
             'time_record_lines'               => 'required|array|min:1',
             'time_record_lines.*.id'          => 'required|exists:time_record_lines,id',
+            'time_record_lines.*.clock_in'         => 'sometimes|nullable|date_format:H:i',
+            'time_record_lines.*.clock_out'        => 'sometimes|nullable|date_format:H:i',
+            'time_record_lines.*.late_minutes'     => 'nullable|numeric|min:0',
+            'time_record_lines.*.undertime_minutes'=> 'nullable|numeric|min:0',
             'time_record_lines.*.remarks'     => 'nullable|string|max:255',
             'files'                           => 'array|max:5',
             'files.*'                         => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
@@ -382,6 +388,10 @@ class TimeRecordController extends Controller
 
                 if ($line) {
                     $line->update([
+                        'clock_in'          => $lineData['clock_in'] ?? null,
+                        'clock_out'         => $lineData['clock_out'] ?? null,
+                        'late_minutes'      => $lineData['late_minutes'] ?? 0,
+                        'undertime_minutes' => $lineData['undertime_minutes'] ?? 0,
                         'remarks' => $lineData['remarks'] ?? null,
                     ]);
                 }

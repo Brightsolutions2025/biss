@@ -8,6 +8,10 @@
         font-size: 0.75rem;
         white-space: nowrap;
     }
+    .late-minutes-input,
+    .undertime-minutes-input {
+        min-width: 80px;
+    }
 </style>
 <x-app-layout>
     <x-slot name="header">
@@ -104,10 +108,24 @@
                                                     <input type="text" readonly name="time_record_lines[{{ $i }}][date]" value="{{ $line->date }}" class="form-control form-control-sm text-center" />
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($line->date)->format('D') }}</td>
-                                                <td class="text-center">{{ $line->clock_in }}</td>
-                                                <td class="text-center">{{ $line->clock_out }}</td>
-                                                <td class="text-center">{{ $line->late_minutes }}</td>
-                                                <td class="text-center">{{ $line->undertime_minutes }}</td>
+                                                <td>
+                                                    <input type="time" name="time_record_lines[{{ $i }}][clock_in]" value="{{ $line->clock_in }}" class="form-control form-control-sm text-center" />
+                                                </td>
+                                                <td>
+                                                    <input type="time" name="time_record_lines[{{ $i }}][clock_out]" value="{{ $line->clock_out }}" class="form-control form-control-sm text-center" />
+                                                </td>
+                                                <td>
+                                                    <input type="number" readonly step="0.01"
+                                                        name="time_record_lines[{{ $i }}][late_minutes]"
+                                                        class="form-control form-control-sm late-minutes-input text-center"
+                                                        value="{{ number_format($line->late_minutes ?? 0, 2, '.', '') }}">
+                                                </td>
+                                                <td>
+                                                    <input type="number" readonly step="0.01"
+                                                        name="time_record_lines[{{ $i }}][undertime_minutes]"
+                                                        class="form-control form-control-sm undertime-minutes-input text-center"
+                                                        value="{{ number_format($line->undertime_minutes ?? 0, 2, '.', '') }}">
+                                                </td>
                                                 <td class="text-center">{{ $line->overtime_time_start }}</td>
                                                 <td class="text-center">{{ $line->overtime_time_end }}</td>
                                                 <td class="text-center">{{ $line->overtime_hours }}</td>
@@ -169,6 +187,62 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+    <script>
+        const isFlexible = @json(optional($timeRecord->employee)->flexible_time);
+        const scheduledTimeIn = @json(optional(optional($timeRecord->employee->employeeShift)->shift)->time_in);
+        const scheduledTimeOut = @json(optional(optional($timeRecord->employee->employeeShift)->shift)->time_out);
+
+        function timeToMinutes(time) {
+            const [h, m] = time.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        function calculateLateMinutes(scheduled, actual) {
+            if (!scheduled || !actual) return 0;
+            const [shH, shM] = scheduled.split(':').map(Number);
+            const [acH, acM] = actual.split(':').map(Number);
+            return Math.max(0, (acH * 60 + acM) - (shH * 60 + shM));
+        }
+
+        function calculateUndertimeMinutes(scheduledOut, actualOut) {
+            if (!scheduledOut || !actualOut) return 0;
+            const [shH, shM] = scheduledOut.split(':').map(Number);
+            const [acH, acM] = actualOut.split(':').map(Number);
+            return Math.max(0, (shH * 60 + shM) - (acH * 60 + acM));
+        }
+
+        function recomputeAllLateUndertime() {
+            const rows = document.querySelectorAll('table tbody tr');
+            rows.forEach(row => {
+                const clockInInput = row.querySelector('input[name$="[clock_in]"]');
+                const clockOutInput = row.querySelector('input[name$="[clock_out]"]');
+                const lateInput = row.querySelector('input[name$="[late_minutes]"]');
+                const undertimeInput = row.querySelector('input[name$="[undertime_minutes]"]');
+
+                if (!isFlexible && scheduledTimeIn && clockInInput && lateInput) {
+                    const late = calculateLateMinutes(scheduledTimeIn, clockInInput.value);
+                    lateInput.value = late;
+                }
+
+                if (!isFlexible && scheduledTimeOut && clockOutInput && undertimeInput) {
+                    const undertime = calculateUndertimeMinutes(scheduledTimeOut, clockOutInput.value);
+                    undertimeInput.value = undertime;
+                }
+            });
+        }
+
+        document.querySelectorAll('input[type="time"]').forEach(input => {
+            input.addEventListener('change', () => {
+                recomputeAllLateUndertime();
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            recomputeAllLateUndertime();
+        });
+    </script>
+    @endpush
     @push('scripts')
     <script>
         function deleteFile(fileId) {
