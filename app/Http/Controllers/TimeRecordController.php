@@ -202,6 +202,7 @@ class TimeRecordController extends Controller
                     $path = $uploadedFile->store('uploads/time_record_files');
 
                     $timeRecord->files()->create([
+                        'company_id'     => $companyId,
                         'file_path' => $path,
                         'file_name' => $uploadedFile->getClientOriginalName(),
                     ]);
@@ -402,6 +403,7 @@ class TimeRecordController extends Controller
                     $path = $uploadedFile->store('uploads/time_record_files');
 
                     $timeRecord->files()->create([
+                        'company_id'     => $companyId,
                         'file_path' => $path,
                         'file_name' => $uploadedFile->getClientOriginalName(),
                     ]);

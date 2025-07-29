@@ -146,6 +146,7 @@ class LeaveRequestController extends Controller
                     $path = $uploadedFile->store('uploads/leave_request_files');
 
                     $leaveRequest->files()->create([
+                        'company_id'     => $companyId,
                         'file_path' => $path,
                         'file_name' => $uploadedFile->getClientOriginalName(),
                     ]);
@@ -267,6 +268,7 @@ class LeaveRequestController extends Controller
                     $path = $uploadedFile->store('uploads/leave_request_files');
 
                     $leaveRequest->files()->create([
+                        'company_id'     => $companyId,
                         'file_path' => $path,
                         'file_name' => $uploadedFile->getClientOriginalName(),
                     ]);

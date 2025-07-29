@@ -128,6 +128,7 @@ class OutbaseRequestController extends Controller
                     $path = $uploadedFile->store('uploads/outbase_request_files');
 
                     $outbase->files()->create([
+                        'company_id'     => $companyId,
                         'file_path' => $path,
                         'file_name' => $uploadedFile->getClientOriginalName(),
                     ]);
@@ -280,6 +281,7 @@ class OutbaseRequestController extends Controller
                     $path = $uploadedFile->store('uploads/outbase_request_files');
 
                     $outbaseRequest->files()->create([
+                        'company_id'     => $companyId,
                         'file_path' => $path,
                         'file_name' => $uploadedFile->getClientOriginalName(),
                     ]);

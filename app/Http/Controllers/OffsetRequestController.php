@@ -283,6 +283,7 @@ class OffsetRequestController extends Controller
                     $path = $uploadedFile->store('uploads/offset_request_files');
 
                     $offsetRequest->files()->create([
+                        'company_id'     => $companyId,
                         'file_path' => $path,
                         'file_name' => $uploadedFile->getClientOriginalName(),
                     ]);
@@ -566,6 +567,7 @@ class OffsetRequestController extends Controller
                     $path = $uploadedFile->store('uploads/offset_request_files');
 
                     $offsetRequest->files()->create([
+                        'company_id'     => $companyId,
                         'file_path' => $path,
                         'file_name' => $uploadedFile->getClientOriginalName(),
                     ]);

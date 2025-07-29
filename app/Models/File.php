@@ -6,10 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class File extends Model
 {
-    protected $fillable = ['file_path', 'file_name'];
+    protected $fillable = [
+        'company_id',
+        'file_path',
+        'file_name',
+    ];
 
     public function fileable()
     {
         return $this->morphTo();
+    }
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }

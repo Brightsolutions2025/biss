@@ -400,6 +400,7 @@ return new class () extends Migration {
 
         Schema::create('files', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('company_id')->constrained()->onDelete('cascade');
             $table->morphs('fileable'); // adds fileable_id and fileable_type
             $table->string('file_path');
             $table->string('file_name')->nullable(); // original uploaded name

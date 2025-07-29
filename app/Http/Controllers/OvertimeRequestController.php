@@ -125,6 +125,7 @@ class OvertimeRequestController extends Controller
                     $path = $uploadedFile->store('uploads/overtime_request_files');
 
                     $overtimeRequest->files()->create([
+                        'company_id'     => $companyId,
                         'file_path' => $path,
                         'file_name' => $uploadedFile->getClientOriginalName(),
                     ]);
@@ -279,6 +280,7 @@ class OvertimeRequestController extends Controller
                     $path = $uploadedFile->store('uploads/overtime_request_files');
 
                     $overtimeRequest->files()->create([
+                        'company_id'     => $companyId,
                         'file_path' => $path,
                         'file_name' => $uploadedFile->getClientOriginalName(),
                     ]);
