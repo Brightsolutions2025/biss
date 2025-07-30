@@ -268,6 +268,8 @@ class OvertimeRequestController extends Controller
                         ->withInput();
         }
 
+        $companyId = auth()->user()->preference->company_id;
+
         DB::beginTransaction();
 
         try {
