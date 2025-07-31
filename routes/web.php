@@ -36,6 +36,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPreferenceController;
 use App\Http\Controllers\ClientContactController;
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Middleware\EnsureUserHasCompany;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
@@ -63,92 +64,95 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth', EnsureUserHasCompany::class)->group(function () {
+    Route::resource('projects', ProjectController::class);
     Route::resource('client_contacts', ClientContactController::class);
     Route::resource('clients', ClientController::class);
 
     Route::delete('/files/{file}', [FileController::class, 'destroy'])->name('files.destroy');
-    Route::get('/files/{file}', [FileController::class, 'download'])->name('files.download');
+    Route::get('/files/{file}', [FileController::class, 'download'])->middleware('throttle:2,1')->name('files.download');
     // 1. Employee DTR Status by Department & Team
     Route::get('/reports/dtr_status_by_team', [ReportController::class, 'dtrStatusByTeam'])
         ->name('reports.dtr_status_by_team');
     Route::get('/reports/dtr-status-by-team/pdf', [ReportController::class, 'downloadPdf'])
+        ->middleware('throttle:2,1')
         ->name('reports.dtr-status-by-team.pdf');
     Route::get('/reports/dtr-status-by-team/excel', [ReportController::class, 'downloadExcel'])
+        ->middleware('throttle:2,1')
         ->name('reports.dtr-status-by-team.excel');
 
     // 2. Leave Utilization Summary
     Route::get('/reports/leave-utilization', [ReportController::class, 'leaveUtilization'])->name('reports.leave_utilization');
-    Route::get('/reports/leave-utilization/pdf', [ReportController::class, 'leaveUtilizationPdf'])->name('reports.leave_utilization.pdf');
-    Route::get('/reports/leave-utilization/excel', [ReportController::class, 'leaveUtilizationExcel'])->name('reports.leave_utilization.excel');
+    Route::get('/reports/leave-utilization/pdf', [ReportController::class, 'leaveUtilizationPdf'])->middleware('throttle:2,1')->name('reports.leave_utilization.pdf');
+    Route::get('/reports/leave-utilization/excel', [ReportController::class, 'leaveUtilizationExcel'])->middleware('throttle:2,1')->name('reports.leave_utilization.excel');
 
     // 3. Overtime vs Offset Report
     Route::get('/reports/overtime-offset-comparison', [ReportController::class, 'overtimeOffsetComparison'])->name('reports.overtime_offset_comparison');
-    Route::get('/reports/overtime-offset-comparison/pdf', [ReportController::class, 'overtimeOffsetComparisonPdf'])->name('reports.overtime_offset_comparison.pdf');
-    Route::get('/reports/overtime-offset-comparison/excel', [ReportController::class, 'overtimeOffsetComparisonExcel'])->name('reports.overtime_offset_comparison.excel');
+    Route::get('/reports/overtime-offset-comparison/pdf', [ReportController::class, 'overtimeOffsetComparisonPdf'])->middleware('throttle:2,1')->name('reports.overtime_offset_comparison.pdf');
+    Route::get('/reports/overtime-offset-comparison/excel', [ReportController::class, 'overtimeOffsetComparisonExcel'])->middleware('throttle:2,1')->name('reports.overtime_offset_comparison.excel');
 
     // 4. Attendance Summary by Date Range
     Route::get('/reports/attendance-summary', [ReportController::class, 'attendanceSummary'])->name('reports.attendance_summary');
-    Route::get('/reports/attendance-summary/pdf', [ReportController::class, 'attendanceSummaryPdf'])->name('reports.attendance_summary.pdf');
-    Route::get('/reports/attendance-summary/excel', [ReportController::class, 'attendanceSummaryExcel'])->name('reports.attendance_summary.excel');
+    Route::get('/reports/attendance-summary/pdf', [ReportController::class, 'attendanceSummaryPdf'])->middleware('throttle:2,1')->name('reports.attendance_summary.pdf');
+    Route::get('/reports/attendance-summary/excel', [ReportController::class, 'attendanceSummaryExcel'])->middleware('throttle:2,1')->name('reports.attendance_summary.excel');
 
     // 5. Employee Shift Assignments
     Route::get('/reports/shift-assignments', [ReportController::class, 'shiftAssignments'])->name('reports.shift_assignments');
-    Route::get('/reports/shift-assignments/pdf', [ReportController::class, 'shiftAssignmentsPdf'])->name('reports.shift_assignments.pdf');
-    Route::get('/reports/shift-assignments/excel', [ReportController::class, 'shiftAssignmentsExcel'])->name('reports.shift_assignments.excel');
+    Route::get('/reports/shift-assignments/pdf', [ReportController::class, 'shiftAssignmentsPdf'])->middleware('throttle:2,1')->name('reports.shift_assignments.pdf');
+    Route::get('/reports/shift-assignments/excel', [ReportController::class, 'shiftAssignmentsExcel'])->middleware('throttle:2,1')->name('reports.shift_assignments.excel');
 
     // 6. Time Log Exceptions
     Route::get('/reports/time-log-exceptions', [ReportController::class, 'timeLogExceptions'])->name('reports.time_log_exceptions');
-    Route::get('/reports/time-log-exceptions/pdf', [ReportController::class, 'timeLogExceptionsPdf'])->name('reports.time_log_exceptions.pdf');
-    Route::get('/reports/time-log-exceptions/excel', [ReportController::class, 'timeLogExceptionsExcel'])->name('reports.time_log_exceptions.excel');
+    Route::get('/reports/time-log-exceptions/pdf', [ReportController::class, 'timeLogExceptionsPdf'])->middleware('throttle:2,1')->name('reports.time_log_exceptions.pdf');
+    Route::get('/reports/time-log-exceptions/excel', [ReportController::class, 'timeLogExceptionsExcel'])->middleware('throttle:2,1')->name('reports.time_log_exceptions.excel');
 
     // 7. Late and Undertime Report
     Route::get('/reports/late-undertime', [LateUndertimeReportController::class, 'index'])->name('reports.late_undertime');
-    Route::get('/reports/late-undertime/pdf', [LateUndertimeReportController::class, 'exportPdf'])->name('reports.late_undertime.pdf');
-    Route::get('/reports/late-undertime/excel', [LateUndertimeReportController::class, 'exportExcel'])->name('reports.late_undertime.excel');
+    Route::get('/reports/late-undertime/pdf', [LateUndertimeReportController::class, 'exportPdf'])->middleware('throttle:2,1')->name('reports.late_undertime.pdf');
+    Route::get('/reports/late-undertime/excel', [LateUndertimeReportController::class, 'exportExcel'])->middleware('throttle:2,1')->name('reports.late_undertime.excel');
 
     // 8. Leave Requests by Status
     Route::get('/reports/leave-status-overview', [LeaveStatusOverviewController::class, 'index'])->name('reports.leave_status_overview');
-    Route::get('/reports/leave-status-overview/pdf', [LeaveStatusOverviewController::class, 'exportPdf'])->name('reports.leave_status_overview.pdf');
-    Route::get('/reports/leave-status-overview/excel', [LeaveStatusOverviewController::class, 'exportExcel'])->name('reports.leave_status_overview.excel');
+    Route::get('/reports/leave-status-overview/pdf', [LeaveStatusOverviewController::class, 'exportPdf'])->middleware('throttle:2,1')->name('reports.leave_status_overview.pdf');
+    Route::get('/reports/leave-status-overview/excel', [LeaveStatusOverviewController::class, 'exportExcel'])->middleware('throttle:2,1')->name('reports.leave_status_overview.excel');
 
     // 9. Outbase Request Summary
     Route::get('/reports/outbase-summary', [OutbaseSummaryController::class, 'index'])->name('reports.outbase_summary');
-    Route::get('/reports/outbase-summary/pdf', [OutbaseSummaryController::class, 'exportPdf'])->name('reports.outbase_summary.pdf');
-    Route::get('/reports/outbase-summary/excel', [OutbaseSummaryController::class, 'exportExcel'])->name('reports.outbase_summary.excel');
+    Route::get('/reports/outbase-summary/pdf', [OutbaseSummaryController::class, 'exportPdf'])->middleware('throttle:2,1')->name('reports.outbase_summary.pdf');
+    Route::get('/reports/outbase-summary/excel', [OutbaseSummaryController::class, 'exportExcel'])->middleware('throttle:2,1')->name('reports.outbase_summary.excel');
 
     // 10. Offset Usage and Expiry Tracker
     Route::get('/reports/offset-tracker', [OffsetTrackerController::class, 'index'])->name('reports.offset_tracker');
-    Route::get('/reports/offset-tracker/pdf', [OffsetTrackerController::class, 'offsetTrackerPdf'])->name('reports.offset_tracker.pdf');
-    Route::get('/reports/offset-tracker/excel', [OffsetTrackerController::class, 'offsetTrackerExcel'])->name('reports.offset_tracker.excel');
+    Route::get('/reports/offset-tracker/pdf', [OffsetTrackerController::class, 'offsetTrackerPdf'])->middleware('throttle:2,1')->name('reports.offset_tracker.pdf');
+    Route::get('/reports/offset-tracker/excel', [OffsetTrackerController::class, 'offsetTrackerExcel'])->middleware('throttle:2,1')->name('reports.offset_tracker.excel');
 
     // 11. Leave Summary Report
     Route::get('/reports/leave-summary', [LeaveSummaryReportController::class, 'index'])->name('reports.leave_summary');
-    Route::get('/reports/leave-summary/pdf', [LeaveSummaryReportController::class, 'leaveSummaryPdf'])->name('reports.leave_summary.pdf');
-    Route::get('/reports/leave-summary/excel', [LeaveSummaryReportController::class, 'leaveSummaryExcel'])->name('reports.leave_summary.excel');
+    Route::get('/reports/leave-summary/pdf', [LeaveSummaryReportController::class, 'leaveSummaryPdf'])->middleware('throttle:2,1')->name('reports.leave_summary.pdf');
+    Route::get('/reports/leave-summary/excel', [LeaveSummaryReportController::class, 'leaveSummaryExcel'])->middleware('throttle:2,1')->name('reports.leave_summary.excel');
 
     // 12. Filed Overtime Report
     Route::get('/reports/overtime-history', [FiledOvertimeReportController::class, 'index'])->name('reports.overtime_history');
-    Route::get('/reports/overtime-history/pdf', [FiledOvertimeReportController::class, 'overtimeHistoryPdf'])->name('reports.overtime_history.pdf');
-    Route::get('/reports/overtime-history/excel', [FiledOvertimeReportController::class, 'overtimeHistoryExcel'])->name('reports.overtime_history.excel');
+    Route::get('/reports/overtime-history/pdf', [FiledOvertimeReportController::class, 'overtimeHistoryPdf'])->middleware('throttle:2,1')->name('reports.overtime_history.pdf');
+    Route::get('/reports/overtime-history/excel', [FiledOvertimeReportController::class, 'overtimeHistoryExcel'])->middleware('throttle:2,1')->name('reports.overtime_history.excel');
 
     // 13. Approved Leaves Timeline
     Route::get('/reports/leave-timeline', [LeaveTimelineReportController::class, 'index'])->name('reports.leave_timeline');
-    Route::get('/reports/leave-timeline/pdf', [LeaveTimelineReportController::class, 'leaveTimelinePdf'])->name('reports.leave_timeline.pdf');
-    Route::get('/reports/leave-timeline/excel', [LeaveTimelineReportController::class, 'leaveTimelineExcel'])->name('reports.leave_timeline.excel');
+    Route::get('/reports/leave-timeline/pdf', [LeaveTimelineReportController::class, 'leaveTimelinePdf'])->middleware('throttle:2,1')->name('reports.leave_timeline.pdf');
+    Route::get('/reports/leave-timeline/excel', [LeaveTimelineReportController::class, 'leaveTimelineExcel'])->middleware('throttle:2,1')->name('reports.leave_timeline.excel');
 
     // 14. Field Work (Outbase) Report
     Route::get('/reports/outbase-history', [OutbaseReportController::class, 'index'])->name('reports.outbase_history');
-    Route::get('/reports/outbase-history/pdf', [OutbaseReportController::class, 'outbaseHistoryPdf'])->name('reports.outbase_history.pdf');
-    Route::get('/reports/outbase-history/excel', [OutbaseReportController::class, 'outbaseHistoryExcel'])->name('reports.outbase_history.excel');
+    Route::get('/reports/outbase-history/pdf', [OutbaseReportController::class, 'outbaseHistoryPdf'])->middleware('throttle:2,1')->name('reports.outbase_history.pdf');
+    Route::get('/reports/outbase-history/excel', [OutbaseReportController::class, 'outbaseHistoryExcel'])->middleware('throttle:2,1')->name('reports.outbase_history.excel');
 
     // 15. Offset Request Usage Summary
     Route::get('/reports/offset-summary', [OffsetSummaryReportController::class, 'index'])->name('reports.offset_summary');
-    Route::get('/reports/offset-summary/pdf', [OffsetSummaryReportController::class, 'exportPdf'])->name('reports.offset_summary.pdf');
-    Route::get('/reports/offset-summary/excel', [OffsetSummaryReportController::class, 'exportExcel'])->name('reports.offset_summary.excel');
+    Route::get('/reports/offset-summary/pdf', [OffsetSummaryReportController::class, 'exportPdf'])->middleware('throttle:2,1')->name('reports.offset_summary.pdf');
+    Route::get('/reports/offset-summary/excel', [OffsetSummaryReportController::class, 'exportExcel'])->middleware('throttle:2,1')->name('reports.offset_summary.excel');
 
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-    Route::get('/time_records/{id}/export/pdf', [TimeRecordController::class, 'exportPdf'])->name('time_records.export.pdf');
-    Route::get('/time_records/{id}/export/excel', [TimeRecordController::class, 'exportExcel'])->name('time_records.export.excel');
+    Route::get('/time_records/{id}/export/pdf', [TimeRecordController::class, 'exportPdf'])->middleware('throttle:2,1')->name('time_records.export.pdf');
+    Route::get('/time_records/{id}/export/excel', [TimeRecordController::class, 'exportExcel'])->middleware('throttle:2,1')->name('time_records.export.excel');
     Route::patch('time_records/{time_record}/approve', [TimeRecordController::class, 'approve'])
         ->name('time_records.approve');
     Route::patch('time_records/{time_record}/reject', [TimeRecordController::class, 'reject'])
