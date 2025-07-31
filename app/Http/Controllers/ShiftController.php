@@ -7,6 +7,7 @@ use App\Models\Shift;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Carbon;
 
 class ShiftController extends Controller
 {
@@ -52,6 +53,11 @@ class ShiftController extends Controller
         if (!auth()->user()->hasPermission('shift.create')) {
             abort(403, 'Unauthorized to create shifts.');
         }
+
+        $request->merge([
+            'time_in' => $request->filled('time_in') ? Carbon::parse($request->input('time_in'))->format('H:i') : null,
+            'time_out'   => $request->filled('time_out')   ? Carbon::parse($request->input('time_out'))->format('H:i')   : null,
+        ]);
 
         $validated = $request->validate([
             'name'           => 'required|string|max:255',
@@ -138,6 +144,11 @@ class ShiftController extends Controller
         if (!auth()->user()->hasPermission('shift.update')) {
             abort(403, 'Unauthorized to update shift.');
         }
+
+        $request->merge([
+            'time_in' => $request->filled('time_in') ? Carbon::parse($request->input('time_in'))->format('H:i') : null,
+            'time_out'   => $request->filled('time_out')   ? Carbon::parse($request->input('time_out'))->format('H:i')   : null,
+        ]);
 
         $validated = $request->validate([
             'name'           => 'required|string|max:255',

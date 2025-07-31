@@ -94,6 +94,11 @@ class OutbaseRequestController extends Controller
             abort(403, 'Unauthorized to create outbase requests.');
         }
 
+        $request->merge([
+            'time_start' => $request->filled('time_start') ? Carbon::parse($request->input('time_start'))->format('H:i') : null,
+            'time_end'   => $request->filled('time_end')   ? Carbon::parse($request->input('time_end'))->format('H:i')   : null,
+        ]);
+
         $validated = $request->validate([
             'employee_id' => 'required|exists:employees,id',
             'date'        => 'required|date',
@@ -256,6 +261,11 @@ class OutbaseRequestController extends Controller
 
         try {
             $companyId = auth()->user()->preference->company_id;
+
+            $request->merge([
+                'time_start' => $request->filled('time_start') ? Carbon::parse($request->input('time_start'))->format('H:i') : null,
+                'time_end'   => $request->filled('time_end')   ? Carbon::parse($request->input('time_end'))->format('H:i')   : null,
+            ]);
 
             $validated = $request->validate([
                 'employee_id'      => 'required|exists:employees,id',

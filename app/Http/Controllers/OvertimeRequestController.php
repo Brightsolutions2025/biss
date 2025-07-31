@@ -85,6 +85,11 @@ class OvertimeRequestController extends Controller
 
         $companyId = auth()->user()->preference->company_id;
 
+        $request->merge([
+            'time_start' => $request->filled('time_start') ? Carbon::parse($request->input('time_start'))->format('H:i') : null,
+            'time_end'   => $request->filled('time_end')   ? Carbon::parse($request->input('time_end'))->format('H:i')   : null,
+        ]);
+
         $validated = $request->validate([
             'employee_id'     => 'required|exists:employees,id',
             'date'            => 'required|date',
@@ -246,6 +251,11 @@ class OvertimeRequestController extends Controller
         if (!$this->canEditOvertimeRequest($overtimeRequest)) {
             abort(403, 'You are not allowed to edit this overtime request.');
         }
+
+        $request->merge([
+            'time_start' => $request->filled('time_start') ? Carbon::parse($request->input('time_start'))->format('H:i') : null,
+            'time_end'   => $request->filled('time_end')   ? Carbon::parse($request->input('time_end'))->format('H:i')   : null,
+        ]);
 
         $validated = $request->validate([
             'employee_id'     => 'required|exists:employees,id',

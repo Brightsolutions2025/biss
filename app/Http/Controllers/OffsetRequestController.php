@@ -149,6 +149,11 @@ class OffsetRequestController extends Controller
             $request->merge(['overtime_requests' => $decoded]);
         }
 
+        $request->merge([
+            'time_start' => $request->filled('time_start') ? Carbon::parse($request->input('time_start'))->format('H:i') : null,
+            'time_end'   => $request->filled('time_end')   ? Carbon::parse($request->input('time_end'))->format('H:i')   : null,
+        ]);
+
         $validated = $request->validate([
             'employee_id'                  => 'required|exists:employees,id',
             'date'                         => 'required|date',
@@ -419,6 +424,11 @@ class OffsetRequestController extends Controller
             return back()->withErrors(['overtime_requests' => 'Invalid overtime request data.'])->withInput();
         }
         $request->merge(['overtime_requests' => $decoded]);
+
+        $request->merge([
+            'time_start' => $request->filled('time_start') ? Carbon::parse($request->input('time_start'))->format('H:i') : null,
+            'time_end'   => $request->filled('time_end')   ? Carbon::parse($request->input('time_end'))->format('H:i')   : null,
+        ]);
 
         $validated = $request->validate([
             'employee_id'                  => 'required|exists:employees,id',

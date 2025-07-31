@@ -138,6 +138,18 @@ class TimeRecordController extends Controller
             abort(403, 'Unauthorized to create time records.');
         }
 
+        $request->merge([
+            'time_record_lines' => collect($request->input('time_record_lines'))->map(function ($line) {
+                if (isset($line['clock_in'])) {
+                    $line['clock_in'] = \Carbon\Carbon::parse($line['clock_in'])->format('H:i');
+                }
+                if (isset($line['clock_out'])) {
+                    $line['clock_out'] = \Carbon\Carbon::parse($line['clock_out'])->format('H:i');
+                }
+                return $line;
+            })->toArray()
+        ]);
+
         $validated = $request->validate([
             'employee_id'                                 => 'required|exists:employees,id',
             'payroll_period_id'                           => 'required|exists:payroll_periods,id',
@@ -366,6 +378,18 @@ class TimeRecordController extends Controller
         if (! $this->canEditTimeRecord($timeRecord)) {
             abort(403, 'You are not allowed to edit this time record.');
         }
+
+        $request->merge([
+            'time_record_lines' => collect($request->input('time_record_lines'))->map(function ($line) {
+                if (isset($line['clock_in'])) {
+                    $line['clock_in'] = \Carbon\Carbon::parse($line['clock_in'])->format('H:i');
+                }
+                if (isset($line['clock_out'])) {
+                    $line['clock_out'] = \Carbon\Carbon::parse($line['clock_out'])->format('H:i');
+                }
+                return $line;
+            })->toArray()
+        ]);
 
         $validated = $request->validate([
             'time_record_lines'               => 'required|array|min:1',
