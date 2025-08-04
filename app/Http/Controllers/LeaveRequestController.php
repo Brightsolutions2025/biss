@@ -650,13 +650,14 @@ class LeaveRequestController extends Controller
             $dateStr    = $date->toDateString();
             $leaveValue = $dailyLeaves[$dateStr] ?? 0;
 
+            // Save the remaining BEFORE deduction
+            $remainingCreditsByDate[$dateStr] = round($remaining, 2);
+
             $withPay = $remaining >= $leaveValue;
 
             if ($leaveValue > 0 && $withPay) {
                 $remaining -= $leaveValue;
             }
-
-            $remainingCreditsByDate[$dateStr] = round($remaining, 2);
 
             if ($leaveValue > 0) {
                 $result[$dateStr] = [

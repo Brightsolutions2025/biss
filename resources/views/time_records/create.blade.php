@@ -235,7 +235,7 @@
                     const outbaseForDate = outbaseRequests[dateStr] || { start: '', end: '' };
                     const offsetForDate = offsetRequests[dateStr] || { hours: 0, start: '', end: '' };
                     const leaveForDate = leaveRequests.dates?.[dateStr] || { days: 0, with_pay: '' };
-                    const remainingCredits = leaveRequests.remaining_credits_by_date?.[dateStr] ?? 0;
+                    const remainingCredits = leaveRequests.remaining_credits_by_date?.[dateStr] ?? '';
 
                     const timeEntries = Object.values(logsForDate)
                         .map(val => extractTimeOnly(val))
