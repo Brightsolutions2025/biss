@@ -247,7 +247,7 @@
                 }
 
                 for (let i = 0, dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1), i++) {
-                    const dateStr = dt.toISOString().split('T')[0];
+                    const dateStr = dt.toLocaleDateString('sv-SE');
                     const logsForDate = timeLogs[dateStr] || {};
                     const overtimeForDate = overtimeRequests[dateStr] || { hours: 0, start: '', end: '' };
                     const outbaseForDate = outbaseRequests[dateStr] || { start: '', end: '' };
@@ -361,7 +361,7 @@
                 }
 
                 for (let i = 0, dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1), i++) {
-                    const dateStr = dt.toISOString().split('T')[0];
+                    const dateStr = dt.toLocaleDateString('sv-SE');
                     const logsForDate = timeLogs[dateStr] || {};
                     const overtimeForDate = overtimeRequests[dateStr] || { hours: 0, start: '', end: '' };
                     const outbaseForDate = outbaseRequests[dateStr] || { start: '', end: '' };
