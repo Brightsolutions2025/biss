@@ -45,16 +45,32 @@ class TimeRecordController extends Controller
                 abort(403, 'No employee record linked to this user.');
             }
 
-            // Get subordinate employee IDs where current user is the approver
+            // Get subordinates directly reporting to the user
             $subordinateIds = Employee::where('approver_id', $user->id)
+                ->where('company_id', $companyId)
                 ->pluck('id')
                 ->toArray();
 
-            // Restrict to own or subordinates' records
-            $query->where(function ($q) use ($employeeId, $subordinateIds) {
-                $q->where('employee_id', $employeeId)
-                ->orWhereIn('employee_id', $subordinateIds);
-            });
+            // Get departments headed by the user
+            $departmentIds = \App\Models\Department::where('head_id', $user->id)
+                ->where('company_id', $companyId)
+                ->pluck('id')
+                ->toArray();
+
+            // Get employees under those departments
+            $departmentEmployeeIds = Employee::whereIn('department_id', $departmentIds)
+                ->where('company_id', $companyId)
+                ->pluck('id')
+                ->toArray();
+
+            // Combine allowed employee IDs
+            $allowedEmployeeIds = array_unique(array_merge(
+                [$employeeId],
+                $subordinateIds,
+                $departmentEmployeeIds
+            ));
+
+            $query->whereIn('employee_id', $allowedEmployeeIds);
         }
 
         // Filter by employee_id

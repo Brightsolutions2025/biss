@@ -60,16 +60,28 @@ class OffsetRequestController extends Controller
                 abort(403, 'No employee record linked to this user.');
             }
 
-            // Get IDs of subordinates where user is the approver
+            // Get direct subordinates
             $subordinateIds = Employee::where('approver_id', $user->id)
+                ->where('company_id', $companyId)
                 ->pluck('id')
                 ->toArray();
 
-            // Restrict to own and subordinates' offset requests
-            $query->where(function ($q) use ($employeeId, $subordinateIds) {
-                $q->where('employee_id', $employeeId)
-                ->orWhereIn('employee_id', $subordinateIds);
-            });
+            // Get departments where user is the head
+            $departmentIds = \App\Models\Department::where('head_id', $user->id)
+                ->where('company_id', $companyId)
+                ->pluck('id')
+                ->toArray();
+
+            // Get employees in those departments
+            $departmentEmployeeIds = Employee::whereIn('department_id', $departmentIds)
+                ->where('company_id', $companyId)
+                ->pluck('id')
+                ->toArray();
+
+            // Combine all allowed employee IDs
+            $allowedEmployeeIds = array_unique(array_merge([$employeeId], $subordinateIds, $departmentEmployeeIds));
+
+            $query->whereIn('employee_id', $allowedEmployeeIds);
         }
 
         if ($request->filled('employee_id')) {
