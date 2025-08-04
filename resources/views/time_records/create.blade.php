@@ -433,16 +433,5 @@
                 }
             });
         });
-
-        document.getElementById('payroll_period_id').addEventListener('change', function () {
-            const selectedOption = this.options[this.selectedIndex];
-            const startDate = selectedOption.getAttribute('data-start');
-            const endDate = selectedOption.getAttribute('data-end');
-
-            if (startDate && endDate) {
-                document.getElementById('corrected_start_date').value = startDate;
-                document.getElementById('corrected_end_date').value = endDate;
-            }
-        });
     </script>
 </x-app-layout>
