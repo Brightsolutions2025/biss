@@ -325,11 +325,23 @@
             });
         });
 
-        function loadTimeRecordLines(startDate, endDate) {
+        window.addEventListener('DOMContentLoaded', () => {
+            const payrollSelect = document.getElementById('payroll_period_id');
+            if (payrollSelect.value) {
+                payrollSelect.dispatchEvent(new Event('change'));
+            }
+        });
+
+        document.getElementById('apply-date-correction').addEventListener('click', function () {
+            const startDate = document.getElementById('corrected_start_date').value;
+            const endDate = document.getElementById('corrected_end_date').value;
             const tbody = document.getElementById('record-lines-body');
             tbody.innerHTML = '';
 
-            if (!startDate || !endDate) return;
+            if (!startDate || !endDate) {
+                alert('Please enter both start and end dates.');
+                return;
+            }
 
             Promise.all([
                 fetch(`/time_records/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
@@ -343,13 +355,12 @@
 
                 if (start > end) {
                     const row = document.createElement('tr');
-                    row.innerHTML = `<td colspan="18" class="text-muted text-center">No data for selected payroll period.</td>`;
+                    row.innerHTML = `<td colspan="18" class="text-muted text-center">No data for selected date range.</td>`;
                     tbody.appendChild(row);
                     return;
                 }
 
-                let i = 0;
-                for (let dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1), i++) {
+                for (let i = 0, dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1), i++) {
                     const dateStr = dt.toISOString().split('T')[0];
                     const logsForDate = timeLogs[dateStr] || {};
                     const overtimeForDate = overtimeRequests[dateStr] || { hours: 0, start: '', end: '' };
@@ -379,8 +390,29 @@
                     }
 
                     const row = document.createElement('tr');
-                    row.innerHTML = `...`; // (Same as your existing innerHTML row construction)
-
+                    row.innerHTML = `
+                        <td><input type="text" readonly name="time_record_lines[${i}][date]" class="form-control form-control-sm text-center" value="${dateStr}"></td>
+                        <td>${new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short' })}</td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][clock_in]" class="form-control form-control-sm clock-in-input" value="${clockIn}"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][clock_out]" class="form-control form-control-sm clock-out-input" value="${clockOut}"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][late_minutes]" class="form-control form-control-sm late-minutes-input" style="min-width: 80px;" step="0.01"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][undertime_minutes]" class="form-control form-control-sm undertime-minutes-input" step="0.01"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][overtime_time_start]" class="form-control form-control-sm" value="${extractTimeOnly(overtimeForDate.start)}"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][overtime_time_end]" class="form-control form-control-sm" value="${extractTimeOnly(overtimeForDate.end)}"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][overtime_hours]" class="form-control form-control-sm" value="${overtimeForDate.hours}" step="0.01"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][offset_time_start]" class="form-control form-control-sm" value="${offsetForDate.start}"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][offset_time_end]" class="form-control form-control-sm" value="${offsetForDate.end}"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][offset_hours]" class="form-control form-control-sm" value="${offsetForDate.hours}" step="0.01"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][outbase_time_start]" class="form-control form-control-sm" value="${outbaseForDate.start}"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][outbase_time_end]" class="form-control form-control-sm" value="${outbaseForDate.end}"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][leave_days]" class="form-control form-control-sm" value="${parseFloat(leaveForDate.days || 0).toFixed(2)}" step="0.01"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][remaining_leave_credits]" class="form-control form-control-sm" value="${remainingCredits}" step="0.01"></td>
+                        <td>
+                            <span>${leaveForDate.with_pay ? 'Yes' : 'No'}</span>
+                            <input type="hidden" name="time_record_lines[${i}][leave_with_pay]" value="${leaveForDate.with_pay ? 1 : 0}">
+                        </td>
+                        <td class="remarks-cell"><input type="text" name="time_record_lines[${i}][remarks]" class="form-control form-control-sm remarks-input"></td>
+                    `;
                     tbody.appendChild(row);
 
                     if (!isFlexible && scheduledTimeIn) {
@@ -400,30 +432,6 @@
                     }
                 }
             });
-        }
-
-        document.getElementById('payroll_period_id').addEventListener('change', function () {
-            const selected = this.options[this.selectedIndex];
-            const startDate = selected.getAttribute('data-start');
-            const endDate = selected.getAttribute('data-end');
-
-            document.getElementById('corrected_start_date').value = startDate;
-            document.getElementById('corrected_end_date').value = endDate;
-
-            loadTimeRecordLines(startDate, endDate);
-        });
-
-        document.getElementById('apply-date-correction').addEventListener('click', () => {
-            const correctedStart = document.getElementById('corrected_start_date').value;
-            const correctedEnd = document.getElementById('corrected_end_date').value;
-            loadTimeRecordLines(correctedStart, correctedEnd);
-        });
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const payrollSelect = document.getElementById('payroll_period_id');
-            if (payrollSelect.value) {
-                payrollSelect.dispatchEvent(new Event('change'));
-            }
         });
     </script>
 </x-app-layout>
