@@ -184,7 +184,7 @@ class OutbaseRequestController extends Controller
             $isOwner = $outbaseRequest->employee_id === $employeeId;
 
             // Check if current user is the approver of the employee in this request
-            $isApprover = $outbaseRequest->employee->approver_id === $employeeId;
+            $isApprover = $outbaseRequest->employee->approver_id === $user->id;
 
             if (!$isOwner && !$isApprover) {
                 abort(403, 'You are not allowed to view this outbase request.');

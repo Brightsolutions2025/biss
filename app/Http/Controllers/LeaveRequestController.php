@@ -193,7 +193,7 @@ class LeaveRequestController extends Controller
         // - OR they are an assigned approver
         if (!$user->hasPermission('leave_request.browse_all')) {
             $isOwner    = $leaveRequest->employee_id === $employeeId;
-            $isApprover = $leaveRequest->approver_id === $employeeId; // or use relationship
+            $isApprover = $leaveRequest->approver_id === $user->id; // or use relationship
 
             if (!$isOwner && !$isApprover) {
                 abort(403, 'You are not allowed to view this leave request.');

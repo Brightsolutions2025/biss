@@ -182,7 +182,7 @@ class OvertimeRequestController extends Controller
         // - OR they are the approver of the employee
         if (!$user->hasPermission('overtime_request.browse_all')) {
             $isOwner    = $overtimeRequest->employee_id           === $employeeId;
-            $isApprover = $overtimeRequest->employee->approver_id === $employeeId;
+            $isApprover = $overtimeRequest->employee->approver_id === $user->id;
 
             if (!$isOwner && !$isApprover) {
                 abort(403, 'You are not allowed to view this overtime request.');

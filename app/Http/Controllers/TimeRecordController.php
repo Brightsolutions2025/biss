@@ -265,7 +265,7 @@ class TimeRecordController extends Controller
             $isOwner = $timeRecord->employee_id === $employeeId;
 
             // Check if current user is approver of the employee linked to this time record
-            $isApprover = $timeRecord->employee->approver_id === $employeeId;
+            $isApprover = $timeRecord->employee->approver_id === $user->id;
 
             if (!$isOwner && !$isApprover) {
                 abort(403, 'You are not allowed to view this time record.');

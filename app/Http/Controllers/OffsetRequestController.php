@@ -334,7 +334,7 @@ class OffsetRequestController extends Controller
 
         if (!$user->hasPermission('offset_request.browse_all')) {
             $isOwner    = $offsetRequest->employee_id           === $employeeId;
-            $isApprover = $offsetRequest->employee->approver_id === $employeeId;
+            $isApprover = $offsetRequest->employee->approver_id === $user->id;
 
             if (!$isOwner && !$isApprover) {
                 abort(403, 'You are not allowed to view this offset request.');
@@ -396,7 +396,7 @@ class OffsetRequestController extends Controller
     {
         $employeeId = auth()->user()->employee?->id;
         $isOwner    = $offsetRequest->employee_id           === $employeeId;
-        $isApprover = $offsetRequest->employee->approver_id === $employeeId;
+        $isApprover = $offsetRequest->employee->approver_id === auth()->user()->id;
 
         if ($isApprover) {
             return true;
@@ -622,7 +622,7 @@ class OffsetRequestController extends Controller
         // Restrict non-global users to their own or subordinate records
         if (!$user->hasPermission('offset_request.browse_all')) {
             $isOwner    = $offsetRequest->employee_id           === $employeeId;
-            $isApprover = $offsetRequest->employee->approver_id === $employeeId;
+            $isApprover = $offsetRequest->employee->approver_id === $user->id;
 
             if (! $isOwner && ! $isApprover) {
                 abort(403, 'You are not allowed to delete this offset request.');
