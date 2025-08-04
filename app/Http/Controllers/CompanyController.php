@@ -154,6 +154,8 @@ class CompanyController extends Controller
             'hr supervisor' => ['modules' => [
                 'department', 'team', 'employee', 'shift',
                 'employee_shift', 'payroll_period', 'time_log', 'leave_balance',
+                'time_record','leave_request', 'overtime_request',
+                'outbase_request', 'offset_request',
             ]],
             'employee' => ['modules' => [
                 'leave_request', 'overtime_request',
