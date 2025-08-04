@@ -651,15 +651,15 @@ class LeaveRequestController extends Controller
             $leaveValue = $dailyLeaves[$dateStr] ?? 0;
 
             $withPay = $remaining >= $leaveValue;
+            
+            $remaining -= 0;
 
             if ($leaveValue > 0 && $withPay) {
                 $remaining -= $leaveValue;
             }
 
-            // ✅ Always set remainingCreditsByDate
             $remainingCreditsByDate[$dateStr] = round($remaining, 2);
 
-            // ✅ Only include leave info if there's actual leave
             if ($leaveValue > 0) {
                 $result[$dateStr] = [
                     'days'     => round($leaveValue, 2),
