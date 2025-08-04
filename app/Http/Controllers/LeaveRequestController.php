@@ -651,8 +651,6 @@ class LeaveRequestController extends Controller
             $leaveValue = $dailyLeaves[$dateStr] ?? 0;
 
             $withPay = $remaining >= $leaveValue;
-            
-            $remaining -= 0;
 
             if ($leaveValue > 0 && $withPay) {
                 $remaining -= $leaveValue;

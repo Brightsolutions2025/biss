@@ -218,8 +218,11 @@
                 fetch(`/offset_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
                 fetch(`/leave_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json())
             ]).then(([timeLogs, overtimeRequests, outbaseRequests, offsetRequests, leaveRequests]) => {
-                const start = new Date(startDate);
-                const end = new Date(endDate);
+                const [startYear, startMonth, startDay] = startDate.split('-').map(Number);
+                const [endYear, endMonth, endDay] = endDate.split('-').map(Number);
+
+                const start = new Date(startYear, startMonth - 1, startDay);
+                const end = new Date(endYear, endMonth - 1, endDay);
 
                 if (start > end) {
                     const row = document.createElement('tr');
@@ -235,7 +238,7 @@
                     const outbaseForDate = outbaseRequests[dateStr] || { start: '', end: '' };
                     const offsetForDate = offsetRequests[dateStr] || { hours: 0, start: '', end: '' };
                     const leaveForDate = leaveRequests.dates?.[dateStr] || { days: 0, with_pay: '' };
-                    const remainingCredits = leaveRequests.remaining_credits_by_date?.[dateStr];
+                    const remainingCredits = leaveRequests.remaining_credits_by_date?.[dateStr] ?? '';
 
                     const timeEntries = Object.values(logsForDate)
                         .map(val => extractTimeOnly(val))
