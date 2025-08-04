@@ -656,12 +656,16 @@ class LeaveRequestController extends Controller
                 $remaining -= $leaveValue;
             }
 
+            // ✅ Always set remainingCreditsByDate
             $remainingCreditsByDate[$dateStr] = round($remaining, 2);
 
-            $result[$dateStr] = [
-                'days'     => round($leaveValue, 2),
-                'with_pay' => $withPay,
-            ];
+            // ✅ Only include leave info if there's actual leave
+            if ($leaveValue > 0) {
+                $result[$dateStr] = [
+                    'days'     => round($leaveValue, 2),
+                    'with_pay' => $withPay,
+                ];
+            }
         }
 
         return response()->json([
