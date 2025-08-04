@@ -220,11 +220,6 @@
             return Math.max(0, (shH * 60 + shM) - (acH * 60 + acM));
         }
 
-        function parseDateAsLocal(dateStr) {
-            const [year, month, day] = dateStr.split('-').map(Number);
-            return new Date(year, month - 1, day); // month is 0-based
-        }
-
         document.getElementById('payroll_period_id').addEventListener('change', function () {
             const selected = this.options[this.selectedIndex];
             const startDate = selected.getAttribute('data-start');
@@ -241,8 +236,8 @@
                 fetch(`/offset_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
                 fetch(`/leave_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json())
             ]).then(([timeLogs, overtimeRequests, outbaseRequests, offsetRequests, leaveRequests]) => {
-                const start = parseDateAsLocal(startDate);
-                const end = parseDateAsLocal(endDate);
+                const start = new Date(startDate);
+                const end = new Date(endDate);
 
                 if (start > end) {
                     const row = document.createElement('tr');
@@ -437,6 +432,17 @@
                     }
                 }
             });
+        });
+
+        document.getElementById('payroll_period_id').addEventListener('change', function () {
+            const selectedOption = this.options[this.selectedIndex];
+            const startDate = selectedOption.getAttribute('data-start');
+            const endDate = selectedOption.getAttribute('data-end');
+
+            if (startDate && endDate) {
+                document.getElementById('corrected_start_date').value = startDate;
+                document.getElementById('corrected_end_date').value = endDate;
+            }
         });
     </script>
 </x-app-layout>
