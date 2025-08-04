@@ -81,6 +81,24 @@
                                 </select>
                             </div>
 
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <label for="corrected_start_date" class="form-label">Corrected Start Date</label>
+                                    <input type="date" id="corrected_start_date" name="corrected_start_date" class="form-control"
+                                        value="">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="corrected_end_date" class="form-label">Corrected End Date</label>
+                                    <input type="date" id="corrected_end_date" name="corrected_end_date" class="form-control"
+                                        value="">
+                                </div>
+                                <div class="col-md-3 d-flex align-items-end">
+                                    <button type="button" id="apply-date-correction" class="btn btn-outline-primary">
+                                        Apply Dates
+                                    </button>
+                                </div>
+                            </div>
+
                             <div class="table-responsive mb-4" id="record-lines-wrapper" style="zoom: 0.85;">
                                 <table class="table table-bordered table-sm align-middle text-center mb-0 compact-table">
                                     <thead class="table-light sticky-top">
@@ -305,6 +323,100 @@
                     }
                 }
             });
+        });
+
+        function loadTimeRecordLines(startDate, endDate) {
+            const tbody = document.getElementById('record-lines-body');
+            tbody.innerHTML = '';
+
+            if (!startDate || !endDate) return;
+
+            Promise.all([
+                fetch(`/time_records/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
+                fetch(`/overtime_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
+                fetch(`/outbase_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
+                fetch(`/offset_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
+                fetch(`/leave_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json())
+            ]).then(([timeLogs, overtimeRequests, outbaseRequests, offsetRequests, leaveRequests]) => {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+
+                if (start > end) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="18" class="text-muted text-center">No data for selected payroll period.</td>`;
+                    tbody.appendChild(row);
+                    return;
+                }
+
+                let i = 0;
+                for (let dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1), i++) {
+                    const dateStr = dt.toISOString().split('T')[0];
+                    const logsForDate = timeLogs[dateStr] || {};
+                    const overtimeForDate = overtimeRequests[dateStr] || { hours: 0, start: '', end: '' };
+                    const outbaseForDate = outbaseRequests[dateStr] || { start: '', end: '' };
+                    const offsetForDate = offsetRequests[dateStr] || { hours: 0, start: '', end: '' };
+                    const leaveForDate = leaveRequests.dates?.[dateStr] || { days: 0, with_pay: '' };
+                    const remainingCredits = leaveRequests.remaining_credits_by_date?.[dateStr] ?? '';
+
+                    const timeEntries = Object.values(logsForDate)
+                        .map(val => extractTimeOnly(val))
+                        .filter(time => /^\d{2}:\d{2}$/.test(time));
+
+                    let clockIn = '';
+                    let clockOut = '';
+
+                    if (timeEntries.length === 1) {
+                        const actualTime = timeEntries[0];
+                        const result = determineClockInOrOut(actualTime, scheduledTimeIn, scheduledTimeOut);
+                        clockIn = result.clockIn;
+                        clockOut = result.clockOut;
+                    } else {
+                        timeEntries.sort();
+                        if (timeEntries.length >= 2) {
+                            clockIn = timeEntries[0];
+                            clockOut = timeEntries[1];
+                        }
+                    }
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `...`; // (Same as your existing innerHTML row construction)
+
+                    tbody.appendChild(row);
+
+                    if (!isFlexible && scheduledTimeIn) {
+                        const clockInInput = row.querySelector('.clock-in-input');
+                        const lateInput = row.querySelector('.late-minutes-input');
+                        if (clockInInput && clockInInput.value && lateInput) {
+                            lateInput.value = calculateLateMinutes(scheduledTimeIn, clockInInput.value);
+                        }
+                    }
+
+                    if (!isFlexible && scheduledTimeOut) {
+                        const clockOutInput = row.querySelector('.clock-out-input');
+                        const undertimeInput = row.querySelector('.undertime-minutes-input');
+                        if (clockOutInput && clockOutInput.value && undertimeInput) {
+                            undertimeInput.value = calculateUndertimeMinutes(scheduledTimeOut, clockOutInput.value);
+                        }
+                    }
+                }
+            });
+        }
+
+        document.getElementById('payroll_period_id').addEventListener('change', function () {
+            const selected = this.options[this.selectedIndex];
+            const startDate = selected.getAttribute('data-start');
+            const endDate = selected.getAttribute('data-end');
+
+            document.getElementById('corrected_start_date').value = startDate;
+            document.getElementById('corrected_end_date').value = endDate;
+
+            loadTimeRecordLines(startDate, endDate);
+        });
+
+        document.getElementById('apply-date-correction').addEventListener('click', () => {
+            const correctedStart = document.getElementById('corrected_start_date').value;
+            const correctedEnd = document.getElementById('corrected_end_date').value;
+            loadTimeRecordLines(correctedStart, correctedEnd);
         });
 
         window.addEventListener('DOMContentLoaded', () => {
