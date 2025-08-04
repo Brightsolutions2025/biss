@@ -658,12 +658,10 @@ class LeaveRequestController extends Controller
 
             $remainingCreditsByDate[$dateStr] = round($remaining, 2);
 
-            if ($leaveValue > 0) {
-                $result[$dateStr] = [
-                    'days'     => round($leaveValue, 2),
-                    'with_pay' => $withPay,
-                ];
-            }
+            $result[$dateStr] = [
+                'days'     => round($leaveValue, 2),
+                'with_pay' => $withPay,
+            ];
         }
 
         return response()->json([
