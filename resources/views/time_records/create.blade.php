@@ -218,11 +218,8 @@
                 fetch(`/offset_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
                 fetch(`/leave_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json())
             ]).then(([timeLogs, overtimeRequests, outbaseRequests, offsetRequests, leaveRequests]) => {
-                const [startYear, startMonth, startDay] = startDate.split('-').map(Number);
-                const [endYear, endMonth, endDay] = endDate.split('-').map(Number);
-
-                const start = new Date(startYear, startMonth - 1, startDay);
-                const end = new Date(endYear, endMonth - 1, endDay);
+                const start = new Date(startDate);
+                const end = new Date(endDate);
 
                 if (start > end) {
                     const row = document.createElement('tr');
