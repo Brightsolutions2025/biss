@@ -35,7 +35,7 @@ class LeaveRequestController extends Controller
             }
 
             // Get IDs of employees where the current user is the approver
-            $subordinateIds = Employee::where('approver_id', $employeeId)
+            $subordinateIds = Employee::where('approver_id', $user->id)
                 ->pluck('id')
                 ->toArray();
 

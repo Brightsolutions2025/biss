@@ -32,7 +32,7 @@ class OvertimeRequestController extends Controller
             }
 
             // Allow own and subordinates' overtime requests
-            $subordinateIds = Employee::where('approver_id', $employeeId)
+            $subordinateIds = Employee::where('approver_id', $user->id)
                 ->pluck('id')
                 ->toArray();
 

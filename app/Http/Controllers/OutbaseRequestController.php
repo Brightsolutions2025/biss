@@ -34,7 +34,7 @@ class OutbaseRequestController extends Controller
             }
 
             // Get IDs of subordinates
-            $subordinateIds = Employee::where('approver_id', $employeeId)
+            $subordinateIds = Employee::where('approver_id', $user->id)
                 ->pluck('id')
                 ->toArray();
 
