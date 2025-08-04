@@ -171,11 +171,11 @@ class CompanyController extends Controller
 
             foreach ($config['modules'] as $module) {
                 foreach ($actions as $action) {
-                    $perm = Permission::create([
-                        'name'        => "{$module}.{$action}",
-                        'description' => ucfirst(str_replace('.', ' ', "{$module}.{$action}")),
-                        'company_id'  => $company->id,
-                    ]);
+                    $perm = $this->getOrCreatePermission(
+                        "{$module}.{$action}",
+                        ucfirst(str_replace('.', ' ', "{$module}.{$action}")),
+                        $company->id
+                    );
                     $permissionIds->push($perm->id);
                 }
             }
