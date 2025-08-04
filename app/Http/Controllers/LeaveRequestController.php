@@ -34,16 +34,28 @@ class LeaveRequestController extends Controller
                 abort(403, 'No employee record linked to this user.');
             }
 
-            // Get IDs of employees where the current user is the approver
+            /// Get subordinates directly reporting to the user (approver)
             $subordinateIds = Employee::where('approver_id', $user->id)
+                ->where('company_id', $companyId)
                 ->pluck('id')
                 ->toArray();
 
-            // Include leave requests of the user and their subordinates
-            $query->where(function ($q) use ($employeeId, $subordinateIds) {
-                $q->where('employee_id', $employeeId)
-                ->orWhereIn('employee_id', $subordinateIds);
-            });
+            // Get departments headed by the user
+            $departmentIds = \App\Models\Department::where('head_id', $user->id)
+                ->where('company_id', $companyId)
+                ->pluck('id')
+                ->toArray();
+
+            // Get employees under those departments
+            $departmentEmployeeIds = Employee::whereIn('department_id', $departmentIds)
+                ->where('company_id', $companyId)
+                ->pluck('id')
+                ->toArray();
+
+            // Combine all allowed employee IDs
+            $allowedEmployeeIds = array_unique(array_merge([$employeeId], $subordinateIds, $departmentEmployeeIds));
+
+            $query->whereIn('employee_id', $allowedEmployeeIds);
         }
 
         if ($request->filled('status')) {
