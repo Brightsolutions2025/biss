@@ -55,4 +55,8 @@ class TimeRecord extends Model
     {
         return $this->morphMany(File::class, 'fileable');
     }
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'approver_id');
+    }
 }
