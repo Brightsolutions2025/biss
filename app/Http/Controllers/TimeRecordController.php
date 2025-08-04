@@ -498,8 +498,8 @@ class TimeRecordController extends Controller
             }
 
             // Prevent deletion if the time record is approved or rejected
-            if (in_array($timeRecord->status, ['approved', 'rejected'])) {
-                abort(403, 'You cannot delete a time record that has already been approved or rejected.');
+            if (in_array($timeRecord->status, ['approved'])) {
+                abort(403, 'You cannot delete a time record that has already been approved.');
             }
         }
 
