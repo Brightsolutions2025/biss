@@ -9,11 +9,11 @@ Route::post('/webhooks/lark', function (Request $request) {
 
     // Handle URL verification
     if (($data['type'] ?? '') === 'url_verification') {
-        return response()->json(['challenge' => '9FwjIWwvODNIREEYGwOrHc2d2pSQc44C']);
+        return response()->json(['challenge' => '$data['challenge']']);
     }
 
     // You can handle other event types below (e.g., attendance events)
     return response()->json(['message' => 'ok']);
 });
 
-Route::post('/webhooks/lark', [LarkWebhookController::class, 'receive']);
+//Route::post('/webhooks/lark', [LarkWebhookController::class, 'receive']);
