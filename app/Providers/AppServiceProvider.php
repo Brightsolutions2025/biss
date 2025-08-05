@@ -26,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Blade::component('dashboard.card', \App\View\Components\Dashboard\Card::class);
 
+        Route::middleware('api')
+            ->prefix('api')
+            ->group(base_path('routes/api.php'));
+
         Storage::extend('google', function ($app, $config) {
             $client = new \Google_Client();
             $client->setClientId($config['clientId']);
