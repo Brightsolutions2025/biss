@@ -16,4 +16,5 @@ Route::post('/webhooks/lark', function (Request $request) {
     return response()->json(['message' => 'ok']);
 });
 
-Route::post('/webhooks/lark', [LarkWebhookController::class, 'receive']);
+Route::post('/webhook/lark', [LarkWebhookController::class, 'handle']);
+//Route::post('/webhooks/lark', [LarkWebhookController::class, 'receive']);
