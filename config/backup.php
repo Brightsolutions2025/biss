@@ -214,11 +214,11 @@ return [
         'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
 
         'mail' => [
-            'to' => 'your@example.com',
+            'to' => 'boropeza@bsm.ph',
 
             'from' => [
-                'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-                'name'    => env('MAIL_FROM_NAME', 'Example'),
+                'address' => env('MAIL_FROM_ADDRESS', 'jruiz@bsm.ph'),
+                'name'    => env('MAIL_FROM_NAME', 'Biss'),
             ],
         ],
 
