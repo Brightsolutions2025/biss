@@ -119,24 +119,41 @@ class EmployeeTest extends TestCase
     /** @test */
     public function it_updates_an_employee()
     {
-        $employee = Employee::factory()->create([
-            'first_name' => 'Old',
-            'company_id' => $this->company->id,
-        ]);
-
         $this->actingAs($this->user);
 
+        $department = Department::factory()->create(['company_id' => $this->company->id]);
+        $team       = Team::factory()->create([
+            'company_id'    => $this->company->id,
+            'department_id' => $department->id,
+        ]);
+        $employeeUser = User::factory()->create();
+
+        $employee = Employee::factory()->create([
+            'company_id' => $this->company->id,
+            'user_id'    => $employeeUser->id,
+            'first_name' => 'Old',
+            'last_name'  => 'Name',
+            'employee_number' => 'EMP001',
+        ]);
+
         $response = $this->put(route('employees.update', $employee), [
-            'user_id'         => $employee->user_id,
-            'employee_number' => $employee->employee_number,
+            'user_id'         => $employeeUser->id,
+            'employee_number' => 'EMP001',
             'first_name'      => 'Updated',
-            'last_name'       => $employee->last_name,
+            'last_name'       => 'Name',
+            'department_id'   => $department->id,
+            'team_id'         => $team->id,
+            'flexible_time'   => false, // simulate unchecked checkbox
+            'ot_not_convertible_to_offset' => false,
         ]);
 
         $response->assertRedirect(route('employees.index'));
+
         $this->assertDatabaseHas('employees', [
             'id'         => $employee->id,
             'first_name' => 'Updated',
+            'team_id'    => $team->id,
+            'department_id' => $department->id,
         ]);
     }
 
