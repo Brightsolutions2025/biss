@@ -171,7 +171,7 @@
                                     <div class="form-floating">
                                         <select class="form-select" name="approver_id" id="approver_id">
                                             <option value="">Select Approver</option>
-                                            @foreach($users as $user)
+                                            @foreach($approvers as $user)
                                                 <option value="{{ $user->id }}" {{ old('approver_id') == $user->id ? 'selected' : '' }}>
                                                     {{ $user->name }}
                                                 </option>
