@@ -143,7 +143,7 @@
                                     </div>
                                 </div>
 
-                            </div>x
+                            </div>
                         </div>
                     @empty
                         <div class="text-muted">No time logs recorded yet.</div>
