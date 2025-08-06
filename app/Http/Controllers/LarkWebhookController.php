@@ -57,16 +57,11 @@ class LarkWebhookController extends Controller
                 }
 
                 // 4. Find or create payroll period
-                $payrollPeriod = PayrollPeriod::firstOrCreate(
-                    [
-                        'company_id' => $companyId,
-                        'start_date' => $periodStart->toDateString(),
-                        'end_date'   => $periodEnd->toDateString(),
-                    ],
-                    [
-                        'name' => $periodStart->format('M d') . ' - ' . $periodEnd->format('d, Y'),
-                    ]
-                );
+                $payrollPeriod = PayrollPeriod::firstOrCreate([
+                    'company_id' => $companyId,
+                    'start_date' => $periodStart->toDateString(),
+                    'end_date'   => $periodEnd->toDateString(),
+                ]);
 
                 Log::debug('Company ID:', [$companyId]);
                 Log::debug('Attendance Time:', [$attendanceTime]);
