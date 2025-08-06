@@ -32,7 +32,9 @@ class LarkWebhookController extends Controller
             return response()->json(['status' => 'ignored'], 400);
         }
 
-        if (in_array($eventType, ['attendance.checkin', 'attendance.checkout'])) {
+        Log::debug('User Flow Event Payload:', $request->all());
+
+        if (Str::startsWith($eventType, 'attendance.')) {
             try {
                 // 1. Find the company_id
                 $company = Company::where('name', 'Bright Solutions Marketing Services, Inc.')->first();
