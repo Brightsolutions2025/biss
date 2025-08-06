@@ -113,19 +113,19 @@ class EmployeeController extends Controller
             'ot_not_convertible_to_offset' => 'boolean',
         ]);
 
+        // Ensure team belongs to department
+        if ($validated['team_id'] && $validated['department_id']) {
+            $team = Team::find($validated['team_id']);
+            if ($team && $team->department_id != $validated['department_id']) {
+                return back()
+                    ->withErrors(['team_id' => 'The selected team does not belong to the selected department.'])
+                    ->withInput();
+            }
+        }
+
         DB::beginTransaction();
 
         try {
-            // Ensure team belongs to department
-            if ($validated['team_id'] && $validated['department_id']) {
-                $team = Team::find($validated['team_id']);
-                if ($team && $team->department_id != $validated['department_id']) {
-                    return back()
-                        ->withErrors(['team_id' => 'The selected team does not belong to the selected department.'])
-                        ->withInput();
-                }
-            }
-
             $validated['flexible_time']                = $request->has('flexible_time'); // checkbox handling
             $validated['ot_not_convertible_to_offset'] = $request->has('ot_not_convertible_to_offset');
 
@@ -189,66 +189,66 @@ class EmployeeController extends Controller
 
         $this->authorizeCompany($employee->company_id);
 
+        $validated = $request->validate([
+            'user_id' => [
+                'required',
+                'exists:users,id',
+                Rule::unique('employees')
+                    ->where(function ($query) use ($companyId) {
+                        return $query->where('company_id', $companyId);
+                    })
+                    ->ignore($employee->id),
+            ],
+            'approver_id'       => 'nullable|exists:users,id',
+            'employee_number'   => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('employees')
+                    ->where(function ($query) use ($companyId) {
+                        return $query->where('company_id', $companyId);
+                    })
+                    ->ignore($employee->id),
+            ],
+            'first_name'                   => 'required|string|max:255',
+            'last_name'                    => 'required|string|max:255',
+            'middle_name'                  => 'nullable|string|max:255',
+            'gender'                       => 'nullable|string|max:10',
+            'birth_date'                   => 'nullable|date',
+            'civil_status'                 => 'nullable|string|max:50',
+            'nationality'                  => 'nullable|string|max:100',
+            'position'                     => 'nullable|string|max:255',
+            'department_id'                => 'nullable|exists:departments,id',
+            'team_id'                      => 'nullable|exists:teams,id',
+            'employment_type'              => 'nullable|string|max:100',
+            'flexible_time'                => 'boolean',
+            'hire_date'                    => 'nullable|date',
+            'termination_date'             => 'nullable|date',
+            'basic_salary'                 => 'nullable|numeric|min:0',
+            'sss_number'                   => 'nullable|string|max:50',
+            'philhealth_number'            => 'nullable|string|max:50',
+            'pagibig_number'               => 'nullable|string|max:50',
+            'tin_number'                   => 'nullable|string|max:50',
+            'address'                      => 'nullable|string',
+            'contact_number'               => 'nullable|string|max:20',
+            'emergency_contact'            => 'nullable|string|max:255',
+            'notes'                        => 'nullable|string',
+            'ot_not_convertible_to_offset' => 'boolean',
+        ]);
+
+        // Ensure team belongs to department
+        if ($validated['team_id'] && $validated['department_id']) {
+            $team = Team::find($validated['team_id']);
+            if ($team && $team->department_id != $validated['department_id']) {
+                return back()
+                    ->withErrors(['team_id' => 'The selected team does not belong to the selected department.'])
+                    ->withInput();
+            }
+        }
+
         DB::beginTransaction();
 
         try {
-            $validated = $request->validate([
-                'user_id' => [
-                    'required',
-                    'exists:users,id',
-                    Rule::unique('employees')
-                        ->where(function ($query) use ($companyId) {
-                            return $query->where('company_id', $companyId);
-                        })
-                        ->ignore($employee->id),
-                ],
-                'approver_id'       => 'nullable|exists:users,id',
-                'employee_number'   => [
-                    'required',
-                    'string',
-                    'max:255',
-                    Rule::unique('employees')
-                        ->where(function ($query) use ($companyId) {
-                            return $query->where('company_id', $companyId);
-                        })
-                        ->ignore($employee->id),
-                ],
-                'first_name'                   => 'required|string|max:255',
-                'last_name'                    => 'required|string|max:255',
-                'middle_name'                  => 'nullable|string|max:255',
-                'gender'                       => 'nullable|string|max:10',
-                'birth_date'                   => 'nullable|date',
-                'civil_status'                 => 'nullable|string|max:50',
-                'nationality'                  => 'nullable|string|max:100',
-                'position'                     => 'nullable|string|max:255',
-                'department_id'                => 'nullable|exists:departments,id',
-                'team_id'                      => 'nullable|exists:teams,id',
-                'employment_type'              => 'nullable|string|max:100',
-                'flexible_time'                => 'boolean',
-                'hire_date'                    => 'nullable|date',
-                'termination_date'             => 'nullable|date',
-                'basic_salary'                 => 'nullable|numeric|min:0',
-                'sss_number'                   => 'nullable|string|max:50',
-                'philhealth_number'            => 'nullable|string|max:50',
-                'pagibig_number'               => 'nullable|string|max:50',
-                'tin_number'                   => 'nullable|string|max:50',
-                'address'                      => 'nullable|string',
-                'contact_number'               => 'nullable|string|max:20',
-                'emergency_contact'            => 'nullable|string|max:255',
-                'notes'                        => 'nullable|string',
-                'ot_not_convertible_to_offset' => 'boolean',
-            ]);
-
-            // Ensure team belongs to department
-            if ($validated['team_id'] && $validated['department_id']) {
-                $team = Team::find($validated['team_id']);
-                if ($team && $team->department_id != $validated['department_id']) {
-                    return back()
-                        ->withErrors(['team_id' => 'The selected team does not belong to the selected department.'])
-                        ->withInput();
-                }
-            }
-
             $validated['flexible_time']                = $request->has('flexible_time'); // checkbox handling
             $validated['ot_not_convertible_to_offset'] = $request->has('ot_not_convertible_to_offset');
 
