@@ -116,6 +116,16 @@ class EmployeeController extends Controller
         DB::beginTransaction();
 
         try {
+            // Ensure team belongs to department
+            if ($validated['team_id'] && $validated['department_id']) {
+                $team = Team::find($validated['team_id']);
+                if ($team && $team->department_id != $validated['department_id']) {
+                    return back()
+                        ->withErrors(['team_id' => 'The selected team does not belong to the selected department.'])
+                        ->withInput();
+                }
+            }
+
             $validated['flexible_time']                = $request->has('flexible_time'); // checkbox handling
             $validated['ot_not_convertible_to_offset'] = $request->has('ot_not_convertible_to_offset');
 
@@ -228,6 +238,16 @@ class EmployeeController extends Controller
                 'notes'                        => 'nullable|string',
                 'ot_not_convertible_to_offset' => 'boolean',
             ]);
+
+            // Ensure team belongs to department
+            if ($validated['team_id'] && $validated['department_id']) {
+                $team = Team::find($validated['team_id']);
+                if ($team && $team->department_id != $validated['department_id']) {
+                    return back()
+                        ->withErrors(['team_id' => 'The selected team does not belong to the selected department.'])
+                        ->withInput();
+                }
+            }
 
             $validated['flexible_time']                = $request->has('flexible_time'); // checkbox handling
             $validated['ot_not_convertible_to_offset'] = $request->has('ot_not_convertible_to_offset');
