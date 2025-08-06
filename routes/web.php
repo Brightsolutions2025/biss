@@ -37,6 +37,7 @@ use App\Http\Controllers\UserPreferenceController;
 use App\Http\Controllers\ClientContactController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TicketController;
 use App\Http\Middleware\EnsureUserHasCompany;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
@@ -197,6 +198,7 @@ Route::middleware('auth', EnsureUserHasCompany::class)->group(function () {
 
 Route::middleware('auth', EnsureUserIsAdmin::class, EnsureUserHasCompany::class)->group(function () {
     Route::resource('audit_logs', AuditLogController::class);
+    Route::resource('tickets', TicketController::class);
     Route::resource('ticket_types', TicketTypeController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);
