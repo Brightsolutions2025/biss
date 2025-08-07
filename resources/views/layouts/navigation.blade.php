@@ -246,7 +246,7 @@
                         @php $user = Auth::user(); @endphp
 
                         {{-- HR Supervisor + Admin + Department Head --}}
-                        @if($user && $user->hasAnyRole(['admin', 'hr supervisor', 'department head']))
+                        @if($user && $user->hasAnyRole(['admin', 'hr supervisor', 'department head', 'finance hris']))
                             <li><hr class="dropdown-divider"></li>
                             <li><h6 class="dropdown-header">HR & Department Head</h6></li>
 
@@ -259,7 +259,7 @@
                         @endif
 
                         {{-- Employee + HR Supervisor + Admin + Department Head --}}
-                        @if($user && $user->hasAnyRole(['admin', 'hr supervisor', 'employee', 'department head']))
+                        @if($user && $user->hasAnyRole(['admin', 'hr supervisor', 'employee', 'department head', 'finance hris']))
                             <li><hr class="dropdown-divider"></li>
                             <li><h6 class="dropdown-header">Employee Reports</h6></li>
 
