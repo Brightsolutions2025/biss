@@ -373,10 +373,6 @@ class TimeRecordController extends Controller
             return true;
         }
 
-        if ($isEmployee && !in_array($timeRecord->status, ['approved', 'rejected'])) {
-            return true;
-        }
-
         return false;
     }
 
