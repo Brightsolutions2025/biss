@@ -115,8 +115,14 @@ class OvertimeRequestController extends Controller
         ]);
 
         // Custom validation: number_of_hours must not exceed actual duration
-        $start    = \Carbon\Carbon::createFromFormat('H:i', $validated['time_start']);
-        $end      = \Carbon\Carbon::createFromFormat('H:i', $validated['time_end']);
+        $start = Carbon::createFromFormat('H:i', $validated['time_start']);
+        $end   = Carbon::createFromFormat('H:i', $validated['time_end']);
+
+        // If end is less than or equal to start, it means the time crosses midnight.
+        if ($end <= $start) {
+            $end->addDay(); // Move end time to the next day
+        }
+
         $maxHours = $start->diffInMinutes($end) / 60;
 
         if ($validated['number_of_hours'] > $maxHours) {
@@ -282,8 +288,14 @@ class OvertimeRequestController extends Controller
         ]);
 
         // Custom check: number_of_hours <= time difference
-        $start    = \Carbon\Carbon::createFromFormat('H:i', $validated['time_start']);
-        $end      = \Carbon\Carbon::createFromFormat('H:i', $validated['time_end']);
+        $start = Carbon::createFromFormat('H:i', $validated['time_start']);
+        $end   = Carbon::createFromFormat('H:i', $validated['time_end']);
+
+        // If end is less than or equal to start, it means the time crosses midnight.
+        if ($end <= $start) {
+            $end->addDay(); // Move end time to the next day
+        }
+
         $maxHours = $start->diffInMinutes($end) / 60;
 
         if ($validated['number_of_hours'] > $maxHours) {
