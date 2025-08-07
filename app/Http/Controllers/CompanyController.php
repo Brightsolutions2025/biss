@@ -133,6 +133,11 @@ class CompanyController extends Controller
                 'description' => 'Manages employees within their department',
                 'company_id'  => $company->id,
             ]),
+            'finance hris' => Role::create([
+                'name'        => 'Finance HRIS',
+                'description' => 'Can view HR data without modification rights',
+                'company_id'  => $company->id,
+            ]),
             'account manager' => Role::create([
                 'name'        => 'Account Manager',
                 'description' => 'Manages clients and their details',
@@ -157,6 +162,12 @@ class CompanyController extends Controller
                 'time_record','leave_request', 'overtime_request',
                 'outbase_request', 'offset_request',
             ]],
+            'finance hris' => ['modules' => [
+                'department', 'team', 'employee', 'shift',
+                'employee_shift', 'payroll_period', 'time_log', 'leave_balance',
+                'time_record','leave_request', 'overtime_request',
+                'outbase_request', 'offset_request',
+            ]],
             'employee' => ['modules' => [
                 'leave_request', 'overtime_request',
                 'outbase_request', 'offset_request', 'time_record',
@@ -171,6 +182,11 @@ class CompanyController extends Controller
 
             foreach ($config['modules'] as $module) {
                 foreach ($actions as $action) {
+                    // Skip create/update/delete if finance hris
+                    if ($role === 'finance hris' && in_array($action, ['create', 'update', 'delete'])) {
+                        continue;
+                    }
+
                     $perm = $this->getOrCreatePermission(
                         "{$module}.{$action}",
                         ucfirst(str_replace('.', ' ', "{$module}.{$action}")),
@@ -196,7 +212,7 @@ class CompanyController extends Controller
 
         foreach ($sharedPermissions as [$name, $desc]) {
             $perm = $this->getOrCreatePermission($name, $desc, $company->id);
-            foreach (['admin', 'hr supervisor'] as $roleKey) {
+            foreach (['admin', 'hr supervisor', 'finance hris'] as $roleKey) {
                 $roles[$roleKey]->permissions()->syncWithoutDetaching([
                     $perm->id => ['company_id' => $company->id]
                 ]);

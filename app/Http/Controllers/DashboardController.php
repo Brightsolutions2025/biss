@@ -183,7 +183,7 @@ class DashboardController extends Controller
             ];
         }
 
-        if ($user->hasAnyRole(['admin', 'hr supervisor'])) {
+        if ($user->hasAnyRole(['admin', 'hr supervisor', 'finance hris'])) {
             $data += [
                 'pendingLeaveRequests' => LeaveRequest::where('company_id', $company->id)
                     ->where('status', 'pending')

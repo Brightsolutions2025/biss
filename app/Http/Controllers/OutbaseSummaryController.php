@@ -115,7 +115,7 @@ class OutbaseSummaryController extends Controller
         }
 
         // You may want to include department head's department as filter
-        if ($user->hasRole('department head') && !$user->hasAnyRole(['admin', 'hr supervisor'])) {
+        if ($user->hasRole('department head') && !$user->hasAnyRole(['admin', 'hr supervisor', 'finance hris'])) {
             $dept = \App\Models\Department::where('head_id', $user->id)->first();
             if ($dept) {
                 $request->merge(['department_id' => $dept->id]);
@@ -215,7 +215,7 @@ class OutbaseSummaryController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->hasRole('department head') && !$user->hasAnyRole(['admin', 'hr supervisor'])) {
+        if ($user->hasRole('department head') && !$user->hasAnyRole(['admin', 'hr supervisor', 'finance hris'])) {
             $dept = \App\Models\Department::where('head_id', $user->id)->first();
             if ($dept) {
                 $query->whereHas('employee', function ($q) use ($dept) {

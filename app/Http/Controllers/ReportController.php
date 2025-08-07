@@ -23,42 +23,42 @@ class ReportController extends Controller
                 'description' => 'Track DTR status of employees by department and team: Not submitted, Submitted, and Approved.',
                 'route'       => 'reports.dtr_status_by_team',
                 'permission'  => 'view time record report',
-                'roles'       => ['admin', 'hr supervisor', 'department head'],
+                'roles'       => ['admin', 'hr supervisor', 'department head', 'finance hris'],
             ],
             [
                 'title'       => 'Leave Utilization Summary',
                 'description' => 'Shows leave usage vs. balance by employee, department, and leave type.',
                 'route'       => 'reports.leave_utilization',
                 'permission'  => 'view leave report',
-                'roles'       => ['admin', 'hr supervisor', 'department head'],
+                'roles'       => ['admin', 'hr supervisor', 'department head', 'finance hris'],
             ],
             [
                 'title'       => 'Overtime vs Offset Report',
                 'description' => 'Compare total overtime filed vs. how much has been used for offset.',
                 'route'       => 'reports.overtime_offset_comparison',
                 'permission'  => 'view overtime report',
-                'roles'       => ['admin', 'hr supervisor', 'department head'],
+                'roles'       => ['admin', 'hr supervisor', 'department head', 'finance hris'],
             ],
             [
                 'title'       => 'Late and Undertime Report',
                 'description' => 'Employees with frequent late arrivals or undertime grouped by department.',
                 'route'       => 'reports.late_undertime',
                 'permission'  => 'view attendance report',
-                'roles'       => ['admin', 'hr supervisor', 'department head'],
+                'roles'       => ['admin', 'hr supervisor', 'department head', 'finance hris'],
             ],
             [
                 'title'       => 'Leave Requests by Status',
                 'description' => 'Summary of pending, approved, and rejected leave requests over a selected period.',
                 'route'       => 'reports.leave_status_overview',
                 'permission'  => 'view leave report',
-                'roles'       => ['admin', 'hr supervisor', 'department head'],
+                'roles'       => ['admin', 'hr supervisor', 'department head', 'finance hris'],
             ],
             [
                 'title'       => 'Outbase Request Summary',
                 'description' => 'Monitor volume and distribution of outbase (field) work across employees.',
                 'route'       => 'reports.outbase_summary',
                 'permission'  => 'view outbase report',
-                'roles'       => ['admin', 'hr supervisor', 'department head'],
+                'roles'       => ['admin', 'hr supervisor', 'department head', 'finance hris'],
             ],
             [
                 'title'       => 'Offset Usage and Expiry Tracker',
@@ -559,7 +559,7 @@ class ReportController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->hasRole('department head') && !$user->hasAnyRole(['admin', 'hr supervisor'])) {
+        if ($user->hasRole('department head') && !$user->hasAnyRole(['admin', 'hr supervisor', 'finance hris'])) {
             $dept = \App\Models\Department::where('head_id', $user->id)->first();
             if ($dept) {
                 $query->where('department_id', $dept->id);
