@@ -42,7 +42,7 @@ class DashboardController extends Controller
         $endDate   = $validated['end_date']   ?? now()->toDateString();
         $year      = Carbon::parse($endDate)->year;
 
-        $employee = $user->employee;
+        $employee = $user->employee()->where('company_id', $company->id)->first();
 
         $data = [
             'startDate' => $startDate,
