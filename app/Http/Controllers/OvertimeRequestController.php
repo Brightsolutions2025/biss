@@ -85,9 +85,11 @@ class OvertimeRequestController extends Controller
         }
 
         $companyId = auth()->user()->preference->company_id;
-        $employees = Employee::where('company_id', $companyId)->get();
+        $employee = Employee::where('company_id', $companyId)
+            ->where('user_id', auth()->id())
+            ->first();
 
-        return view('overtime_requests.create', compact('employees'));
+        return view('overtime_requests.create', compact('employee'));
     }
 
     public function store(Request $request)
