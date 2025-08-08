@@ -160,13 +160,13 @@
                         {{-- Employees --}}
                         @if(auth()->user()->hasPermission('employee.browse'))
                             <li><h6 class="dropdown-header">Employees</h6></li>
-                            <li><a class="dropdown-item" href="{{ route('employees.browse') }}">Employees</a></li>
+                            <li><a class="dropdown-item" href="{{ route('employees.index') }}">Employees</a></li>
                         @endif
                         @if(auth()->user()->hasPermission('team.browse'))
-                            <li><a class="dropdown-item" href="{{ route('teams.browse') }}">Teams</a></li>
+                            <li><a class="dropdown-item" href="{{ route('teams.index') }}">Teams</a></li>
                         @endif
                         @if(auth()->user()->hasPermission('department.browse'))
-                            <li><a class="dropdown-item" href="{{ route('departments.browse') }}">Departments</a></li>
+                            <li><a class="dropdown-item" href="{{ route('departments.index') }}">Departments</a></li>
                         @endif
 
                         {{-- Requests --}}
@@ -176,16 +176,16 @@
                         ]))
                             <li><h6 class="dropdown-header">Requests</h6></li>
                             @if(auth()->user()->hasPermission('leave_request.browse'))
-                                <li><a class="dropdown-item" href="{{ route('leave_requests.browse') }}">Leave Requests</a></li>
+                                <li><a class="dropdown-item" href="{{ route('leave_requests.index') }}">Leave Requests</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('overtime_request.browse'))
-                                <li><a class="dropdown-item" href="{{ route('overtime_requests.browse') }}">Overtime Requests</a></li>
+                                <li><a class="dropdown-item" href="{{ route('overtime_requests.index') }}">Overtime Requests</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('offset_request.browse'))
-                                <li><a class="dropdown-item" href="{{ route('offset_requests.browse') }}">Offset Requests</a></li>
+                                <li><a class="dropdown-item" href="{{ route('offset_requests.index') }}">Offset Requests</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('outbase_request.browse'))
-                                <li><a class="dropdown-item" href="{{ route('outbase_requests.browse') }}">Outbase Requests</a></li>
+                                <li><a class="dropdown-item" href="{{ route('outbase_requests.index') }}">Outbase Requests</a></li>
                             @endif
                         @endif
 
@@ -195,13 +195,13 @@
                         ]))
                             <li><h6 class="dropdown-header">Timekeeping</h6></li>
                             @if(auth()->user()->hasPermission('time_record.browse'))
-                                <li><a class="dropdown-item" href="{{ route('time_records.browse') }}">Time Records</a></li>
+                                <li><a class="dropdown-item" href="{{ route('time_records.index') }}">Time Records</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('payroll_period.browse'))
-                                <li><a class="dropdown-item" href="{{ route('payroll_periods.browse') }}">Payroll Periods</a></li>
+                                <li><a class="dropdown-item" href="{{ route('payroll_periods.index') }}">Payroll Periods</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('time_log.browse'))
-                                <li><a class="dropdown-item" href="{{ route('time_logs.browse') }}">Time Logs</a></li>
+                                <li><a class="dropdown-item" href="{{ route('time_logs.index') }}">Time Logs</a></li>
                             @endif
                         @endif
 
@@ -211,13 +211,13 @@
                         ]))
                             <li><h6 class="dropdown-header">Settings</h6></li>
                             @if(auth()->user()->hasPermission('shift.browse'))
-                                <li><a class="dropdown-item" href="{{ route('shifts.browse') }}">Shifts</a></li>
+                                <li><a class="dropdown-item" href="{{ route('shifts.index') }}">Shifts</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('employee_shift.browse'))
-                                <li><a class="dropdown-item" href="{{ route('employee_shifts.browse') }}">Employee Shifts</a></li>
+                                <li><a class="dropdown-item" href="{{ route('employee_shifts.index') }}">Employee Shifts</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('leave_balance.browse'))
-                                <li><a class="dropdown-item" href="{{ route('leave_balances.browse') }}">Leave Balances</a></li>
+                                <li><a class="dropdown-item" href="{{ route('leave_balances.index') }}">Leave Balances</a></li>
                             @endif
                         @endif
 
@@ -226,11 +226,11 @@
                             $user->hasRole('admin')
                         ))
                             <li><h6 class="dropdown-header">Admin</h6></li>
-                            <li><a class="dropdown-item" href="{{ route('companies.browse') }}">Companies</a></li>
-                            <li><a class="dropdown-item" href="{{ route('users.browse') }}">Users</a></li>
-                            <li><a class="dropdown-item" href="{{ route('roles.browse') }}">Roles</a></li>
-                            <li><a class="dropdown-item" href="{{ route('permissions.browse') }}">Permissions</a></li>
-                            <li><a class="dropdown-item" href="{{ route('company_users.browse') }}">Company Users</a></li>
+                            <li><a class="dropdown-item" href="{{ route('companies.index') }}">Companies</a></li>
+                            <li><a class="dropdown-item" href="{{ route('users.index') }}">Users</a></li>
+                            <li><a class="dropdown-item" href="{{ route('roles.index') }}">Roles</a></li>
+                            <li><a class="dropdown-item" href="{{ route('permissions.index') }}">Permissions</a></li>
+                            <li><a class="dropdown-item" href="{{ route('company_users.index') }}">Company Users</a></li>
                         @endif
                     </ul>
                 </li>
