@@ -23,10 +23,6 @@
                     </div>
                 @endif
 
-                @php
-                    $employee = auth()->user()->employee;
-                @endphp
-
                 @if (!$employee)
                     <div class="alert alert-warning fw-semibold">
                         You need to complete your employee profile before submitting an overtime request. 
