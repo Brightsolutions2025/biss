@@ -182,25 +182,6 @@
                     }
                 });
             });
-        });
-
-        function prepareOvertimeData() {
-            const inputs = document.querySelectorAll('.hours-to-offset');
-            const selected = [];
-
-            inputs.forEach(input => {
-                const value = parseFloat(input.value);
-                if (!isNaN(value) && value >= 0.5) {
-                    selected.push({
-                        id: parseInt(input.dataset.otId),
-                        used_hours: value
-                    });
-                }
-            });
-
-            document.getElementById('overtime_requests').value = JSON.stringify(selected);
-        }
-        document.addEventListener('DOMContentLoaded', () => {
             const timeStart = document.getElementById('time_start');
             const timeEnd = document.getElementById('time_end');
             const numberOfHours = document.getElementById('number_of_hours');
@@ -228,6 +209,23 @@
             timeStart.addEventListener('change', calculateHours);
             timeEnd.addEventListener('change', calculateHours);
         });
+
+        function prepareOvertimeData() {
+            const inputs = document.querySelectorAll('.hours-to-offset');
+            const selected = [];
+
+            inputs.forEach(input => {
+                const value = parseFloat(input.value);
+                if (!isNaN(value) && value >= 0.5) {
+                    selected.push({
+                        id: parseInt(input.dataset.otId),
+                        used_hours: value
+                    });
+                }
+            });
+
+            document.getElementById('overtime_requests').value = JSON.stringify(selected);
+        }
     </script>
     @push('scripts')
     <script>
