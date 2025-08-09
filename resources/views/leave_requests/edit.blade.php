@@ -171,6 +171,29 @@
                 }
             });
         }
+        document.addEventListener('DOMContentLoaded', function () {
+            const startDateInput = document.getElementById('start_date');
+            const endDateInput = document.getElementById('end_date');
+            const daysInput = document.getElementById('number_of_days');
+
+            function calculateDays() {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+
+                if (!isNaN(startDate) && !isNaN(endDate) && endDate >= startDate) {
+                    // Calculate difference in milliseconds
+                    const diffTime = endDate - startDate;
+                    // Convert to days (+1 to include both start and end date)
+                    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                    daysInput.value = diffDays;
+                } else {
+                    daysInput.value = '';
+                }
+            }
+
+            startDateInput.addEventListener('change', calculateDays);
+            endDateInput.addEventListener('change', calculateDays);
+        });
     </script>
     @endpush
 </x-app-layout>
