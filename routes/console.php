@@ -8,6 +8,6 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('dtr:send-reminders')->hourly(); // ->hourly();->everyMinute();
+Schedule::command('dtr:send-reminders')->everyMinute(); // ->hourly();->everyMinute();
 
 Schedule::command('backup:run')->daily()->at('01:00'); // set preferred time
