@@ -41,6 +41,12 @@
                         <input type="hidden" name="employee_id" value="{{ $leaveRequest->employee_id }}">
                     </div>
 
+                    <!-- Note -->
+                    <div class="alert alert-info mb-4">
+                        <strong>Note:</strong> If you're planning to take leave for more than one week,
+                        submit a separate request for each week.
+                    </div>
+
                     <!-- Start Date -->
                     <div class="mb-3">
                         <label for="start_date" class="form-label">Start Date</label>
