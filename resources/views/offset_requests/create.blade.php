@@ -184,5 +184,33 @@
 
             document.getElementById('overtime_requests').value = JSON.stringify(selected);
         }
+        document.addEventListener('DOMContentLoaded', () => {
+            const timeStart = document.getElementById('time_start');
+            const timeEnd = document.getElementById('time_end');
+            const numberOfHours = document.getElementById('number_of_hours');
+
+            function calculateHours() {
+                const start = timeStart.value;
+                const end = timeEnd.value;
+
+                if (start && end) {
+                    const startTime = new Date(`1970-01-01T${start}:00`);
+                    const endTime = new Date(`1970-01-01T${end}:00`);
+
+                    let diff = (endTime - startTime) / (1000 * 60 * 60); // Convert ms → hours
+
+                    // If end time is past midnight
+                    if (diff < 0) {
+                        diff += 24;
+                    }
+
+                    // Round to 2 decimal places
+                    numberOfHours.value = diff.toFixed(2);
+                }
+            }
+
+            timeStart.addEventListener('change', calculateHours);
+            timeEnd.addEventListener('change', calculateHours);
+        });
     </script>
 </x-app-layout>
