@@ -223,12 +223,12 @@ class CompanyController extends Controller
     private function assignReportPermissions(Company $company, array $roles): void
     {
         $reportPermissions = [
-            ['reports.dtr_status_by_team', 'view time record report', 'Employee DTR Status by Department & Team', ['admin', 'hr supervisor', 'department head']],
-            ['reports.leave_utilization', 'view leave report', 'Leave Utilization Summary', ['admin', 'hr supervisor', 'department head']],
-            ['reports.overtime_offset_comparison', 'view overtime report', 'Overtime vs Offset Report', ['admin', 'hr supervisor', 'department head']],
-            ['reports.late_undertime', 'view attendance report', 'Late and Undertime Report', ['admin', 'hr supervisor', 'department head']],
-            ['reports.leave_status_overview', 'view leave report', 'Leave Requests by Status', ['admin', 'hr supervisor', 'department head']],
-            ['reports.outbase_summary', 'view outbase report', 'Outbase Request Summary', ['admin', 'hr supervisor', 'department head']],
+            ['reports.dtr_status_by_team', 'view time record report', 'Employee DTR Status by Department & Team', ['admin', 'hr supervisor', 'department head', 'finance hris']],
+            ['reports.leave_utilization', 'view leave report', 'Leave Utilization Summary', ['admin', 'hr supervisor', 'department head', 'finance hris']],
+            ['reports.overtime_offset_comparison', 'view overtime report', 'Overtime vs Offset Report', ['admin', 'hr supervisor', 'department head', 'finance hris']],
+            ['reports.late_undertime', 'view attendance report', 'Late and Undertime Report', ['admin', 'hr supervisor', 'department head', 'finance hris']],
+            ['reports.leave_status_overview', 'view leave report', 'Leave Requests by Status', ['admin', 'hr supervisor', 'department head', 'finance hris']],
+            ['reports.outbase_summary', 'view outbase report', 'Outbase Request Summary', ['admin', 'hr supervisor', 'department head', 'finance hris']],
             ['reports.offset_tracker', 'view offset report', 'Offset Usage and Expiry Tracker', ['admin', 'hr supervisor', 'employee']],
             ['reports.leave_summary', 'view leave report', 'Leave Summary Report', ['admin', 'hr supervisor', 'employee']],
             ['reports.overtime_history', 'view overtime report', 'Filed Overtime Report', ['admin', 'hr supervisor', 'employee']],
