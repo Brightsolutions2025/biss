@@ -126,4 +126,35 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const startInput = document.getElementById('time_start');
+            const endInput   = document.getElementById('time_end');
+            const hoursInput = document.getElementById('number_of_hours');
+
+            function computeHours() {
+                const start = startInput.value;
+                const end   = endInput.value;
+
+                if (start && end) {
+                    const startTime = new Date(`1970-01-01T${start}:00`);
+                    const endTime   = new Date(`1970-01-01T${end}:00`);
+
+                    let diff = (endTime - startTime) / (1000 * 60 * 60); // difference in hours
+
+                    // Handle overnight work (e.g., starts at 22:00, ends at 02:00)
+                    if (diff < 0) {
+                        diff += 24;
+                    }
+
+                    hoursInput.value = diff.toFixed(2);
+                }
+            }
+
+            startInput.addEventListener('change', computeHours);
+            endInput.addEventListener('change', computeHours);
+        });
+    </script>
+    @endpush
 </x-app-layout>
