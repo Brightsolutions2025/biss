@@ -52,9 +52,13 @@ class EmployeeController extends Controller
         $companyId   = auth()->user()->preference->company_id;
         $departments = Department::where('company_id', $companyId)->get();
         $teams       = Team::whereIn('department_id', $departments->pluck('id'))->get();
-        $users       = User::whereDoesntHave('employee', function ($query) use ($companyId) {
-            $query->where('company_id', $companyId);
-        })->get();
+        $users = User::whereHas('companies', function ($query) use ($companyId) {
+        $query->where('company_id', $companyId);
+            })
+            ->whereDoesntHave('employee', function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })
+            ->get();
         $approvers   = User::with('employee')->whereHas('employee', function ($query) use ($companyId) {
             $query->where('company_id', $companyId);
         })->get();
