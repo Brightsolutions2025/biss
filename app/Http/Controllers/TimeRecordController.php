@@ -391,6 +391,9 @@ class TimeRecordController extends Controller
             abort(403, 'You are not allowed to edit this time record.');
         }
 
+        $user = auth()->user();
+        $companyId = $user->preference->company_id;
+
         $request->merge([
             'time_record_lines' => collect($request->input('time_record_lines'))->map(function ($line) {
                 if (isset($line['clock_in'])) {

@@ -91,7 +91,7 @@ class TimeRecordTest extends TestCase
     /** @test */
     public function it_stores_a_time_record()
     {
-        Storage::fake();
+        Storage::fake('local');
 
         $this->actingAs($this->user);
 
@@ -139,6 +139,9 @@ class TimeRecordTest extends TestCase
     /** @test */
     public function it_displays_time_record_edit_form()
     {
+        $hrRole = Role::factory()->create(['name' => 'HR Supervisor']);
+        $this->user->roles()->attach($hrRole->id, ['company_id' => $this->company->id]);
+
         $timeRecord = TimeRecord::factory()->create([
             'employee_id'       => $this->employee->id,
             'company_id'        => $this->company->id,
@@ -155,6 +158,9 @@ class TimeRecordTest extends TestCase
     /** @test */
     public function it_updates_a_time_record()
     {
+        $hrRole = Role::factory()->create(['name' => 'HR Supervisor']);
+        $this->user->roles()->attach($hrRole->id, ['company_id' => $this->company->id]);
+        
         $timeRecord = TimeRecord::factory()->create([
             'employee_id'       => $this->employee->id,
             'company_id'        => $this->company->id,

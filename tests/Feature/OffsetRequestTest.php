@@ -164,7 +164,7 @@ class OffsetRequestTest extends TestCase
             'employee_id'     => $this->employee->id,
             'company_id'      => $this->company->id,
             'date'            => now()->subDays(10)->toDateString(),
-            'number_of_hours' => 2.5,
+            'number_of_hours' => 2,
             'status'          => 'approved',
         ]);
 
@@ -174,7 +174,7 @@ class OffsetRequestTest extends TestCase
             'company_id'                   => $this->company->id,
             'status'                       => 'pending',
             'project_or_event_description' => 'Original Description',
-            'number_of_hours'              => 2.5,
+            'number_of_hours'              => 2,
             'date'                         => now()->subDay()->toDateString(),
         ]);
 
@@ -194,11 +194,11 @@ class OffsetRequestTest extends TestCase
             'date'                         => now()->toDateString(),
             'project_or_event_description' => 'Updated Project',
             'time_start'                   => '08:00',
-            'time_end'                     => '10:30',
-            'number_of_hours'              => 2.5,
+            'time_end'                     => '10:00',
+            'number_of_hours'              => 2,
             'reason'                       => 'Updated reason',
             'overtime_requests'            => json_encode([
-                ['id' => $newOvertime->id, 'used_hours' => 2.5]
+                ['id' => $newOvertime->id, 'used_hours' => 2]
             ]),
         ];
 
@@ -209,14 +209,14 @@ class OffsetRequestTest extends TestCase
         $this->assertDatabaseHas('offset_requests', [
             'id'                           => $offset->id,
             'project_or_event_description' => 'Updated Project',
-            'number_of_hours'              => 2.5,
+            'number_of_hours'              => 2,
         ]);
 
         // Optional: verify pivot table update
         $this->assertDatabaseHas('offset_overtime', [
             'offset_request_id'   => $offset->id,
             'overtime_request_id' => $newOvertime->id,
-            'used_hours'          => 2.5,
+            'used_hours'          => 2,
         ]);
     }
 
