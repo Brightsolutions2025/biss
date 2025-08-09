@@ -204,8 +204,8 @@
                         diff += 24;
                     }
 
-                    // Round to 2 decimal places
-                    numberOfHours.value = diff.toFixed(2);
+                    // Round down to the nearest whole number
+                    numberOfHours.value = Math.floor(diff);
                 }
             }
 

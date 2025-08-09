@@ -172,7 +172,7 @@ class OffsetRequestController extends Controller
             'project_or_event_description' => 'required|string',
             'time_start'                   => 'required|date_format:H:i',
             'time_end'                     => 'required|date_format:H:i|after:time_start',
-            'number_of_hours'              => 'required|numeric|min:0.25',
+            'number_of_hours'              => 'required|integer|min:1',
             'reason'                       => 'nullable|string',
 
             'overtime_requests'              => 'required|array|min:1',
@@ -448,7 +448,7 @@ class OffsetRequestController extends Controller
             'project_or_event_description' => 'required|string',
             'time_start'                   => 'required|date_format:H:i',
             'time_end'                     => 'required|date_format:H:i|after:time_start',
-            'number_of_hours'              => 'required|numeric|min:0.25',
+            'number_of_hours'              => 'required|integer|min:1',
             'reason'                       => 'nullable|string',
 
             'overtime_requests'              => 'required|array|min:1',
