@@ -148,7 +148,7 @@
                         diff += 24;
                     }
 
-                    hoursInput.value = diff.toFixed(2);
+                    hoursInput.value = Math.floor(diff); // whole number, rounded down
                 }
             }
 
