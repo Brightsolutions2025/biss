@@ -62,9 +62,17 @@ class CompanyUserController extends Controller
         try {
             $company = Company::findOrFail($validated['company_id']);
 
-            if (!$company->users()->where('user_id', $validated['user_id'])->exists()) {
-                $company->users()->attach($validated['user_id']);
+            // Check if already assigned
+            if ($company->users()->where('user_id', $validated['user_id'])->exists()) {
+                DB::rollBack();
+                return back()->withErrors('This user is already assigned to the selected company.');
             }
+
+            // Attach safely
+            $company->users()->attach($validated['user_id'], [
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
             DB::commit();
 
@@ -110,19 +118,15 @@ class CompanyUserController extends Controller
         DB::beginTransaction();
 
         try {
-            // Detach old relationship
+            // Update pivot in place
             DB::table('company_user')
                 ->where('company_id', $companyUser->company_id)
                 ->where('user_id', $companyUser->user_id)
-                ->delete();
-
-            // Attach new relationship
-            DB::table('company_user')->insert([
-                'company_id' => $validated['company_id'],
-                'user_id'    => $validated['user_id'],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+                ->update([
+                    'company_id' => $validated['company_id'],
+                    'user_id'    => $validated['user_id'],
+                    'updated_at' => now(),
+                ]);
 
             DB::commit();
 
