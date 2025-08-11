@@ -118,15 +118,19 @@ class CompanyUserController extends Controller
         DB::beginTransaction();
 
         try {
-            // Update pivot in place
+            // Detach old relationship
             DB::table('company_user')
                 ->where('company_id', $companyUser->company_id)
                 ->where('user_id', $companyUser->user_id)
-                ->update([
-                    'company_id' => $validated['company_id'],
-                    'user_id'    => $validated['user_id'],
-                    'updated_at' => now(),
-                ]);
+                ->delete();
+
+            // Attach new relationship
+            DB::table('company_user')->insert([
+                'company_id' => $validated['company_id'],
+                'user_id'    => $validated['user_id'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
             DB::commit();
 

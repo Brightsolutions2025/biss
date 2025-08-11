@@ -112,13 +112,14 @@ class TimeRecordController extends Controller
             abort(403, 'Unauthorized to create time records.');
         }
 
-        $employee = auth()->user()->employee;
+        $companyId = auth()->user()->preference->company_id;
+        $employee = Employee::where('company_id', $companyId)
+            ->where('user_id', auth()->id())
+            ->first();
 
         if (!$employee) {
             abort(403, 'You are not authorized to access this page.');
         }
-
-        $companyId = auth()->user()->preference->company_id;
 
         $employees      = Employee::where('company_id', $companyId)->get();
         $payrollPeriods = PayrollPeriod::where('company_id', $companyId)->get();

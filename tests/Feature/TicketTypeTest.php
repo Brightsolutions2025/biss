@@ -13,8 +13,6 @@ use Tests\TestCase;
 
 class TicketTypeTest extends TestCase
 {
-    use HasFactory;
-
     protected User $user;
     protected Company $company;
 

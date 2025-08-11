@@ -16,7 +16,9 @@ class Company extends Model
     }
     public function users()
     {
-        return $this->belongsToMany(User::class)->withTimestamps();
+        return $this->belongsToMany(User::class, 'company_user')
+            ->using(CompanyUser::class)
+            ->withPivot('created_at', 'updated_at'); // if timestamps exist
     }
     public function roles()
     {
