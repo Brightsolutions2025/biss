@@ -50,7 +50,7 @@
 
                         @forelse ($tickets as $ticket)
                             <div class="card mb-3">
-                                <div class="card-body d-flex justify-content-between align-items-start">
+                                 <div class="card-body d-flex justify-content-between align-items-center">
                                     <div>
                                         <div><strong>Ticket #:</strong> {{ $ticket->ticket_number }}</div>
                                         <div><strong>Subject:</strong> {{ $ticket->subject }}</div>
@@ -66,7 +66,7 @@
                                         </div>
                                         <div><strong>Due:</strong> {{ $ticket->due_at ? $ticket->due_at->format('Y-m-d H:i') : '—' }}</div>
                                     </div>
-                                    <div class="d-flex flex-column align-items-end gap-2">
+                                    <div class="d-flex gap-2">
                                         <a href="{{ route('tickets.show', $ticket->id) }}" class="btn btn-sm btn-outline-primary">View</a>
                                         <a href="{{ route('tickets.edit', $ticket->id) }}" class="btn btn-sm btn-outline-warning">Edit</a>
                                         <form method="POST" action="{{ route('tickets.destroy', $ticket->id) }}" onsubmit="return confirm('Are you sure you want to delete this ticket?')">

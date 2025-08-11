@@ -217,7 +217,7 @@ return [
             'to' => 'boropeza@bsm.ph',
 
             'from' => [
-                'address' => env('MAIL_FROM_ADDRESS', 'jruiz@bsm.ph'),
+                'address' => env('MAIL_FROM_ADDRESS', 'biss@bsm.ph'),
                 'name'    => env('MAIL_FROM_NAME', 'Biss'),
             ],
         ],

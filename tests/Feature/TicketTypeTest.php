@@ -13,7 +13,7 @@ use Tests\TestCase;
 
 class TicketTypeTest extends TestCase
 {
-    use RefreshDatabase;
+    use HasFactory;
 
     protected User $user;
     protected Company $company;

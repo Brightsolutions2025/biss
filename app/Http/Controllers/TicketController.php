@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use App\Models\TicketType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+
 
 class TicketController extends Controller
 {
@@ -40,29 +42,36 @@ class TicketController extends Controller
         return view('tickets.create', compact('ticketTypes'));
     }
 
-    public function store(Request $request)
-    {
-        if (!auth()->user()->hasPermission('ticket.create')) {
-            // abort(403, 'Unauthorized to create tickets.');
-        }
+public function store(Request $request)
+{
+    if (!auth()->user()->hasPermission('ticket.create')) {
+        // abort(403, 'Unauthorized to create tickets.');
+    }
 
-        $validated = $request->validate([
-            'ticket_type_id' => 'required|exists:ticket_types,id',
-            'subject'        => 'required|string|max:255',
-            'description'    => 'nullable|string',
-            'priority'       => 'required|in:low,medium,high,urgent',
-            'due_at'         => 'nullable|date',
-            'attachments'    => 'nullable|array',
-        ]);
+    $validated = $request->validate([
+        'ticket_type_id' => 'required|exists:ticket_types,id',
+        'subject'        => 'required|string|max:255',
+        'description'    => 'nullable|string',
+        'priority'       => 'required|in:low,medium,high,urgent',
+        'due_at'         => 'nullable|date',
+        'attachments'    => 'nullable|array',
+    ]);
 
-        $user = auth()->user();
-        $companyId = $user->preference->company_id;
+    $user = auth()->user();
+    $companyId = $user->preference->company_id;
 
-        $validated['company_id'] = $companyId;
-        $validated['department_id'] = $user->preference->department_id;
-        $validated['team_id'] = $user->preference->team_id;
-        $validated['created_by'] = $user->id;
-        $validated['ticket_number'] = Ticket::generateTicketNumber();
+    DB::transaction(function () use (&$ticket, $validated, $user, $companyId) {
+        $validated['company_id']     = $companyId;
+        $validated['department_id']  = $user->preference->department_id;
+        $validated['team_id']        = $user->preference->team_id;
+        $validated['created_by']     = $user->id;
+
+        // Retry until unique ticket_number is found
+        do {
+            $ticketNumber = Ticket::generateTicketNumber();
+        } while (Ticket::where('ticket_number', $ticketNumber)->exists());
+
+        $validated['ticket_number'] = $ticketNumber;
 
         $ticket = Ticket::create($validated);
 
@@ -70,9 +79,10 @@ class TicketController extends Controller
             'ticket_id' => $ticket->id,
             'user_id'   => $user->id,
         ]);
+    });
 
-        return redirect()->route('tickets.index')->with('status', 'Ticket created successfully.');
-    }
+    return redirect()->route('tickets.index')->with('status', 'Ticket created successfully.');
+}
 
     public function show(Ticket $ticket)
     {
@@ -110,11 +120,11 @@ class TicketController extends Controller
         }
 
         $validated = $request->validate([
-            'ticket_type_id' => 'required|exists:ticket_types,id',
+            'ticket_type_id' => 'exists:ticket_types,id',
             'subject'        => 'required|string|max:255',
             'description'    => 'nullable|string',
             'priority'       => 'required|in:low,medium,high,urgent',
-            'status'         => 'required|in:open,pending_approval,approved,in_progress,resolved,closed,rejected',
+            'status'         => 'in:open,pending_approval,approved,in_progress,resolved,closed,rejected',
             'due_at'         => 'nullable|date',
             'resolved_at'    => 'nullable|date',
         ]);
