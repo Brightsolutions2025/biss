@@ -32,6 +32,28 @@
                             @csrf
                             @method('PUT')
 
+                            <!-- Company Selection -->
+                            <div class="mb-3">
+                                <label for="company_id" class="form-label">Company</label>
+                                <select
+                                    id="company_id"
+                                    name="company_id"
+                                    class="form-select"
+                                    required
+                                >
+                                    <option value="">Select Company</option>
+                                    @foreach ($companies as $company)
+                                        <option value="{{ $company->id }}"
+                                            {{ old('company_id', $companyUser->company_id) == $company->id ? 'selected' : '' }}>
+                                            {{ $company->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('company_id')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <!-- User Selection -->
                             <div class="mb-4">
                                 <label for="user_id" class="form-label">User</label>
