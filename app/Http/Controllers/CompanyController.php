@@ -393,7 +393,7 @@ class CompanyController extends Controller
         if (!$user->companies->contains($company->id)) {
             abort(403, 'Unauthorized: not your company.');
         }
-        /*
+        
         if ($adminOnly) {
             // Check if the user has the 'Admin' role in this company
             $hasAdminRole = $user->roles()
@@ -404,6 +404,6 @@ class CompanyController extends Controller
             if (!$hasAdminRole) {
                 abort(403, 'Unauthorized: admin access required.');
             }
-        }*/
+        }
     }
 }
