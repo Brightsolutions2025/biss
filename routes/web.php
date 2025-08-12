@@ -210,7 +210,7 @@ Route::middleware('auth', EnsureUserIsAdmin::class, EnsureUserHasCompany::class)
 Route::middleware(['auth'])->group(function () {
     Route::post('/tickets/{ticket}/approve', [TicketController::class, 'approve'])->name('tickets.approve');
     Route::post('/tickets/{ticket}/assign', [TicketController::class, 'assignPerson'])->name('tickets.assign');
-    Route::get('/tickets/{ticket}/assign', [TicketAssignmentController::class, 'edit'])->name('tickets.assign');
+    Route::get('/tickets/{ticket}/assign', [TicketAssignmentController::class, 'edit']);
     Route::post('/tickets/{ticket}/assign', [TicketAssignmentController::class, 'update'])->name('tickets.assign.update');
     Route::post('/tickets/{ticket}/assign', [TicketController::class, 'assign'])
     ->name('tickets.assign')
