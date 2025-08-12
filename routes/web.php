@@ -38,6 +38,7 @@ use App\Http\Controllers\ClientContactController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\TicketAssignmentController;
 use App\Http\Middleware\EnsureUserHasCompany;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
@@ -205,5 +206,17 @@ Route::middleware('auth', EnsureUserIsAdmin::class, EnsureUserHasCompany::class)
     Route::resource('company_users', CompanyUserController::class);
     Route::resource('users', UserController::class);
 });
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/tickets/{ticket}/approve', [TicketController::class, 'approve'])->name('tickets.approve');
+    Route::post('/tickets/{ticket}/assign', [TicketController::class, 'assignPerson'])->name('tickets.assign');
+    Route::get('/tickets/{ticket}/assign', [TicketAssignmentController::class, 'edit'])->name('tickets.assign');
+    Route::post('/tickets/{ticket}/assign', [TicketAssignmentController::class, 'update'])->name('tickets.assign.update');
+    Route::post('/tickets/{ticket}/assign', [TicketController::class, 'assign'])
+    ->name('tickets.assign')
+    ->middleware('auth');
+});
+
+
 
 require __DIR__ . '/auth.php';

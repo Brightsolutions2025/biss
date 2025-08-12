@@ -75,11 +75,20 @@
                             </div>
 
                             <!-- Attachments -->
-                            <div class="mb-3">
-                                <label for="attachments" class="form-label">Attachments</label>
-                                <input type="file" name="attachments[]" id="attachments" class="form-control" multiple>
+                            <div class="mb-4">
+                                <label for="files" class="form-label">Supporting Documents (optional)</label>
+                                <input
+                                    id="files"
+                                    name="files[]"
+                                    type="file"
+                                    class="form-control"
+                                    multiple
+                                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xlsx"
+                                >
+                                @error('files.*')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
-
                             <div class="d-flex gap-2">
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Submit Ticket') }}

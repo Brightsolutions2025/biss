@@ -27,8 +27,12 @@ class LeaveRequestController extends Controller
         $query = LeaveRequest::with(['employee.user'])
             ->where('company_id', $companyId);
 
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+
         if (!$user->hasPermission('leave_request.browse_all')) {
-            $employeeId = $user->employee?->id;
+            $employeeId = $employee->id;
 
             if (!$employeeId) {
                 abort(403, 'No employee record linked to this user.');
@@ -198,7 +202,11 @@ class LeaveRequestController extends Controller
             abort(403, 'Unauthorized to read leave requests.');
         }
 
-        $employeeId = $user->employee?->id;
+        $companyId = auth()->user()->preference->company_id;
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+        $employeeId = $employee->id;
 
         // If user lacks 'browse_all' permission, allow if:
         // - they own the request
@@ -232,9 +240,14 @@ class LeaveRequestController extends Controller
             abort(403, 'You are not allowed to edit this leave request.');
         }
 
+        $companyId = auth()->user()->preference->company_id;
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+        $employeeId = $employee->id;
+
         // If user lacks browse_all, ensure they are owner or approver
         if (!$user->hasPermission('leave_request.browse_all')) {
-            $employeeId = $user->employee?->id;
             $isOwner    = $employeeId && $leaveRequest->employee_id === $employeeId;
             $isApprover = $user->id                                 === $leaveRequest->employee->approver_id;
 
@@ -316,8 +329,17 @@ class LeaveRequestController extends Controller
     protected function canEditLeaveRequest(LeaveRequest $leaveRequest): bool
     {
         $user       = auth()->user();
+
+        $companyId = $user->preference->company_id;
+
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+
+        $employeeId = $employee->id;
+
         $isApprover = $user->id            === $leaveRequest->employee->approver_id;
-        $isOwner    = $user->employee?->id === $leaveRequest->employee_id;
+        $isOwner    = $employeeId === $leaveRequest->employee_id;
 
         // Approver can always edit; employee can edit only if not final
         return $isApprover || ($isOwner && !in_array($leaveRequest->status, ['approved', 'rejected']));
@@ -336,9 +358,16 @@ class LeaveRequestController extends Controller
             abort(403, 'Unauthorized to delete leave requests.');
         }
 
+        $companyId = $user->preference->company_id;
+
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+
+        $employeeId = $employee->id;
+
         // Ownership check if user lacks global permission
         if (!$user->hasPermission('leave_request.browse_all')) {
-            $employeeId = $user->employee?->id;
 
             if (!$employeeId || $leaveRequest->employee_id !== $employeeId) {
                 abort(403, 'You are not allowed to delete this leave request.');

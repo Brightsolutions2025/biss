@@ -37,9 +37,14 @@ class TimeRecordController extends Controller
 
         $query = TimeRecord::with(['employee.user', 'payrollPeriod'])
             ->where('company_id', $companyId);
+        
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+        
+        $employeeId = $employee->id;
 
         if (!$user->hasPermission('time_record.browse_all')) {
-            $employeeId = $user->employee?->id;
 
             if (!$employeeId) {
                 abort(403, 'No employee record linked to this user.');
@@ -194,12 +199,16 @@ class TimeRecordController extends Controller
 
         $companyId = auth()->user()->preference->company_id;
 
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+
         DB::beginTransaction();
 
         try {
             $timeRecord = TimeRecord::create([
                 'company_id'        => $companyId,
-                'employee_id'       => $validated['employee_id'],
+                'employee_id'       => $employee->id,
                 'payroll_period_id' => $validated['payroll_period_id'],
             ]);
 
@@ -276,7 +285,12 @@ class TimeRecordController extends Controller
             abort(403, 'Unauthorized to view time records.');
         }
 
-        $employeeId = $user->employee?->id;
+        $companyId = $user->preference->company_id;
+
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+        $employeeId = $employee->id;
 
         if (!$user->hasPermission('time_record.browse_all')) {
             $isOwner = $timeRecord->employee_id === $employeeId;
@@ -342,9 +356,18 @@ class TimeRecordController extends Controller
             abort(403, 'You are not allowed to edit this time record.');
         }
 
+        $companyId = $user->preference->company_id;
+
+        $query = LeaveRequest::with(['employee.user'])
+            ->where('company_id', $companyId);
+
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+
         // If user doesn't have 'browse_all', enforce ownership or approver rights
         if (!$user->hasPermission('time_record.browse_all')) {
-            $employeeId = $user->employee?->id;
+            $employeeId = $employee->id;
             $isOwner    = $employeeId && $timeRecord->employee_id === $employeeId;
             $isApprover = $user->id                               === $timeRecord->employee->approver_id;
 
@@ -366,8 +389,13 @@ class TimeRecordController extends Controller
     protected function canEditTimeRecord(TimeRecord $timeRecord): bool
     {
         $user = auth()->user();
+        $companyId = $user->preference->company_id;
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+
         $isApprover = auth()->id()                  === $timeRecord->employee->approver_id;
-        $isEmployee = auth()->user()->employee?->id === $timeRecord->employee_id;
+        $isEmployee = $employee->id === $timeRecord->employee_id;
         $isHrSupervisor = $user->hasAnyRole('HR Supervisor', $timeRecord->company_id);
 
         if ($isApprover || $isHrSupervisor) {
@@ -422,6 +450,23 @@ class TimeRecordController extends Controller
         DB::beginTransaction();
 
         try {
+            if ($request->employee_id && $request->employee_id != $timeRecord->employee_id) {
+                abort(403, 'You cannot change the employee for this time record.');
+            }
+
+            if ($request->payroll_period_id && $request->payroll_period_id != $timeRecord->payroll_period_id) {
+                abort(403, 'You cannot change the payroll period for this time record.');
+            }
+            
+            $validated['employee_id'] = $timeRecord->employee_id;
+            $validated['payroll_period_id'] = $timeRecord->payroll_period_id;
+
+            $timeRecord->update([
+                'employee_id'       => $validated['employee_id'],
+                'payroll_period_id' => $validated['payroll_period_id'],
+                // You can include other updatable fields here if needed
+            ]);
+
             unset($validated['files']);
 
             foreach ($validated['time_record_lines'] as $lineData) {
@@ -489,9 +534,14 @@ class TimeRecordController extends Controller
             abort(403, 'Unauthorized to delete time records.');
         }
 
+        $companyId = $user->preference->company_id;
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+
         // Ownership check if user lacks global permission
         if (!$user->hasPermission('time_record.browse_all')) {
-            $employeeId = $user->employee?->id;
+            $employeeId = $employee->id;
 
             if (!$employeeId || $timeRecord->employee_id !== $employeeId) {
                 abort(403, 'You are not allowed to delete this time record.');

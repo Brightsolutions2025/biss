@@ -87,4 +87,8 @@ class Employee extends Model
     {
         return $this->hasMany(TimeRecord::class);
     }
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
 }

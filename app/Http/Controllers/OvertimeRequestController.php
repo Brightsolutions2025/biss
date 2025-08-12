@@ -24,8 +24,12 @@ class OvertimeRequestController extends Controller
         $query = OvertimeRequest::with('employee')
             ->where('company_id', $companyId);
 
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+
         if (!$user->hasPermission('overtime_request.browse_all')) {
-            $employeeId = $user->employee?->id;
+            $employeeId = $employee->id;
 
             if (!$employeeId) {
                 abort(403, 'No employee record linked to this user.');
@@ -100,6 +104,10 @@ class OvertimeRequestController extends Controller
 
         $companyId = auth()->user()->preference->company_id;
 
+        $employee = Employee::where('company_id', $companyId)
+            ->where('user_id', auth()->id())
+            ->first();
+
         $request->merge([
             'time_start' => $request->filled('time_start') ? Carbon::parse($request->input('time_start'))->format('H:i') : null,
             'time_end'   => $request->filled('time_end')   ? Carbon::parse($request->input('time_end'))->format('H:i')   : null,
@@ -137,7 +145,7 @@ class OvertimeRequestController extends Controller
         try {
             $overtimeRequest = OvertimeRequest::create([
                 'company_id'      => $companyId,
-                'employee_id'     => $validated['employee_id'],
+                'employee_id'     => $employee->id,
                 'date'            => $validated['date'],
                 'time_start'      => $validated['time_start'],
                 'time_end'        => $validated['time_end'],
@@ -196,7 +204,11 @@ class OvertimeRequestController extends Controller
             abort(403, 'Unauthorized to view overtime requests.');
         }
 
-        $employeeId = $user->employee?->id;
+        $companyId = $user->preference->company_id;
+
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
 
         // If user lacks global permission, allow if:
         // - they own the request
@@ -227,9 +239,15 @@ class OvertimeRequestController extends Controller
             abort(403, 'You are not allowed to edit this overtime request.');
         }
 
+        $companyId = $user->preference->company_id;
+
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+
         // If user doesn't have 'browse_all', enforce ownership or approver rights
         if (!$user->hasPermission('overtime_request.browse_all')) {
-            $employeeId = $user->employee?->id;
+            $employeeId = $employee->id;
             $isOwner    = $employeeId && $overtimeRequest->employee_id === $employeeId;
             $isApprover = $user->id                                    === $overtimeRequest->employee->approver_id;
 
@@ -237,8 +255,6 @@ class OvertimeRequestController extends Controller
                 abort(403, 'You are not allowed to edit this overtime request.');
             }
         }
-
-        $companyId = auth()->user()->preference->company_id;
 
         $employees = Employee::where('company_id', $companyId)->get();
 
@@ -248,7 +264,12 @@ class OvertimeRequestController extends Controller
     protected function canEditOvertimeRequest(OvertimeRequest $overtimeRequest): bool
     {
         $user       = auth()->user();
-        $employeeId = $user->employee?->id;
+        $companyId = $user->preference->company_id;
+
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+        $employeeId = $employee->id;
 
         $isOwner    = $employeeId === $overtimeRequest->employee_id;
         $isApprover = $user->id   === $overtimeRequest->employee->approver_id;
@@ -273,6 +294,14 @@ class OvertimeRequestController extends Controller
             abort(403, 'You are not allowed to edit this overtime request.');
         }
 
+        $user       = auth()->user();
+        $companyId = $user->preference->company_id;
+
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+        $employeeId = $employee->id;
+
         $request->merge([
             'time_start' => $request->filled('time_start') ? Carbon::parse($request->input('time_start'))->format('H:i') : null,
             'time_end'   => $request->filled('time_end')   ? Carbon::parse($request->input('time_end'))->format('H:i')   : null,
@@ -288,6 +317,8 @@ class OvertimeRequestController extends Controller
             'files'           => 'array|max:5',
             'files.*'         => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
         ]);
+
+        $validated['employee_id'] = $employeeId;
 
         // Custom check: number_of_hours <= time difference
         $start = Carbon::createFromFormat('H:i', $validated['time_start']);
@@ -363,9 +394,15 @@ class OvertimeRequestController extends Controller
             abort(403, 'Unauthorized to delete overtime requests.');
         }
 
+        $companyId = $user->preference->company_id;
+
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+        $employeeId = $employee->id;
+
         // Ownership or approver check if user lacks global permission
         if (!$user->hasPermission('overtime_request.browse_all')) {
-            $employeeId = $user->employee?->id;
 
             if (!$employeeId || $overtimeRequest->employee_id !== $employeeId) {
                 abort(403, 'You are not allowed to delete this overtime request.');

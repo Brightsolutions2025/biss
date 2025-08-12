@@ -54,18 +54,45 @@
                             </div>
                         @endforeach
 
-                        @if (!empty($ticket->attachments) && is_array($ticket->attachments))
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Attachments</label>
+                        @if ($ticket->files->count())
+                            <div class="mb-4">
+                                <label class="form-label">Attached Files</label>
                                 <ul class="list-unstyled">
-                                    @foreach ($ticket->attachments as $file)
-                                        <li>
-                                            <a href="{{ asset('storage/' . $file) }}" target="_blank">{{ basename($file) }}</a>
+                                    @foreach ($ticket->files as $file)
+                                        <li class="mb-2">
+                                            <a href="{{ route('files.download', $file->id) }}" target="_blank" class="d-inline-flex align-items-center gap-2">
+                                                @php
+                                                    $extension = pathinfo($file->file_name, PATHINFO_EXTENSION);
+                                                @endphp
+
+                                                @switch($extension)
+                                                    @case('pdf')
+                                                        <i class="bi bi-file-earmark-pdf text-danger"></i>
+                                                        @break
+                                                    @case('jpg')
+                                                    @case('jpeg')
+                                                    @case('png')
+                                                        <i class="bi bi-image text-primary"></i>
+                                                        @break
+                                                    @case('doc')
+                                                    @case('docx')
+                                                        <i class="bi bi-file-earmark-word text-primary"></i>
+                                                        @break
+                                                    @case('xlsx')
+                                                        <i class="bi bi-file-earmark-excel text-success"></i>
+                                                        @break
+                                                    @default
+                                                        <i class="bi bi-paperclip"></i>
+                                                @endswitch
+
+                                                {{ $file->file_name }}
+                                            </a>
                                         </li>
                                     @endforeach
                                 </ul>
                             </div>
                         @endif
+
 
                         <!-- Action Buttons -->
                         <div class="d-flex gap-2 mt-4">

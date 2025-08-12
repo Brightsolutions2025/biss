@@ -165,4 +165,36 @@ public function store(Request $request)
             abort(403, 'Unauthorized company access.');
         }
     }
+
+    // Department Head approves ticket
+    public function approve(Ticket $ticket)
+    {
+        $this->authorize('approve', $ticket); // Policy check
+
+        $ticket->update([
+            'status' => 'approved'
+        ]);
+
+        return back()->with('success', 'Ticket approved. Now assign someone to fix it.');
+    }
+
+    // Assign a person to fix the ticket
+    public function assign(Request $request, Ticket $ticket)
+    {
+        $this->authorize('assign', $ticket);
+
+        $request->validate([
+            'assigned_to' => 'required|exists:users,id',
+        ]);
+
+        $ticket->update([
+            'assigned_to' => $request->assigned_to,
+            'assigned_by' => auth()->id(),
+            'assigned_at' => now(),
+            'status'      => 'in_progress',
+        ]);
+
+        return redirect()->route('tickets.show', $ticket->id)
+            ->with('success', 'Ticket successfully assigned.');
+    }
 }

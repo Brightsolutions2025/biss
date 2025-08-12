@@ -25,9 +25,13 @@ class OutbaseRequestController extends Controller
 
         $query = OutbaseRequest::with('employee.user')
             ->where('company_id', $companyId);
+        
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
 
         if (!$user->hasPermission('outbase_request.browse_all')) {
-            $employeeId = $user->employee?->id;
+            $employeeId = $employee->id;
 
             if (!$employeeId) {
                 abort(403, 'No employee record linked to this user.');
@@ -126,7 +130,9 @@ class OutbaseRequestController extends Controller
 
         try {
             $companyId = auth()->user()->preference->company_id;
-            $employee  = Employee::findOrFail($validated['employee_id']);
+            $employee = Employee::where('company_id', $companyId)
+                ->where('user_id', auth()->id())
+                ->firstOrFail();
 
             $outbase = OutbaseRequest::create([
                 'company_id'  => $companyId,
@@ -190,7 +196,11 @@ class OutbaseRequestController extends Controller
             abort(403, 'Unauthorized to view outbase request.');
         }
 
-        $employeeId = $user->employee?->id;
+        $companyId = $user->preference->company_id;
+        $employee = Employee::where('company_id', $companyId)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+        $employeeId = $employee->id;
 
         if (!$user->hasPermission('outbase_request.browse_all')) {
             $isOwner = $outbaseRequest->employee_id === $employeeId;
@@ -225,9 +235,14 @@ class OutbaseRequestController extends Controller
             abort(403, 'You are not allowed to edit this outbase request.');
         }
 
+        $companyId = $user->preference->company_id;
+        $employee = Employee::where('company_id', $companyId)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+        $employeeId = $employee->id;
+
         // If user doesn't have 'browse_all', enforce ownership or approver rights
         if (!$user->hasPermission('outbase_request.browse_all')) {
-            $employeeId = $user->employee?->id;
             $isOwner    = $employeeId && $outbaseRequest->employee_id === $employeeId;
             $isApprover = auth()->id()                                === $outbaseRequest->employee->approver_id;
 
@@ -242,7 +257,11 @@ class OutbaseRequestController extends Controller
     protected function canEditOutbaseRequest(OutbaseRequest $outbaseRequest): bool
     {
         $user       = auth()->user();
-        $employeeId = $user->employee?->id;
+        $companyId = $user->preference->company_id;
+        $employee = Employee::where('company_id', $companyId)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+        $employeeId = $employee->id;
         $isOwner    = $employeeId  === $outbaseRequest->employee_id;
         $isApprover = auth()->id() === $outbaseRequest->employee->approver_id;
 
@@ -273,6 +292,9 @@ class OutbaseRequestController extends Controller
 
         try {
             $companyId = auth()->user()->preference->company_id;
+            $employee = Employee::where('company_id', $companyId)
+                ->where('user_id', auth()->id())
+                ->firstOrFail();
 
             $request->merge([
                 'time_start' => $request->filled('time_start') ? Carbon::parse($request->input('time_start'))->format('H:i') : null,
@@ -289,8 +311,6 @@ class OutbaseRequestController extends Controller
                 'files'            => 'array|max:5',
                 'files.*'          => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
             ]);
-
-            $employee = Employee::findOrFail($validated['employee_id']);
 
             unset($validated['files']);
 
@@ -349,8 +369,13 @@ class OutbaseRequestController extends Controller
             abort(403, 'Unauthorized to delete outbase request.');
         }
 
+        $companyId = $user->preference->company_id;
+        $employee = Employee::where('company_id', $companyId)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+        $employeeId = $employee->id;
+
         if (!$user->hasPermission('outbase_request.browse_all')) {
-            $employeeId = $user->employee?->id;
 
             // Check if user is the owner
             if (!$employeeId || $outbaseRequest->employee_id !== $employeeId) {

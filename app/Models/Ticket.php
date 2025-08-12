@@ -89,4 +89,16 @@ class Ticket extends Model
     {
         return route('tickets.show', $this);
     }
+
+    public function files()
+    {
+        return $this->morphMany(File::class, 'fileable');
+    }
+    public function assignedToUser() {
+    return $this->belongsTo(User::class, 'assigned_to');
+    }
+    public function assignedByUser() {
+        return $this->belongsTo(User::class, 'assigned_by');
+    }
 }
+    

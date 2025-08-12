@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class OffsetRequestController extends Controller
 {
@@ -50,8 +51,12 @@ class OffsetRequestController extends Controller
         $query = OffsetRequest::with('employee.user')
             ->where('company_id', $companyId);
 
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+
         if (!$user->hasPermission('offset_request.browse_all')) {
-            $employeeId = $user->employee?->id;
+            $employeeId = $employee->id;
 
             if (!$employeeId) {
                 Log::warning('User without linked employee tried to browse offset requests.', [
@@ -167,7 +172,12 @@ class OffsetRequestController extends Controller
         ]);
 
         $validated = $request->validate([
-            'employee_id'                  => 'required|exists:employees,id',
+            'employee_id' => [
+                'required',
+                Rule::exists('employees', 'id')->where(function ($query) use ($companyId) {
+                    $query->where('company_id', $companyId);
+                }),
+            ],
             'date'                         => 'required|date',
             'project_or_event_description' => 'required|string',
             'time_start'                   => 'required|date_format:H:i',
@@ -342,7 +352,11 @@ class OffsetRequestController extends Controller
             abort(403, 'Unauthorized to view offset requests.');
         }
 
-        $employeeId = $user->employee?->id;
+        $companyId = $user->preference->company_id;
+        $employee  = Employee::where('company_id', $companyId)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+        $employeeId = $employee->id;
 
         if (!$user->hasPermission('offset_request.browse_all')) {
             $isOwner    = $offsetRequest->employee_id           === $employeeId;
@@ -389,6 +403,7 @@ class OffsetRequestController extends Controller
                         now()->toDateString(),
                     ]);
             })
+            ->orderBy('date')
             ->get(['id', 'date', 'time_start', 'time_end', 'number_of_hours'])
             ->filter(function ($ot) use ($currentOTIds) {
                 $used = DB::table('offset_overtime')
@@ -406,7 +421,13 @@ class OffsetRequestController extends Controller
 
     protected function canEditOffsetRequest(OffsetRequest $offsetRequest): bool
     {
-        $employeeId = auth()->user()->employee?->id;
+        $user = auth()->user();
+        $companyId = $user->preference->company_id;
+        $employee  = Employee::where('company_id', $companyId)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+        $employeeId = $employee->id;
+
         $isOwner    = $offsetRequest->employee_id           === $employeeId;
         $isApprover = $offsetRequest->employee->approver_id === auth()->user()->id;
 
@@ -443,7 +464,12 @@ class OffsetRequestController extends Controller
         ]);
 
         $validated = $request->validate([
-            'employee_id'                  => 'required|exists:employees,id',
+            'employee_id' => [
+                'required',
+                Rule::exists('employees', 'id')->where(function ($query) use ($companyId) {
+                    $query->where('company_id', $companyId);
+                }),
+            ],
             'date'                         => 'required|date',
             'project_or_event_description' => 'required|string',
             'time_start'                   => 'required|date_format:H:i',
@@ -629,7 +655,13 @@ class OffsetRequestController extends Controller
             abort(403, 'Unauthorized to delete offset requests.');
         }
 
-        $employeeId = $user->employee?->id;
+        $companyId = $user->preference->company_id;
+
+        $employee = Employee::where('user_id', auth()->id())
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+
+        $employeeId = $employee->id;
 
         // Restrict non-global users to their own or subordinate records
         if (!$user->hasPermission('offset_request.browse_all')) {
