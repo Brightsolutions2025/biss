@@ -173,6 +173,8 @@ class TimeRecordController extends Controller
             })->toArray()
         ]);
 
+        $companyId = auth()->user()->preference->company_id;
+
         $validated = $request->validate([
             'employee_id' => [
                 'required',

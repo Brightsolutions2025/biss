@@ -70,7 +70,6 @@
                             </form>
                         @endif
 
-
                         <form action="{{ route('tickets.assign', $ticket) }}" method="POST">
                             @csrf
                             @method('PATCH')
@@ -101,10 +100,8 @@
                                 Back
                             </a>
                         </div>
-
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

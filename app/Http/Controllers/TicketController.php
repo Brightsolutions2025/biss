@@ -4,28 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use App\Models\TicketType;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
     public function index(Request $request)
     {
-    $user = auth()->user();
-    $companyId = $user->preference->company_id;
+        $user = auth()->user();
+        $companyId = $user->preference->company_id;
 
-    $query = Ticket::with(['ticketType', 'company', 'department', 'team'])
-        ->where('company_id', $companyId);
+        $query = Ticket::with(['ticketType', 'company', 'department', 'team'])
+            ->where('company_id', $companyId);
 
-    if ($request->filled('subject')) {
-        $query->where('subject', 'like', '%' . $request->subject . '%');
-    }
+        if ($request->filled('subject')) {
+            $query->where('subject', 'like', '%' . $request->subject . '%');
+        }
 
-    $tickets = $query->orderByDesc('created_at')->paginate(10);
+        $tickets = $query->orderByDesc('created_at')->paginate(10);
 
-    return view('tickets.index', compact('tickets'));
+        return view('tickets.index', compact('tickets'));
     }
 
     public function create()
@@ -42,47 +43,47 @@ class TicketController extends Controller
         return view('tickets.create', compact('ticketTypes'));
     }
 
-public function store(Request $request)
-{
-    if (!auth()->user()->hasPermission('ticket.create')) {
-        // abort(403, 'Unauthorized to create tickets.');
-    }
+    public function store(Request $request)
+    {
+        if (!auth()->user()->hasPermission('ticket.create')) {
+            // abort(403, 'Unauthorized to create tickets.');
+        }
 
-    $validated = $request->validate([
-        'ticket_type_id' => 'required|exists:ticket_types,id',
-        'subject'        => 'required|string|max:255',
-        'description'    => 'nullable|string',
-        'priority'       => 'required|in:low,medium,high,urgent',
-        'due_at'         => 'nullable|date',
-        'attachments'    => 'nullable|array',
-    ]);
-
-    $user = auth()->user();
-    $companyId = $user->preference->company_id;
-
-    DB::transaction(function () use (&$ticket, $validated, $user, $companyId) {
-        $validated['company_id']     = $companyId;
-        $validated['department_id']  = $user->preference->department_id;
-        $validated['team_id']        = $user->preference->team_id;
-        $validated['created_by']     = $user->id;
-
-        // Retry until unique ticket_number is found
-        do {
-            $ticketNumber = Ticket::generateTicketNumber();
-        } while (Ticket::where('ticket_number', $ticketNumber)->exists());
-
-        $validated['ticket_number'] = $ticketNumber;
-
-        $ticket = Ticket::create($validated);
-
-        Log::info('Ticket created', [
-            'ticket_id' => $ticket->id,
-            'user_id'   => $user->id,
+        $validated = $request->validate([
+            'ticket_type_id' => 'required|exists:ticket_types,id',
+            'subject'        => 'required|string|max:255',
+            'description'    => 'nullable|string',
+            'priority'       => 'required|in:low,medium,high,urgent',
+            'due_at'         => 'nullable|date',
+            'attachments'    => 'nullable|array',
         ]);
-    });
 
-    return redirect()->route('tickets.index')->with('status', 'Ticket created successfully.');
-}
+        $user = auth()->user();
+        $companyId = $user->preference->company_id;
+
+        DB::transaction(function () use (&$ticket, $validated, $user, $companyId) {
+            $validated['company_id']     = $companyId;
+            $validated['department_id']  = $user->preference->department_id;
+            $validated['team_id']        = $user->preference->team_id;
+            $validated['created_by']     = $user->id;
+
+            // Retry until unique ticket_number is found
+            do {
+                $ticketNumber = Ticket::generateTicketNumber();
+            } while (Ticket::where('ticket_number', $ticketNumber)->exists());
+
+            $validated['ticket_number'] = $ticketNumber;
+
+            $ticket = Ticket::create($validated);
+
+            Log::info('Ticket created', [
+                'ticket_id' => $ticket->id,
+                'user_id'   => $user->id,
+            ]);
+        });
+
+        return redirect()->route('tickets.index')->with('status', 'Ticket created successfully.');
+    }
 
     public function show(Ticket $ticket)
     {
@@ -92,7 +93,17 @@ public function store(Request $request)
             // abort(403, 'Unauthorized to view tickets.');
         }
 
-        return view('tickets.show', compact('ticket'));
+        // Prepare users for assignment dropdown (always pass variable to view)
+        $users = collect();
+
+        // Only fetch possible assignees when current user can assign AND ticket is approved (or you can relax condition)
+        if (auth()->user()->can('assign', $ticket) && $ticket->status === 'approved') {
+            $users = User::where('company_id', $ticket->company_id)
+                         ->where('department_id', $ticket->department_id)
+                         ->get();
+        }
+
+        return view('tickets.show', compact('ticket', 'users'));
     }
 
     public function edit(Ticket $ticket)
@@ -178,7 +189,7 @@ public function store(Request $request)
         return back()->with('success', 'Ticket approved. Now assign someone to fix it.');
     }
 
-    // Assign a person to fix the ticket
+    // Assign a person to fix the ticket (single method - no duplicates)
     public function assign(Request $request, Ticket $ticket)
     {
         $this->authorize('assign', $ticket);
@@ -189,7 +200,7 @@ public function store(Request $request)
 
         $ticket->update([
             'assigned_to' => $request->assigned_to,
-            'assigned_by' => auth()->id(),
+            'assigned_by' => Auth::id(),
             'assigned_at' => now(),
             'status'      => 'in_progress',
         ]);
@@ -197,36 +208,4 @@ public function store(Request $request)
         return redirect()->route('tickets.show', $ticket->id)
             ->with('success', 'Ticket successfully assigned.');
     }
-
-    // Show assign form
-    public function showAssignForm(Ticket $ticket)
-        {
-            $this->authorize('assign', $ticket);
-
-            // You can filter users by company, department, role, etc.
-            $users = \App\Models\User::where('company_id', $ticket->company_id)->get();
-
-            return view('tickets.assign', compact('ticket', 'users'));
-        }
-
-        // Handle assigning
-        public function assign(Request $request, Ticket $ticket)
-        {
-            $this->authorize('assign', $ticket);
-
-            $request->validate([
-                'assigned_to' => 'required|exists:users,id',
-            ]);
-
-            $ticket->update([
-                'assigned_to' => $request->assigned_to,
-                'assigned_by' => auth()->id(),
-                'assigned_at' => now(),
-                'status'      => 'in_progress',
-            ]);
-
-            return redirect()->route('tickets.show', $ticket->id)
-                ->with('success', 'Ticket successfully assigned.');
-    }
-
 }
