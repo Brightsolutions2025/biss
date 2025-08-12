@@ -213,8 +213,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tickets/{ticket}/assign', [TicketAssignmentController::class, 'edit']);
     Route::post('/tickets/{ticket}/assign', [TicketAssignmentController::class, 'update'])->name('tickets.assign.update');
     Route::post('/tickets/{ticket}/assign', [TicketController::class, 'assign'])
-    ->name('tickets.assign')
-    ->middleware('auth');
+    ->name('tickets.assign');
 });
 
 
