@@ -299,15 +299,38 @@ class TimeRecordController extends Controller
         $employee = Employee::where('user_id', auth()->id())
             ->where('company_id', $companyId)
             ->firstOrFail();
-        $employeeId = $timeRecord->employee_id;
+        $employeeId = $employee->id;
 
         if (!$user->hasPermission('time_record.browse_all')) {
-            $isOwner = $timeRecord->employee_id === $employeeId;
+            $allowedEmployeeIds = [];
 
-            // Check if current user is approver of the employee linked to this time record
-            $isApprover = $timeRecord->employee->approver_id === $user->id;
+            // Current employee
+            $allowedEmployeeIds[] = $employeeId;
 
-            if (!$isOwner && !$isApprover) {
+            // Direct subordinates
+            $subordinateIds = Employee::where('approver_id', $user->id)
+                ->where('company_id', $companyId)
+                ->pluck('id')
+                ->toArray();
+
+            // Department heads
+            $departmentIds = \App\Models\Department::where('head_id', $user->id)
+                ->where('company_id', $companyId)
+                ->pluck('id')
+                ->toArray();
+
+            $departmentEmployeeIds = Employee::whereIn('department_id', $departmentIds)
+                ->where('company_id', $companyId)
+                ->pluck('id')
+                ->toArray();
+
+            $allowedEmployeeIds = array_unique(array_merge(
+                $allowedEmployeeIds,
+                $subordinateIds,
+                $departmentEmployeeIds
+            ));
+
+            if (!in_array($timeRecord->employee_id, $allowedEmployeeIds)) {
                 abort(403, 'You are not allowed to view this time record.');
             }
         }
@@ -318,24 +341,34 @@ class TimeRecordController extends Controller
         $startDate = $dates->min();
         $endDate   = $dates->max();
 
-        $overtimeRequests = OvertimeRequest::where('employee_id', $employeeId)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->get();
+        $employeeId = $timeRecord->employee_id;
 
-        $leaveRequests = LeaveRequest::where('employee_id', $employeeId)
-            ->where(function ($q) use ($startDate, $endDate) {
-                $q->whereBetween('start_date', [$startDate, $endDate])
-                ->orWhereBetween('end_date', [$startDate, $endDate]);
-            })
-            ->get();
+        if (!$startDate || !$endDate) {
+            // No lines, so skip related requests
+            $overtimeRequests = collect();
+            $leaveRequests    = collect();
+            $outbaseRequests  = collect();
+            $offsetRequests   = collect();
+        } else {
+            $overtimeRequests = OvertimeRequest::where('employee_id', $employeeId)
+                ->whereBetween('date', [$startDate, $endDate])
+                ->get();
 
-        $outbaseRequests = OutbaseRequest::where('employee_id', $employeeId)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->get();
+            $leaveRequests = LeaveRequest::where('employee_id', $employeeId)
+                ->where(function ($q) use ($startDate, $endDate) {
+                    $q->whereBetween('start_date', [$startDate, $endDate])
+                    ->orWhereBetween('end_date', [$startDate, $endDate]);
+                })
+                ->get();
 
-        $offsetRequests = OffsetRequest::where('employee_id', $employeeId)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->get();
+            $outbaseRequests = OutbaseRequest::where('employee_id', $employeeId)
+                ->whereBetween('date', [$startDate, $endDate])
+                ->get();
+
+            $offsetRequests = OffsetRequest::where('employee_id', $employeeId)
+                ->whereBetween('date', [$startDate, $endDate])
+                ->get();
+        }
 
         return view('time_records.show', compact(
             'timeRecord',

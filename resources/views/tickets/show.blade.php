@@ -23,7 +23,6 @@
 
                 <div class="card">
                     <div class="card-body">
-
                         @php
                             $fields = [
                                 'Ticket Number'    => $ticket->ticket_number,
