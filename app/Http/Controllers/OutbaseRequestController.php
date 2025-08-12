@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class OutbaseRequestController extends Controller
 {
@@ -116,7 +117,10 @@ class OutbaseRequestController extends Controller
         ]);
 
         $validated = $request->validate([
-            'employee_id' => 'required|exists:employees,id',
+            'employee_id' => [
+                'required',
+                Rule::exists('employees', 'id')->where('company_id', auth()->user()->preference->company_id),
+            ],
             'date'        => 'required|date',
             'time_start'  => 'required|date_format:H:i',
             'time_end'    => 'required|date_format:H:i|after:time_start',
@@ -302,7 +306,10 @@ class OutbaseRequestController extends Controller
             ]);
 
             $validated = $request->validate([
-                'employee_id'      => 'required|exists:employees,id',
+                'employee_id' => [
+                    'required',
+                    Rule::exists('employees', 'id')->where('company_id', auth()->user()->preference->company_id),
+                ],
                 'date'             => 'required|date',
                 'time_start'       => 'required|date_format:H:i',
                 'time_end'         => 'required|date_format:H:i|after:time_start',
@@ -538,6 +545,7 @@ class OutbaseRequestController extends Controller
     public function fetchApprovedByDate($employeeId, $start, $end)
     {
         $requests = OutbaseRequest::where('employee_id', $employeeId)
+            ->where('company_id', auth()->user()->preference->company_id)
             ->where('status', 'approved')
             ->whereBetween('date', [$start, $end])
             ->get()

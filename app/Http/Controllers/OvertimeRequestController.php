@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class OvertimeRequestController extends Controller
 {
@@ -114,7 +115,10 @@ class OvertimeRequestController extends Controller
         ]);
 
         $validated = $request->validate([
-            'employee_id'     => 'required|exists:employees,id',
+            'employee_id' => [
+                'required',
+                Rule::exists('employees', 'id')->where('company_id', $companyId),
+            ],
             'date'            => 'required|date',
             'time_start'      => 'required|date_format:H:i',
             'time_end'        => 'required|date_format:H:i',
@@ -209,6 +213,7 @@ class OvertimeRequestController extends Controller
         $employee = Employee::where('user_id', auth()->id())
             ->where('company_id', $companyId)
             ->firstOrFail();
+        $employeeId = $employee->id;
 
         // If user lacks global permission, allow if:
         // - they own the request
@@ -308,7 +313,10 @@ class OvertimeRequestController extends Controller
         ]);
 
         $validated = $request->validate([
-            'employee_id'     => 'required|exists:employees,id',
+            'employee_id' => [
+                'required',
+                Rule::exists('employees', 'id')->where('company_id', $companyId),
+            ],
             'date'            => 'required|date',
             'time_start'      => 'required|date_format:H:i',
             'time_end'        => 'required|date_format:H:i',

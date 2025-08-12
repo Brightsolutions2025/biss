@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Validation\Rule;
 
 class TimeRecordController extends Controller
 {
@@ -173,8 +174,14 @@ class TimeRecordController extends Controller
         ]);
 
         $validated = $request->validate([
-            'employee_id'                                 => 'required|exists:employees,id',
-            'payroll_period_id'                           => 'required|exists:payroll_periods,id',
+            'employee_id' => [
+                'required',
+                Rule::exists('employees', 'id')->where('company_id', $companyId),
+            ],
+            'payroll_period_id' => [
+                'required',
+                Rule::exists('payroll_periods', 'id')->where('company_id', $companyId),
+            ],
             'time_record_lines'                           => 'required|array|min:1',
             'time_record_lines.*.date'                    => 'required|date',
             'time_record_lines.*.clock_in'                => 'nullable|date_format:H:i',
@@ -692,6 +699,8 @@ class TimeRecordController extends Controller
     {
         $timeRecord = TimeRecord::with(['employee.user', 'payrollPeriod', 'lines'])->findOrFail($id);
 
+        $this->authorizeTimeRecordView($timeRecord);
+
         $pdf = Pdf::loadView('exports.time_record_pdf', compact('timeRecord'))
                 ->setPaper('a4', 'portrait'); // <-- Set landscape orientation
 
@@ -700,6 +709,34 @@ class TimeRecordController extends Controller
     public function exportExcel($id)
     {
         $timeRecord = TimeRecord::with(['employee.user', 'payrollPeriod', 'lines'])->findOrFail($id);
+        
+        $this->authorizeTimeRecordView($timeRecord);
+        
         return Excel::download(new TimeRecordExport($timeRecord), 'time_record_' . $timeRecord->id . '.xlsx');
+    }
+    protected function authorizeTimeRecordView(TimeRecord $timeRecord)
+    {
+        $user = auth()->user();
+        $this->authorizeCompany($timeRecord->company_id);
+
+        if (!$user->hasPermission('time_record.read')) {
+            abort(403, 'Unauthorized to view time records.');
+        }
+
+        $companyId = $user->preference->company_id;
+        $employee = Employee::where('user_id', $user->id)
+            ->where('company_id', $companyId)
+            ->firstOrFail();
+
+        $employeeId = $employee->id;
+
+        if (!$user->hasPermission('time_record.browse_all')) {
+            $isOwner    = $timeRecord->employee_id === $employeeId;
+            $isApprover = $timeRecord->employee->approver_id === $user->id;
+
+            if (!$isOwner && !$isApprover) {
+                abort(403, 'You are not allowed to view this time record.');
+            }
+        }
     }
 }

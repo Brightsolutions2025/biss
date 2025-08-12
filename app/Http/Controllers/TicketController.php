@@ -197,4 +197,36 @@ public function store(Request $request)
         return redirect()->route('tickets.show', $ticket->id)
             ->with('success', 'Ticket successfully assigned.');
     }
+
+    // Show assign form
+    public function showAssignForm(Ticket $ticket)
+        {
+            $this->authorize('assign', $ticket);
+
+            // You can filter users by company, department, role, etc.
+            $users = \App\Models\User::where('company_id', $ticket->company_id)->get();
+
+            return view('tickets.assign', compact('ticket', 'users'));
+        }
+
+        // Handle assigning
+        public function assign(Request $request, Ticket $ticket)
+        {
+            $this->authorize('assign', $ticket);
+
+            $request->validate([
+                'assigned_to' => 'required|exists:users,id',
+            ]);
+
+            $ticket->update([
+                'assigned_to' => $request->assigned_to,
+                'assigned_by' => auth()->id(),
+                'assigned_at' => now(),
+                'status'      => 'in_progress',
+            ]);
+
+            return redirect()->route('tickets.show', $ticket->id)
+                ->with('success', 'Ticket successfully assigned.');
+    }
+
 }

@@ -186,7 +186,12 @@ class OffsetRequestController extends Controller
             'reason'                       => 'nullable|string',
 
             'overtime_requests'              => 'required|array|min:1',
-            'overtime_requests.*.id'         => 'required|exists:overtime_requests,id',
+            'overtime_requests.*.id' => [
+                'required',
+                Rule::exists('overtime_requests', 'id')->where(function ($query) use ($companyId) {
+                    $query->where('company_id', $companyId);
+                }),
+            ],
             'overtime_requests.*.used_hours' => 'required|numeric|min:0.5',
             'files'                          => 'array|max:5',
             'files.*'                        => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
@@ -478,7 +483,12 @@ class OffsetRequestController extends Controller
             'reason'                       => 'nullable|string',
 
             'overtime_requests'              => 'required|array|min:1',
-            'overtime_requests.*.id'         => 'required|exists:overtime_requests,id',
+            'overtime_requests.*.id' => [
+                'required',
+                Rule::exists('overtime_requests', 'id')->where(function ($query) use ($companyId) {
+                    $query->where('company_id', $companyId);
+                }),
+            ],
             'overtime_requests.*.used_hours' => 'required|numeric|min:0.5',
             'files'                          => 'array|max:5',
             'files.*'                        => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',

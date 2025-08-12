@@ -54,45 +54,37 @@
                             </div>
                         @endforeach
 
-                        @if ($ticket->files->count())
-                            <div class="mb-4">
-                                <label class="form-label">Attached Files</label>
-                                <ul class="list-unstyled">
-                                    @foreach ($ticket->files as $file)
-                                        <li class="mb-2">
-                                            <a href="{{ route('files.download', $file->id) }}" target="_blank" class="d-inline-flex align-items-center gap-2">
-                                                @php
-                                                    $extension = pathinfo($file->file_name, PATHINFO_EXTENSION);
-                                                @endphp
-
-                                                @switch($extension)
-                                                    @case('pdf')
-                                                        <i class="bi bi-file-earmark-pdf text-danger"></i>
-                                                        @break
-                                                    @case('jpg')
-                                                    @case('jpeg')
-                                                    @case('png')
-                                                        <i class="bi bi-image text-primary"></i>
-                                                        @break
-                                                    @case('doc')
-                                                    @case('docx')
-                                                        <i class="bi bi-file-earmark-word text-primary"></i>
-                                                        @break
-                                                    @case('xlsx')
-                                                        <i class="bi bi-file-earmark-excel text-success"></i>
-                                                        @break
-                                                    @default
-                                                        <i class="bi bi-paperclip"></i>
-                                                @endswitch
-
-                                                {{ $file->file_name }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
+                        @if(auth()->user()->hasRole('Department Head') && $ticket->status === 'approved')
+                            <form action="{{ route('tickets.assign', $ticket->id) }}" method="POST">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="assigned_to" class="form-label">Assign To</label>
+                                    <select name="assigned_to" id="assigned_to" class="form-select" required>
+                                        <option value="">-- Select User --</option>
+                                        @foreach($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Assign Ticket</button>
+                            </form>
                         @endif
 
+
+                        <form action="{{ route('tickets.assign', $ticket) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+
+                            <label>Assign To:</label>
+                            <select name="assigned_to" required>
+                                <option value="">-- Select User --</option>
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+
+                            <button type="submit">Assign Ticket</button>
+                        </form>
 
                         <!-- Action Buttons -->
                         <div class="d-flex gap-2 mt-4">
