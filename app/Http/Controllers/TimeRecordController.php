@@ -299,7 +299,7 @@ class TimeRecordController extends Controller
         $employee = Employee::where('user_id', auth()->id())
             ->where('company_id', $companyId)
             ->firstOrFail();
-        $employeeId = $employee->id;
+        $employeeId = $timeRecord->employee_id;
 
         if (!$user->hasPermission('time_record.browse_all')) {
             $isOwner = $timeRecord->employee_id === $employeeId;
@@ -313,8 +313,6 @@ class TimeRecordController extends Controller
         }
 
         $timeRecord->load(['employee', 'payrollPeriod', 'lines']);
-
-        $employeeId = $timeRecord->employee_id;
 
         $dates     = $timeRecord->lines->pluck('date');
         $startDate = $dates->min();
