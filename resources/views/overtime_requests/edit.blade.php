@@ -127,35 +127,6 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const startInput = document.getElementById('time_start');
-            const endInput   = document.getElementById('time_end');
-            const hoursInput = document.getElementById('number_of_hours');
-
-            function computeHours() {
-                const start = startInput.value;
-                const end   = endInput.value;
-
-                if (start && end) {
-                    const startTime = new Date(`1970-01-01T${start}:00`);
-                    const endTime   = new Date(`1970-01-01T${end}:00`);
-
-                    let diff = (endTime - startTime) / (1000 * 60 * 60); // difference in hours
-
-                    // Handle overnight work (e.g., starts at 22:00, ends at 02:00)
-                    if (diff < 0) {
-                        diff += 24;
-                    }
-
-                    hoursInput.value = Math.floor(diff); // whole number, rounded down
-                }
-            }
-
-            startInput.addEventListener('change', computeHours);
-            endInput.addEventListener('change', computeHours);
-        });
-    </script>
     @push('scripts')
     <script>
         function deleteFile(fileId) {
@@ -174,6 +145,29 @@
                 }
             });
         }
+        function computeHours() {
+            let start = document.getElementById('time_start').value;
+            let end = document.getElementById('time_end').value;
+
+            if (start && end) {
+                let startTime = new Date(`1970-01-01T${start}:00`);
+                let endTime = new Date(`1970-01-01T${end}:00`);
+
+                // Handle overnight (end time past midnight)
+                if (endTime < startTime) {
+                    endTime.setDate(endTime.getDate() + 1);
+                }
+
+                let diffMs = endTime - startTime;
+                let diffHours = diffMs / (1000 * 60 * 60);
+
+                // Round down to whole number
+                document.getElementById('number_of_hours').value = Math.floor(diffHours);
+            }
+        }
+
+        document.getElementById('time_start').addEventListener('change', computeHours);
+        document.getElementById('time_end').addEventListener('change', computeHours);
     </script>
     @endpush
 </x-app-layout>
