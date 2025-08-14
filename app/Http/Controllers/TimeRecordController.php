@@ -578,19 +578,24 @@ class TimeRecordController extends Controller
         $employee = Employee::where('user_id', auth()->id())
             ->where('company_id', $companyId)
             ->firstOrFail();
+        $employeeId = $employee->id;
+        $approverId = $timeRecord->employee->approver_id;
 
-        // Ownership check if user lacks global permission
-        if (!$user->hasPermission('time_record.browse_all')) {
-            $employeeId = $employee->id;
-
-            if (!$employeeId || $timeRecord->employee_id !== $employeeId) {
-                abort(403, 'You are not allowed to delete this time record.');
+        // --- Permission rules ---
+        if ($user->hasRole('admin') && $timeRecord->employee->company_id === $companyId) {
+            // Admin in same company can delete regardless of status
+        } elseif ($timeRecord->employee_id === $employeeId) {
+            // Employee can delete only if status is pending
+            if ($timeRecord->status !== 'pending') {
+                abort(403, 'You can only delete time records that are still pending.');
             }
-
-            // Prevent deletion if the time record is approved or rejected
-            if (in_array($timeRecord->status, ['approved'])) {
-                abort(403, 'You cannot delete a time record that has already been approved.');
+        } elseif ($approverId && $approverId === $user->id) {
+            // Approver can delete if status is pending
+            if ($timeRecord->status !== 'pending') {
+                abort(403, 'You can only delete pending time records.');
             }
+        } else {
+            abort(403, 'You are not allowed to delete this time record.');
         }
 
         DB::beginTransaction();
@@ -683,6 +688,8 @@ class TimeRecordController extends Controller
     public function reject(Request $request, TimeRecord $timeRecord)
     {
         $this->authorizeCompany($timeRecord->company_id);
+
+        abort(403, 'Rejection is disabled for this request type. Please delete the request to remove it.');
 
         $approverId = $timeRecord->employee->approver_id;
 
