@@ -127,24 +127,11 @@
             </div>
         </div>
     </div>
-    @push('scripts')
     <script>
-        function deleteFile(fileId) {
-            if (!confirm('Delete this file?')) return;
-
-            fetch(`/files/${fileId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            }).then(res => {
-                if (res.ok) {
-                    location.reload();
-                }
-            });
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('time_start').addEventListener('change', computeHours);
+            document.getElementById('time_end').addEventListener('change', computeHours);
+        });
         function computeHours() {
             let start = document.getElementById('time_start').value;
             let end = document.getElementById('time_end').value;
@@ -165,9 +152,25 @@
                 document.getElementById('number_of_hours').value = Math.floor(diffHours);
             }
         }
+    </script>
+    @push('scripts')
+    <script>
+        function deleteFile(fileId) {
+            if (!confirm('Delete this file?')) return;
 
-        document.getElementById('time_start').addEventListener('change', computeHours);
-        document.getElementById('time_end').addEventListener('change', computeHours);
+            fetch(`/files/${fileId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => {
+                if (res.ok) {
+                    location.reload();
+                }
+            });
+        }
     </script>
     @endpush
 </x-app-layout>
