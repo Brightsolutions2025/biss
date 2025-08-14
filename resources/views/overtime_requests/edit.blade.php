@@ -132,13 +132,12 @@
     <script>
         function computeHours() {
             const start = document.getElementById('time_start').value;
-            const end   = document.getElementById('time_end').value;
+            const end = document.getElementById('time_end').value;
             const hoursInput = document.getElementById('number_of_hours');
 
-            // Recompute if BOTH times are present (even if only one changed)
             if (start && end) {
                 const startTime = new Date(`1970-01-01T${start}:00`);
-                const endTime   = new Date(`1970-01-01T${end}:00`);
+                const endTime = new Date(`1970-01-01T${end}:00`);
 
                 let diff = (endTime - startTime) / (1000 * 60 * 60);
 
@@ -147,12 +146,16 @@
                     diff += 24;
                 }
 
-                hoursInput.value = Math.floor(diff); // round down to whole hours
+                hoursInput.value = Math.floor(diff); // round down to whole number
             }
         }
 
-        document.getElementById('time_start').addEventListener('change', computeHours);
-        document.getElementById('time_end').addEventListener('change', computeHours);
+        // Trigger computation when either field changes
+        document.getElementById('time_start').addEventListener('input', computeHours);
+        document.getElementById('time_end').addEventListener('input', computeHours);
+
+        // Also recompute immediately on page load if both are already filled
+        window.addEventListener('DOMContentLoaded', computeHours);
     </script>
     @push('scripts')
     <script>
