@@ -52,7 +52,8 @@
                     <div class="mb-3">
                         <label for="time_start" class="form-label">Time Start</label>
                         <input type="time" name="time_start" id="time_start" class="form-control"
-                               value="{{ old('time_start', $overtimeRequest->time_start) }}" required>
+                               value="{{ old('time_start', $overtimeRequest->time_start) }}"
+                               onchange="computeHours()" required>
                         @error('time_start')
                             <div class="text-danger small">{{ $message }}</div>
                         @enderror
@@ -62,7 +63,8 @@
                     <div class="mb-3">
                         <label for="time_end" class="form-label">Time End</label>
                         <input type="time" name="time_end" id="time_end" class="form-control"
-                               value="{{ old('time_end', $overtimeRequest->time_end) }}" required>
+                               value="{{ old('time_end', $overtimeRequest->time_end) }}"
+                               onchange="computeHours()" required>
                         @error('time_end')
                             <div class="text-danger small">{{ $message }}</div>
                         @enderror
@@ -128,37 +130,28 @@
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        function computeHours() {
             const startInput = document.getElementById('time_start');
             const endInput   = document.getElementById('time_end');
             const hoursInput = document.getElementById('number_of_hours');
 
-            function computeHours() {
-                const start = startInput.value;
-                const end   = endInput.value;
+            const start = startInput.value;
+            const end   = endInput.value;
 
-                if (start && end) {
-                    const startTime = new Date(`1970-01-01T${start}:00`);
-                    const endTime   = new Date(`1970-01-01T${end}:00`);
+            if (start && end) {
+                const startTime = new Date(`1970-01-01T${start}:00`);
+                const endTime   = new Date(`1970-01-01T${end}:00`);
 
-                    let diff = (endTime - startTime) / (1000 * 60 * 60); // difference in hours
+                let diff = (endTime - startTime) / (1000 * 60 * 60);
 
-                    // Handle overnight work (e.g., 22:00 to 02:00)
-                    if (diff < 0) {
-                        diff += 24;
-                    }
-
-                    hoursInput.value = Math.floor(diff); // whole number, rounded down
+                // Handle overnight work
+                if (diff < 0) {
+                    diff += 24;
                 }
+
+                hoursInput.value = Math.floor(diff); // round down
             }
-
-            // Listen for changes instantly
-            startInput.addEventListener('input', computeHours);
-            endInput.addEventListener('input', computeHours);
-
-            // Run once on page load to compute from existing values
-            computeHours();
-        });
+        }
     </script>
     @push('scripts')
     <script>
