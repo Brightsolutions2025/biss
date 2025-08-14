@@ -672,19 +672,23 @@ class OffsetRequestController extends Controller
             ->firstOrFail();
 
         $employeeId = $employee->id;
+        $approverId = $offsetRequest->employee->approver_id;
 
-        // Restrict non-global users to their own or subordinate records
-        if (!$user->hasPermission('offset_request.browse_all')) {
-            $isOwner    = $offsetRequest->employee_id           === $employeeId;
-            $isApprover = $offsetRequest->employee->approver_id === $user->id;
-
-            if (! $isOwner && ! $isApprover) {
-                abort(403, 'You are not allowed to delete this offset request.');
+        // --- Permission rules ---
+        if ($user->hasRole('admin') && $offsetRequest->employee->company_id === $companyId) {
+            // Admin in same company can delete regardless of status
+        } elseif ($offsetRequest->employee_id === $employeeId) {
+            // Employee can delete only if status is pending
+            if ($offsetRequest->status !== 'pending') {
+                abort(403, 'You can only delete offset requests that are still pending.');
             }
-
-            if (in_array($offsetRequest->status, ['approved', 'rejected'])) {
-                abort(403, 'You cannot delete an offset request that has already been approved or rejected.');
+        } elseif ($approverId && $approverId === $user->id) {
+            // Approver can delete if status is pending
+            if ($offsetRequest->status !== 'pending') {
+                abort(403, 'You can only delete pending offset requests.');
             }
+        } else {
+            abort(403, 'You are not allowed to delete this offset request.');
         }
 
         DB::beginTransaction();
@@ -777,6 +781,8 @@ class OffsetRequestController extends Controller
     public function reject(Request $request, OffsetRequest $offsetRequest)
     {
         $this->authorizeCompany($offsetRequest->company_id);
+
+        abort(403, 'Rejection is disabled for this request type. Please delete the request to remove it.');
 
         $approverId = $offsetRequest->employee->approver_id;
 

@@ -382,19 +382,17 @@ class OutbaseRequestController extends Controller
             ->firstOrFail();
         $employeeId = $employee->id;
 
-        if (!$user->hasPermission('outbase_request.browse_all')) {
-
-            // Check if user is the owner
-            if (!$employeeId || $outbaseRequest->employee_id !== $employeeId) {
-                abort(403, 'You are not allowed to delete this outbase request.');
+        // --- Permission rules ---
+        if ($user->hasRole('admin') && $outbaseRequest->employee->company_id === $companyId) {
+            // Admin in same company can delete regardless of status
+        } elseif ($outbaseRequest->employee_id === $employeeId) {
+            // Employee can delete only if status is pending
+            if ($outbaseRequest->status !== 'pending') {
+                abort(403, 'You can only delete outbase requests that are still pending.');
             }
-
-            // Prevent deletion if the request is already approved or rejected
-            if (in_array($outbaseRequest->status, ['approved', 'rejected'])) {
-                abort(403, 'You cannot delete an outbase request that has already been approved or rejected.');
-            }
+        } else {
+            abort(403, 'You are not allowed to delete this outbase request.');
         }
-
 
         DB::beginTransaction();
 

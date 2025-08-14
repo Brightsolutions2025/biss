@@ -409,17 +409,16 @@ class OvertimeRequestController extends Controller
             ->firstOrFail();
         $employeeId = $employee->id;
 
-        // Ownership or approver check if user lacks global permission
-        if (!$user->hasPermission('overtime_request.browse_all')) {
-
-            if (!$employeeId || $overtimeRequest->employee_id !== $employeeId) {
-                abort(403, 'You are not allowed to delete this overtime request.');
+        // --- Permission rules ---
+        if ($user->hasRole('admin') && $overtimeRequest->employee->company_id === $companyId) {
+            // Admin in same company can delete regardless of status
+        } elseif ($overtimeRequest->employee_id === $employeeId) {
+            // Employee can delete only if status is pending
+            if ($overtimeRequest->status !== 'pending') {
+                abort(403, 'You can only delete overtime requests that are still pending.');
             }
-
-            // Block deletion if request has already been processed
-            if (in_array($overtimeRequest->status, ['approved', 'rejected'])) {
-                abort(403, 'You cannot delete an overtime request that has already been approved or rejected.');
-            }
+        } else {
+            abort(403, 'You are not allowed to delete this overtime request.');
         }
 
         DB::beginTransaction();
