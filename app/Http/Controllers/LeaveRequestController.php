@@ -379,6 +379,11 @@ class LeaveRequestController extends Controller
             }
         }
 
+        // Only allow if the user has the "admin" role in this company
+        if (!$user->hasRole('admin')) {
+            abort(403, 'Only company admins can delete leave requests.');
+        }
+
         DB::beginTransaction();
 
         try {

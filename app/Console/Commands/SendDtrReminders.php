@@ -25,6 +25,11 @@ class SendDtrReminders extends Command
             $employees = Employee::where('company_id', $payrollPeriod->company_id)->get();
 
             foreach ($employees as $employee) {
+                // Skip specific email
+                if (strtolower($employee->user->email) === 'jpua@bsm.ph') {
+                    continue;
+                }
+
                 $timeRecord = TimeRecord::where('employee_id', $employee->id)
                     ->where('payroll_period_id', $payrollPeriod->id)
                     ->first();
