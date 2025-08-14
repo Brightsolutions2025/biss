@@ -204,9 +204,10 @@ class OffsetRequestController extends Controller
         $end         = \Carbon\Carbon::createFromFormat('H:i', $validated['time_end']);
         $diffInHours = $start->floatDiffInRealHours($end); // float, like 1.75
 
-        if (round($diffInHours, 2) !== round($validated['number_of_hours'], 2)) {
+        // Allow number_of_hours <= time diff, but not more
+        if (round($validated['number_of_hours'], 2) > round($diffInHours, 2)) {
             return back()->withErrors([
-                'number_of_hours' => 'The number of hours must equal the difference between Time Start and Time End.'
+                'number_of_hours' => 'The number of hours cannot be greater than the difference between Time Start and Time End.'
             ])->withInput();
         }
 
@@ -501,9 +502,10 @@ class OffsetRequestController extends Controller
         $end         = \Carbon\Carbon::createFromFormat('H:i', $validated['time_end']);
         $diffInHours = $start->floatDiffInRealHours($end);
 
-        if (round($diffInHours, 2) !== round($validated['number_of_hours'], 2)) {
+        // Allow number_of_hours <= time diff, but not more
+        if (round($validated['number_of_hours'], 2) > round($diffInHours, 2)) {
             return back()->withErrors([
-                'number_of_hours' => 'The number of hours must equal the difference between Time Start and Time End.'
+                'number_of_hours' => 'The number of hours cannot be greater than the difference between Time Start and Time End.'
             ])->withInput();
         }
 

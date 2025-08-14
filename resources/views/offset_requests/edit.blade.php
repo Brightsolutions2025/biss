@@ -52,13 +52,6 @@
                             @error('project_or_event_description') <div class="text-danger small">{{ $message }}</div> @enderror
                         </div>
 
-                        <!-- Note -->
-                        <div class="alert alert-info mb-4">
-                            <strong>Note:</strong> If your offset covers a full day that includes a lunch break, submit
-                            <strong>two separate requests</strong> — one from clock-in to the start of lunch break, and another
-                            from the end of lunch break to clock-out.
-                        </div>
-
                         <!-- Time Start -->
                         <div class="mb-3">
                             <label for="time_start" class="form-label">Time Start</label>
