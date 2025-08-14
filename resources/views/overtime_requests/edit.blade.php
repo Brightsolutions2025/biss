@@ -127,24 +127,7 @@
             </div>
         </div>
     </div>
-    @push('scripts')
     <script>
-        function deleteFile(fileId) {
-            if (!confirm('Delete this file?')) return;
-
-            fetch(`/files/${fileId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            }).then(res => {
-                if (res.ok) {
-                    location.reload();
-                }
-            });
-        }
         document.addEventListener('DOMContentLoaded', function () {
             const startInput = document.getElementById('time_start');
             const endInput   = document.getElementById('time_end');
@@ -176,6 +159,25 @@
             // Run once on page load to compute from existing values
             computeHours();
         });
+    </script>
+    @push('scripts')
+    <script>
+        function deleteFile(fileId) {
+            if (!confirm('Delete this file?')) return;
+
+            fetch(`/files/${fileId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => {
+                if (res.ok) {
+                    location.reload();
+                }
+            });
+        }
     </script>
     @endpush
 </x-app-layout>
