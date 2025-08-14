@@ -181,7 +181,7 @@ class OffsetRequestController extends Controller
             'date'                         => 'required|date',
             'project_or_event_description' => 'required|string',
             'time_start'                   => 'required|date_format:H:i',
-            'time_end'                     => 'required|date_format:H:i|after:time_start',
+            'time_end'                     => 'required|date_format:H:i',
             'number_of_hours'              => 'required|integer|min:1',
             'reason'                       => 'nullable|string',
 
@@ -202,6 +202,11 @@ class OffsetRequestController extends Controller
         // 1. Compute time difference in hours
         $start       = \Carbon\Carbon::createFromFormat('H:i', $validated['time_start']);
         $end         = \Carbon\Carbon::createFromFormat('H:i', $validated['time_end']);
+
+        if ($end <= $start) {
+            $end->addDay(); // Handle crossing midnight
+        }
+
         $diffInHours = $start->floatDiffInRealHours($end); // float, like 1.75
 
         // Allow number_of_hours <= time diff, but not more
@@ -479,7 +484,7 @@ class OffsetRequestController extends Controller
             'date'                         => 'required|date',
             'project_or_event_description' => 'required|string',
             'time_start'                   => 'required|date_format:H:i',
-            'time_end'                     => 'required|date_format:H:i|after:time_start',
+            'time_end'                     => 'required|date_format:H:i',
             'number_of_hours'              => 'required|integer|min:1',
             'reason'                       => 'nullable|string',
 
@@ -500,6 +505,11 @@ class OffsetRequestController extends Controller
         // 1. Validate time diff
         $start       = \Carbon\Carbon::createFromFormat('H:i', $validated['time_start']);
         $end         = \Carbon\Carbon::createFromFormat('H:i', $validated['time_end']);
+
+        if ($end <= $start) {
+            $end->addDay(); // Handle crossing midnight
+        }
+
         $diffInHours = $start->floatDiffInRealHours($end);
 
         // Allow number_of_hours <= time diff, but not more
