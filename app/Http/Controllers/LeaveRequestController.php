@@ -366,22 +366,16 @@ class LeaveRequestController extends Controller
 
         $employeeId = $employee->id;
 
-        // Ownership check if user lacks global permission
-        if (!$user->hasPermission('leave_request.browse_all')) {
-
-            if (!$employeeId || $leaveRequest->employee_id !== $employeeId) {
-                abort(403, 'You are not allowed to delete this leave request.');
+        // --- Permission rules ---
+        if ($user->hasRole('admin') && $leaveRequest->employee->company_id === $companyId) {
+            // Admin in same company can delete regardless of status
+        } elseif ($leaveRequest->employee_id === $employeeId) {
+            // Employee can delete only if status is pending
+            if ($leaveRequest->status !== 'pending') {
+                abort(403, 'You can only delete leave requests that are still pending.');
             }
-
-            // Prevent deletion if the leave request is approved or rejected
-            if (in_array($leaveRequest->status, ['approved', 'rejected'])) {
-                abort(403, 'You cannot delete a leave request that has already been approved or rejected.');
-            }
-        }
-
-        // Only allow if the user has the "admin" role in this company
-        if (!$user->hasRole('admin')) {
-            abort(403, 'Only company admins can delete leave requests.');
+        } else {
+            abort(403, 'You are not allowed to delete this leave request.');
         }
 
         DB::beginTransaction();
