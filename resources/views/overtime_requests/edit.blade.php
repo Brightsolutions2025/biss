@@ -53,7 +53,7 @@
                         <label for="time_start" class="form-label">Time Start</label>
                         <input type="time" name="time_start" id="time_start" class="form-control"
                                value="{{ old('time_start', $overtimeRequest->time_start) }}"
-                               onchange="computeHours()" required>
+                               oninput="computeHours()" required>
                         @error('time_start')
                             <div class="text-danger small">{{ $message }}</div>
                         @enderror
@@ -64,7 +64,7 @@
                         <label for="time_end" class="form-label">Time End</label>
                         <input type="time" name="time_end" id="time_end" class="form-control"
                                value="{{ old('time_end', $overtimeRequest->time_end) }}"
-                               onchange="computeHours()" required>
+                               oninput="computeHours()" required>
                         @error('time_end')
                             <div class="text-danger small">{{ $message }}</div>
                         @enderror
