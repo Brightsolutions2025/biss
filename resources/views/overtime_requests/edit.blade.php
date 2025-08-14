@@ -130,6 +130,10 @@
         </div>
     </div>
     <script>
+        // Store the original values
+        let originalStart = document.getElementById('time_start').value;
+        let originalEnd   = document.getElementById('time_end').value;
+
         function computeHours() {
             const startInput = document.getElementById('time_start');
             const endInput   = document.getElementById('time_end');
@@ -138,7 +142,8 @@
             const start = startInput.value;
             const end   = endInput.value;
 
-            if (start && end) {
+            // Only recompute if BOTH times are present and BOTH changed
+            if (start && end && (start !== originalStart || end !== originalEnd)) {
                 const startTime = new Date(`1970-01-01T${start}:00`);
                 const endTime   = new Date(`1970-01-01T${end}:00`);
 
@@ -152,6 +157,10 @@
                 hoursInput.value = Math.floor(diff); // round down
             }
         }
+
+        // Attach listeners
+        document.getElementById('time_start').addEventListener('change', computeHours);
+        document.getElementById('time_end').addEventListener('change', computeHours);
     </script>
     @push('scripts')
     <script>
