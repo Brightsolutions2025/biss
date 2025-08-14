@@ -158,19 +158,19 @@
                     const startTime = new Date(`1970-01-01T${start}:00`);
                     const endTime   = new Date(`1970-01-01T${end}:00`);
 
-                    let diff = (endTime - startTime) / (1000 * 60 * 60); // difference in hours
+                    let diff = (endTime - startTime) / (1000 * 60 * 60); // hours
 
-                    // Handle overnight work (e.g., starts at 22:00, ends at 02:00)
-                    if (diff < 0) {
-                        diff += 24;
-                    }
+                    // Handle overnight shifts
+                    if (diff < 0) diff += 24;
 
-                    hoursInput.value = Math.floor(diff); // whole number, rounded down
+                    // Round to 2 decimal places
+                    hoursInput.value = diff.toFixed(2);
                 }
             }
 
-            startInput.addEventListener('change', computeHours);
-            endInput.addEventListener('change', computeHours);
+            // Update on any input change
+            startInput.addEventListener('input', computeHours);
+            endInput.addEventListener('input', computeHours);
         });
     </script>
     @endpush
