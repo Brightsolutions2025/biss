@@ -2,60 +2,101 @@
 
 namespace Database\Factories;
 
-use App\Models\Ticket;
-use App\Models\TicketType;
-use App\Models\User;
 use App\Models\Company;
 use App\Models\Department;
 use App\Models\Team;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Ticket;
+use App\Models\TicketType;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class TicketFactory extends Factory
 {
-    use HasFactory;
-
     protected $model = Ticket::class;
 
     public function definition(): array
     {
-        static $ticketCounter = 1;
-        $ticketNumber = 'TCK-' . str_pad($ticketCounter++, 6, '0', STR_PAD_LEFT);
-
-        $company = Company::factory()->create();
-        $department = Department::factory()->create(['company_id' => $company->id]);
-        $team = Team::factory()->create(['company_id' => $company->id]);
-        $ticketType = TicketType::factory()->create(['company_id' => $company->id]);
-        $creator = User::factory()->create();
-        $assignee = User::factory()->create();
+        // Generate a fake but unique ticket number (e.g., TCK-000001)
+        $ticketNumber = 'TCK-' . str_pad($this->faker->unique()->numberBetween(1, 999999), 6, '0', STR_PAD_LEFT);
 
         return [
-            'ticket_number'     => $ticketNumber,
-            'company_id'        => $company->id,
-            'department_id'     => $department->id,
-            'team_id'           => $team->id,
-            'ticket_type_id'    => $ticketType->id,
-            'subject'           => $this->faker->sentence(6),
-            'description'       => $this->faker->paragraph(),
-            'due_at'            => $this->faker->optional()->dateTimeBetween('now', '+1 month'),
-            'resolved_at'       => null,
-            'status'            => $this->faker->randomElement([
-                'open', 'pending_approval', 'approved', 
+            'ticket_number'    => $ticketNumber,
+
+            // Ownership
+            'company_id'       => Company::factory(),
+            'department_id'    => Department::factory(),
+            'team_id'          => Team::factory(),
+
+            // Type
+            'ticket_type_id'   => TicketType::factory(),
+
+            // Info
+            'subject'          => $this->faker->sentence(6),
+            'description'      => $this->faker->paragraph(),
+
+            // SLA
+            'due_at'           => $this->faker->optional()->dateTimeBetween('now', '+1 week'),
+            'resolved_at'      => null,
+
+            // Priority / Status
+            'status'           => $this->faker->randomElement([
+                'open', 'pending_approval', 'approved',
                 'in_progress', 'resolved', 'closed', 'rejected'
             ]),
-            'priority'          => $this->faker->randomElement(['low', 'medium', 'high', 'urgent']),
-            'created_by'        => $creator->id,
-            'assigned_to'       => $assignee->id,
-            'requires_approval' => $this->faker->boolean(30),
-            'approved_by'       => null,
-            'approved_at'       => null,
-            'attachments'       => json_encode(
-                $this->faker->optional()->randomElements(
-                    ['file1.pdf', 'image.png', 'doc.docx'],
-                    rand(1, 2)
-                )
-            ),
-            'created_at'        => now(),
-            'updated_at'        => now(),
+            'priority'         => $this->faker->randomElement(['low', 'medium', 'high', 'urgent']),
+
+            // Assignment
+            'created_by'       => User::factory(),
+            'assigned_to'      => null,
+            'assigned_by'      => null,
+            'assigned_at'      => null,
+
+            // Approval
+            'requires_approval'=> $this->faker->boolean(20),
+            'approved_by'      => null,
+            'approved_at'      => null,
+
+            // Attachments
+            'attachments'      => null,
+
+            // Timestamps
+            'created_at'       => now(),
+            'updated_at'       => now(),
         ];
+    }
+
+    /**
+     * Indicate the ticket is already assigned.
+     */
+    public function assigned(User $assignee = null, User $assigner = null): self
+    {
+        return $this->state(function () use ($assignee, $assigner) {
+            $assignee = $assignee ?? User::factory()->create();
+            $assigner = $assigner ?? User::factory()->create();
+
+            return [
+                'assigned_to' => $assignee->id,
+                'assigned_by' => $assigner->id,
+                'assigned_at' => now(),
+                'status'      => 'in_progress',
+            ];
+        });
+    }
+
+    /**
+     * Indicate the ticket is approved.
+     */
+    public function approved(User $approver = null): self
+    {
+        return $this->state(function () use ($approver) {
+            $approver = $approver ?? User::factory()->create();
+
+            return [
+                'status'      => 'approved',
+                'approved_by' => $approver->id,
+                'approved_at' => now(),
+            ];
+        });
     }
 }

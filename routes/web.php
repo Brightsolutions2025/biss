@@ -66,6 +66,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth', EnsureUserHasCompany::class)->group(function () {
+    Route::post('/tickets/{ticket}/assign', [TicketController::class, 'assign'])
+        ->name('tickets.assign');
     Route::resource('projects', ProjectController::class);
     Route::resource('client_contacts', ClientContactController::class);
     Route::resource('clients', ClientController::class);

@@ -83,7 +83,7 @@ class LeaveBalanceController extends Controller
                     }),
                 ],
                 'year'              => 'required|integer|min:2000|max:2100',
-                'beginning_balance' => 'nullable|integer|min:0',
+                'beginning_balance' => 'nullable|numeric|min:0',
             ], [
                 'employee_id.unique' => 'There is already a beginning balance record for this employee in the selected year.',
             ]);
@@ -167,7 +167,7 @@ class LeaveBalanceController extends Controller
                     ->ignore($leaveBalance->id),
             ],
             'year'              => 'required|integer|min:2000|max:2100',
-            'beginning_balance' => 'nullable|integer|min:0',
+            'beginning_balance' => 'nullable|numeric|min:0',
         ]);
 
         DB::beginTransaction();

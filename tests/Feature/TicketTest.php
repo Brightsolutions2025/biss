@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\Company;
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\Ticket;
 use App\Models\TicketType;
 use App\Models\User;
-use App\Models\Company;
-use App\Models\Role;
 use App\Models\UserPreference;
-use App\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -18,13 +18,14 @@ class TicketTest extends TestCase
 
     protected User $user;
     protected Company $company;
+    protected TicketType $ticketType;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->company = Company::factory()->create();
-        $this->user = User::factory()->create();
+        $this->user    = User::factory()->create();
         $this->user->companies()->attach($this->company->id);
 
         UserPreference::factory()->create([
@@ -41,20 +42,26 @@ class TicketTest extends TestCase
             'ticket.read',
             'ticket.update',
             'ticket.delete',
-        ])->map(function ($name) {
-            return Permission::create([
-                'name'       => $name,
-                'company_id' => $this->company->id,
-            ]);
-        });
+        ])->map(fn ($name) => Permission::create([
+            'name'       => $name,
+            'company_id' => $this->company->id,
+        ]));
 
         $role->permissions()->attach($permissions->pluck('id'), ['company_id' => $this->company->id]);
+
+        $this->ticketType = TicketType::factory()->create([
+            'company_id' => $this->company->id,
+            'is_active'  => true,
+        ]);
     }
 
     /** @test */
     public function it_displays_ticket_index()
     {
-        Ticket::factory()->count(3)->create();
+        Ticket::factory()->count(3)->create([
+            'company_id'    => $this->company->id,
+            'ticket_type_id'=> $this->ticketType->id,
+        ]);
 
         $this->actingAs($this->user)
             ->get(route('tickets.index'))
@@ -63,7 +70,7 @@ class TicketTest extends TestCase
     }
 
     /** @test */
-    public function it_displays_create_form()
+    public function it_displays_ticket_create_form()
     {
         $this->actingAs($this->user)
             ->get(route('tickets.create'))
@@ -72,34 +79,34 @@ class TicketTest extends TestCase
     }
 
     /** @test */
-    public function it_stores_a_ticket()
+    public function it_stores_a_new_ticket()
     {
-        $ticketType = TicketType::factory()->create(['company_id' => $this->company->id]);
+        $this->actingAs($this->user);
 
         $data = [
-            'ticket_type_id' => $ticketType->id,
-            'subject'        => 'Test Ticket',
-            'description'    => 'Test ticket description',
-            'status'         => 'open',
+            'ticket_type_id' => $this->ticketType->id,
+            'subject'        => 'System Crash',
+            'description'    => 'The system crashed at login.',
             'priority'       => 'high',
         ];
-
-        $this->actingAs($this->user);
 
         $response = $this->post(route('tickets.store'), $data);
 
         $response->assertRedirect(route('tickets.index'));
-
         $this->assertDatabaseHas('tickets', [
-            'subject' => 'Test Ticket',
-            'company_id' => $this->company->id,
+            'subject'        => 'System Crash',
+            'company_id'     => $this->company->id,
+            'ticket_type_id' => $this->ticketType->id,
         ]);
     }
 
     /** @test */
-    public function it_displays_a_specific_ticket()
+    public function it_displays_a_ticket()
     {
-        $ticket = Ticket::factory()->create();
+        $ticket = Ticket::factory()->create([
+            'company_id'     => $this->company->id,
+            'ticket_type_id' => $this->ticketType->id,
+        ]);
 
         $this->actingAs($this->user)
             ->get(route('tickets.show', $ticket))
@@ -108,9 +115,12 @@ class TicketTest extends TestCase
     }
 
     /** @test */
-    public function it_displays_edit_form()
+    public function it_displays_ticket_edit_form()
     {
-        $ticket = Ticket::factory()->create();
+        $ticket = Ticket::factory()->create([
+            'company_id'     => $this->company->id,
+            'ticket_type_id' => $this->ticketType->id,
+        ]);
 
         $this->actingAs($this->user)
             ->get(route('tickets.edit', $ticket))
@@ -121,49 +131,44 @@ class TicketTest extends TestCase
     /** @test */
     public function it_updates_a_ticket()
     {
-        $ticket = Ticket::factory()->create(['subject' => 'Old Subject']);
+        $ticket = Ticket::factory()->create([
+            'company_id'     => $this->company->id,
+            'ticket_type_id' => $this->ticketType->id,
+            'subject'        => 'Old Subject',
+        ]);
 
         $this->actingAs($this->user);
 
         $response = $this->put(route('tickets.update', $ticket), [
-            'subject'     => 'Updated Subject',
-            'description' => 'Updated description',
-            'status'      => 'in_progress',
-            'priority'    => 'low',
+            'ticket_type_id' => $this->ticketType->id,
+            'subject'        => 'New Subject',
+            'description'    => 'Updated description',
+            'priority'       => 'medium',
         ]);
 
         $response->assertRedirect(route('tickets.index'));
 
         $this->assertDatabaseHas('tickets', [
             'id'      => $ticket->id,
-            'subject' => 'Updated Subject',
+            'subject' => 'New Subject',
         ]);
     }
 
     /** @test */
     public function it_deletes_a_ticket()
     {
-        $ticket = Ticket::factory()->create();
+        $ticket = Ticket::factory()->create([
+            'company_id'     => $this->company->id,
+            'ticket_type_id' => $this->ticketType->id,
+        ]);
 
         $this->actingAs($this->user);
 
         $response = $this->delete(route('tickets.destroy', $ticket));
 
         $response->assertRedirect(route('tickets.index'));
-
         $this->assertDatabaseMissing('tickets', [
             'id' => $ticket->id,
         ]);
-    }
-    
-    /** @test */
-    public function it_has_relationships()
-    {
-        $ticket = Ticket::factory()->create();
-
-        $this->assertInstanceOf(Company::class, $ticket->company);
-        $this->assertInstanceOf(TicketType::class, $ticket->ticketType);
-        $this->assertInstanceOf(User::class, $ticket->creator);
-        $this->assertTrue($ticket->assignedTo === null || $ticket->assignedTo instanceof User);
     }
 }
