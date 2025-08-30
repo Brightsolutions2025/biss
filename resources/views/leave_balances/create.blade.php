@@ -70,6 +70,7 @@
                             name="beginning_balance"
                             type="number"
                             min="0"
+                            step="0.5"
                             class="form-control"
                             value="{{ old('beginning_balance', 0) }}"
                             required

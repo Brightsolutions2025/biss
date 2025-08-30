@@ -58,7 +58,7 @@
                     {{-- Beginning Balance --}}
                     <div class="mb-3">
                         <label for="beginning_balance" class="form-label">Beginning Balance</label>
-                        <input id="beginning_balance" name="beginning_balance" type="number" class="form-control" value="{{ old('beginning_balance', $leaveBalance->beginning_balance) }}">
+                        <input id="beginning_balance" name="beginning_balance" type="number" step="0.5" class="form-control" value="{{ old('beginning_balance', $leaveBalance->beginning_balance) }}">
                         @error('beginning_balance')
                             <div class="text-danger small mt-1">{{ $message }}</div>
                         @enderror
