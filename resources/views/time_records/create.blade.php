@@ -178,6 +178,29 @@
         const scheduledTimeOut = @json(optional(optional($employee->employeeShift)->shift)->time_out);
         const approvedOvertimeHours = @json($overtimeByDate);
 
+        function calculateFlexibleUndertime(clockIn, clockOut) {
+            if (!clockIn || !clockOut) return 0;
+
+            let start = timeToMinutes(clockIn);
+            let end = timeToMinutes(clockOut);
+
+            // Define lunch break window: 12:00–13:00
+            const lunchStart = 12 * 60;
+            const lunchEnd = 13 * 60;
+
+            let worked = end - start;
+
+            // Deduct overlap with lunch (if any)
+            const overlapStart = Math.max(start, lunchStart);
+            const overlapEnd = Math.min(end, lunchEnd);
+            if (overlapEnd > overlapStart) {
+                worked -= (overlapEnd - overlapStart);
+            }
+
+            const required = 480; // 8 hours
+            return worked < required ? required - worked : 0;
+        }
+
         function determineClockInOrOut(attendanceTime, shiftIn, shiftOut) {
             if (!attendanceTime || !shiftIn || !shiftOut) return { clockIn: '', clockOut: '' };
 
@@ -206,18 +229,50 @@
             return match ? match[0].substring(0, 5) : '';
         }
 
+        function excludeLunchMinutes(start, end) {
+            const lunchStart = 12 * 60;
+            const lunchEnd = 13 * 60;
+
+            // no overlap → no adjustment
+            if (end <= lunchStart || start >= lunchEnd) return 0;
+
+            // overlap → compute overlap minutes
+            const overlapStart = Math.max(start, lunchStart);
+            const overlapEnd = Math.min(end, lunchEnd);
+
+            return Math.max(0, overlapEnd - overlapStart);
+        }
+
         function calculateLateMinutes(scheduled, actual) {
             if (!scheduled || !actual) return 0;
-            const [shH, shM] = scheduled.split(':').map(Number);
-            const [acH, acM] = actual.split(':').map(Number);
-            return Math.max(0, (acH * 60 + acM) - (shH * 60 + shM));
+
+            const sched = timeToMinutes(scheduled);
+            const act = timeToMinutes(actual);
+
+            if (act <= sched) return 0;
+
+            let diff = act - sched;
+
+            // ✅ Subtract any overlap with lunch
+            diff -= excludeLunchMinutes(sched, act);
+
+            return Math.max(0, diff);
         }
 
         function calculateUndertimeMinutes(scheduledOut, actualOut) {
             if (!scheduledOut || !actualOut) return 0;
-            const [shH, shM] = scheduledOut.split(':').map(Number);
-            const [acH, acM] = actualOut.split(':').map(Number);
-            return Math.max(0, (shH * 60 + shM) - (acH * 60 + acM));
+
+            const sched = timeToMinutes(scheduledOut);
+            const act = timeToMinutes(actualOut);
+
+            if (act >= sched) return 0;
+
+            let diff = sched - act;
+
+            // ✅ Subtract any overlap with lunch
+            diff -= excludeLunchMinutes(act, sched);
+
+            return Math.max(0, diff);
         }
 
         document.getElementById('payroll_period_id').addEventListener('change', function () {
@@ -306,19 +361,30 @@
                     `;
                     tbody.appendChild(row);
 
-                    if (!isFlexible && scheduledTimeIn) {
+                    if (isFlexible) {
                         const clockInInput = row.querySelector('.clock-in-input');
-                        const lateInput = row.querySelector('.late-minutes-input');
-                        if (clockInInput && clockInInput.value && lateInput) {
-                            lateInput.value = calculateLateMinutes(scheduledTimeIn, clockInInput.value);
-                        }
-                    }
-
-                    if (!isFlexible && scheduledTimeOut) {
                         const clockOutInput = row.querySelector('.clock-out-input');
                         const undertimeInput = row.querySelector('.undertime-minutes-input');
-                        if (clockOutInput && clockOutInput.value && undertimeInput) {
-                            undertimeInput.value = calculateUndertimeMinutes(scheduledTimeOut, clockOutInput.value);
+
+                        if (clockInInput && clockOutInput && undertimeInput) {
+                            undertimeInput.value = calculateFlexibleUndertime(clockInInput.value, clockOutInput.value);
+                        }
+                    } else {
+
+                        if (!isFlexible && scheduledTimeIn) {
+                            const clockInInput = row.querySelector('.clock-in-input');
+                            const lateInput = row.querySelector('.late-minutes-input');
+                            if (clockInInput && clockInInput.value && lateInput) {
+                                lateInput.value = calculateLateMinutes(scheduledTimeIn, clockInInput.value);
+                            }
+                        }
+
+                        if (!isFlexible && scheduledTimeOut) {
+                            const clockOutInput = row.querySelector('.clock-out-input');
+                            const undertimeInput = row.querySelector('.undertime-minutes-input');
+                            if (clockOutInput && clockOutInput.value && undertimeInput) {
+                                undertimeInput.value = calculateUndertimeMinutes(scheduledTimeOut, clockOutInput.value);
+                            }
                         }
                     }
                 }
@@ -415,21 +481,33 @@
                     `;
                     tbody.appendChild(row);
 
-                    if (!isFlexible && scheduledTimeIn) {
+                    if (isFlexible) {
                         const clockInInput = row.querySelector('.clock-in-input');
-                        const lateInput = row.querySelector('.late-minutes-input');
-                        if (clockInInput && clockInInput.value && lateInput) {
-                            lateInput.value = calculateLateMinutes(scheduledTimeIn, clockInInput.value);
+                        const clockOutInput = row.querySelector('.clock-out-input');
+                        const undertimeInput = row.querySelector('.undertime-minutes-input');
+
+                        if (clockInInput && clockOutInput && undertimeInput) {
+                            undertimeInput.value = calculateFlexibleUndertime(clockInInput.value, clockOutInput.value);
+                        }
+                    } else {
+
+                        if (!isFlexible && scheduledTimeIn) {
+                            const clockInInput = row.querySelector('.clock-in-input');
+                            const lateInput = row.querySelector('.late-minutes-input');
+                            if (clockInInput && clockInInput.value && lateInput) {
+                                lateInput.value = calculateLateMinutes(scheduledTimeIn, clockInInput.value);
+                            }
+                        }
+
+                        if (!isFlexible && scheduledTimeOut) {
+                            const clockOutInput = row.querySelector('.clock-out-input');
+                            const undertimeInput = row.querySelector('.undertime-minutes-input');
+                            if (clockOutInput && clockOutInput.value && undertimeInput) {
+                                undertimeInput.value = calculateUndertimeMinutes(scheduledTimeOut, clockOutInput.value);
+                            }
                         }
                     }
 
-                    if (!isFlexible && scheduledTimeOut) {
-                        const clockOutInput = row.querySelector('.clock-out-input');
-                        const undertimeInput = row.querySelector('.undertime-minutes-input');
-                        if (clockOutInput && clockOutInput.value && undertimeInput) {
-                            undertimeInput.value = calculateUndertimeMinutes(scheduledTimeOut, clockOutInput.value);
-                        }
-                    }
                 }
             });
         });

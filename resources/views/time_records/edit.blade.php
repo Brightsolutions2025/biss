@@ -194,22 +194,66 @@
         const scheduledTimeOut = @json(optional(optional($timeRecord->employee->employeeShift)->shift)->time_out);
 
         function timeToMinutes(time) {
+            if (!time) return null;
             const [h, m] = time.split(':').map(Number);
             return h * 60 + m;
         }
 
-        function calculateLateMinutes(scheduled, actual) {
-            if (!scheduled || !actual) return 0;
-            const [shH, shM] = scheduled.split(':').map(Number);
-            const [acH, acM] = actual.split(':').map(Number);
-            return Math.max(0, (acH * 60 + acM) - (shH * 60 + shM));
+        // ✅ New helper to compute overlap with lunch break
+        function excludeLunchMinutes(start, end) {
+            const lunchStart = 12 * 60;
+            const lunchEnd = 13 * 60;
+
+            if (end <= lunchStart || start >= lunchEnd) return 0;
+            const overlapStart = Math.max(start, lunchStart);
+            const overlapEnd = Math.min(end, lunchEnd);
+
+            return Math.max(0, overlapEnd - overlapStart);
         }
 
+        // ✅ Updated to subtract lunch overlap (same as Add page)
+        function calculateLateMinutes(scheduled, actual) {
+            if (!scheduled || !actual) return 0;
+
+            const sched = timeToMinutes(scheduled);
+            const act = timeToMinutes(actual);
+
+            if (act <= sched) return 0;
+
+            let diff = act - sched;
+            diff -= excludeLunchMinutes(sched, act);
+
+            return Math.max(0, diff);
+        }
+
+        // ✅ Updated to subtract lunch overlap (same as Add page)
         function calculateUndertimeMinutes(scheduledOut, actualOut) {
             if (!scheduledOut || !actualOut) return 0;
-            const [shH, shM] = scheduledOut.split(':').map(Number);
-            const [acH, acM] = actualOut.split(':').map(Number);
-            return Math.max(0, (shH * 60 + shM) - (acH * 60 + acM));
+
+            const sched = timeToMinutes(scheduledOut);
+            const act = timeToMinutes(actualOut);
+
+            if (act >= sched) return 0;
+
+            let diff = sched - act;
+            diff -= excludeLunchMinutes(act, sched);
+
+            return Math.max(0, diff);
+        }
+
+        // ✅ Already handled lunch (kept logic)
+        function calculateFlexibleUndertime(clockIn, clockOut) {
+            if (!clockIn || !clockOut) return 0;
+
+            let start = timeToMinutes(clockIn);
+            let end = timeToMinutes(clockOut);
+            let worked = end - start;
+
+            // Subtract overlap with 12:00–13:00
+            worked -= excludeLunchMinutes(start, end);
+
+            const required = 480; // 8 hours
+            return worked < required ? required - worked : 0;
         }
 
         function recomputeAllLateUndertime() {
@@ -220,29 +264,32 @@
                 const lateInput = row.querySelector('input[name$="[late_minutes]"]');
                 const undertimeInput = row.querySelector('input[name$="[undertime_minutes]"]');
 
-                if (!isFlexible && scheduledTimeIn && clockInInput && lateInput) {
-                    const late = calculateLateMinutes(scheduledTimeIn, clockInInput.value);
-                    lateInput.value = late;
-                }
-
-                if (!isFlexible && scheduledTimeOut && clockOutInput && undertimeInput) {
-                    const undertime = calculateUndertimeMinutes(scheduledTimeOut, clockOutInput.value);
-                    undertimeInput.value = undertime;
+                if (isFlexible) {
+                    if (clockInInput && clockOutInput && undertimeInput) {
+                        undertimeInput.value = calculateFlexibleUndertime(clockInInput.value, clockOutInput.value);
+                    }
+                    if (lateInput) {
+                        lateInput.value = 0; // No "late" for flexible-time
+                    }
+                } else {
+                    if (scheduledTimeIn && clockInInput && lateInput) {
+                        lateInput.value = calculateLateMinutes(scheduledTimeIn, clockInInput.value);
+                    }
+                    if (scheduledTimeOut && clockOutInput && undertimeInput) {
+                        undertimeInput.value = calculateUndertimeMinutes(scheduledTimeOut, clockOutInput.value);
+                    }
                 }
             });
         }
 
         document.querySelectorAll('input[type="time"]').forEach(input => {
-            input.addEventListener('change', () => {
-                recomputeAllLateUndertime();
-            });
+            input.addEventListener('change', recomputeAllLateUndertime);
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            recomputeAllLateUndertime();
-        });
+        document.addEventListener('DOMContentLoaded', recomputeAllLateUndertime);
     </script>
     @endpush
+
     @push('scripts')
     <script>
         function deleteFile(fileId) {
