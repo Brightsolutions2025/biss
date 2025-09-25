@@ -133,54 +133,66 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($overtimeRequests as $overtime)
+                            @forelse ($employeeModel->overtimeRequests as $overtime)
                                 @php
-                                    // ✅ FIX: use pivot->used_hours instead of offset->number_of_hours
                                     $offsets = $overtime->offsetRequests;
+                                    $firstOffset = $offsets->first();
+                                    $remainingOffsets = $offsets->skip(1);
+
+                                    // ✅ FIX: use pivot->used_hours, not offset->number_of_hours
                                     $offsetTotal = $offsets->sum(fn($o) => $o->pivot->used_hours);
 
-                                    // ✅ FIX: balance is total OT hours minus actual used hours (not requested offset hours)
-                                    $isExpired = $overtime->offset_expiration_date < now();
+                                    // ✅ Expired OTs have no balance
+                                    $isExpired = $overtime->expires_at && \Carbon\Carbon::parse($overtime->expires_at)->lt(now());
                                     $balance = $isExpired ? 0 : ($overtime->number_of_hours - $offsetTotal);
                                 @endphp
 
-                                @if ($offsets->isEmpty())
+                                <tr>
+                                    <td>
+                                        <a href="{{ route('overtime_requests.show', $overtime->id) }}" class="text-decoration-underline text-primary">
+                                            {{ \Carbon\Carbon::parse($overtime->date)->format('Y-m-d') }}
+                                        </a>
+                                    </td>
+                                    <td class="text-end">{{ number_format($overtime->number_of_hours, 2) }}</td>
+                                    <td class="text-end {{ $isExpired ? 'text-danger' : 'text-success' }}">
+                                        {{ $isExpired ? 'Yes' : 'No' }}
+                                    </td>
+                                    <td>
+                                        @if ($firstOffset)
+                                            <a href="{{ route('offset_requests.show', $firstOffset->id) }}" class="text-decoration-underline text-primary">
+                                                {{ $firstOffset->date }}
+                                            </a>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    
+                                    {{-- ✅ show actual used hours from pivot --}}
+                                    <td class="text-end">{{ $firstOffset ? number_format($firstOffset->pivot->used_hours, 2) : '-' }}</td>
+
+                                    {{-- ✅ balance is shown once per overtime --}}
+                                    <td class="text-end text-success" rowspan="{{ max(1, $offsets->count()) }}">
+                                        {{ number_format($balance, 2) }}
+                                    </td>
+                                </tr>
+
+                                @foreach ($remainingOffsets as $offset)
                                     <tr>
-                                        <td>{{ $overtime->date->format('Y-m-d') }}</td>
-                                        <td class="text-end">{{ number_format($overtime->number_of_hours, 2) }}</td>
-                                        <td>{{ ucfirst($overtime->status) }}</td>
-                                        <td>-</td>
-                                        <td class="text-end">-</td>
-                                        <td class="text-end">{{ number_format($balance, 2) }}</td>
+                                        <td colspan="3"></td>
+                                        <td>
+                                            <a href="{{ route('offset_requests.show', $offset->id) }}" class="text-decoration-underline text-primary">
+                                                {{ $offset->date }}
+                                            </a>
+                                        </td>
+                                        {{-- ✅ again, use pivot->used_hours --}}
+                                        <td class="text-end">{{ number_format($offset->pivot->used_hours, 2) }}</td>
                                     </tr>
-                                @else
-                                    @php $firstOffset = $offsets->first(); @endphp
-                                    <tr>
-                                        <td>{{ $overtime->date->format('Y-m-d') }}</td>
-                                        <td class="text-end">{{ number_format($overtime->number_of_hours, 2) }}</td>
-                                        <td>{{ ucfirst($overtime->status) }}</td>
-                                        <td>{{ $firstOffset->date->format('Y-m-d') }}</td>
-                                        
-                                        {{-- ✅ FIX: show actual used hours from pivot instead of offset->number_of_hours --}}
-                                        <td class="text-end">{{ number_format($firstOffset->pivot->used_hours, 2) }}</td>
-                                        
-                                        <td class="text-end">{{ number_format($balance, 2) }}</td>
-                                    </tr>
-                                    @foreach ($offsets->skip(1) as $offset)
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>{{ $offset->date->format('Y-m-d') }}</td>
-                                            
-                                            {{-- ✅ FIX: show pivot->used_hours for remaining offsets --}}
-                                            <td class="text-end">{{ number_format($offset->pivot->used_hours, 2) }}</td>
-                                            
-                                            <td></td>
-                                        </tr>
-                                    @endforeach
-                                @endif
-                            @endforeach
+                                @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center">No overtime or offset records found.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 @endif
