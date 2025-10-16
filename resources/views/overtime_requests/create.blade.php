@@ -29,7 +29,8 @@
                         <a href="{{ route('employees.create') }}" class="text-decoration-underline">Click here to set up your profile</a>.
                     </div>
                 @else
-                    <form method="POST" action="{{ route('overtime_requests.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('overtime_requests.store') }}" enctype="multipart/form-data"
+                        onsubmit="this.querySelector('button[type=submit]').disabled=true; this.querySelector('button[type=submit]').innerText='Submitting...';">
                         @csrf
 
                         <!-- Employee Display -->

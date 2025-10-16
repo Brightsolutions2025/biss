@@ -23,7 +23,8 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('overtime_requests.update', $overtimeRequest) }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('overtime_requests.update', $overtimeRequest) }}" enctype="multipart/form-data"
+                    onsubmit="this.querySelector('button[type=submit]').disabled=true; this.querySelector('button[type=submit]').innerText='Submitting...';">
                     @csrf
                     @method('PATCH')
 

@@ -25,7 +25,8 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('leave_requests.update', $leaveRequest->id) }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('leave_requests.update', $leaveRequest->id) }}" enctype="multipart/form-data"
+                    onsubmit="this.querySelector('button[type=submit]').disabled=true; this.querySelector('button[type=submit]').innerText='Submitting...';">
                     @csrf
                     @method('PUT')
 

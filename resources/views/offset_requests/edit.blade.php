@@ -26,7 +26,8 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('offset_requests.update', $offsetRequest) }}" onsubmit="prepareOvertimeData()"  enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('offset_requests.update', $offsetRequest) }}" enctype="multipart/form-data"
+                        onsubmit="prepareOvertimeData(); this.querySelector('button[type=submit]').disabled=true; this.querySelector('button[type=submit]').innerText='Submitting...';">
                         @csrf
                         @method('PUT')
 
