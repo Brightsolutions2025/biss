@@ -34,6 +34,7 @@ class LeaveSummaryExcelExport implements FromView
             ->where('employee_id', $employee->id)
             ->whereYear('start_date', $this->year)
             ->where('status', 'approved')
+            ->where('leave_with_pay', true)
             ->sum('number_of_days');
 
         $beginning   = $leaveBalance?->beginning_balance ?? 0;
@@ -55,6 +56,7 @@ class LeaveSummaryExcelExport implements FromView
             ->where('employee_id', $employee->id)
             ->whereYear('start_date', $this->year)
             ->where('status', 'approved')
+            ->where('leave_with_pay', true)
             ->orderBy('start_date')
             ->get();
 

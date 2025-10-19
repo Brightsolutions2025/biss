@@ -148,6 +148,7 @@ class LeaveRequestController extends Controller
                 'end_date'       => $validated['end_date'],
                 'number_of_days' => $validated['number_of_days'],
                 'reason'         => $validated['reason'],
+                'leave_with_pay' => (bool) $request->input('leave_with_pay', false),
                 'status'         => 'pending',
                 'approver_id'    => $employee->approver_id,
             ]);
@@ -285,6 +286,8 @@ class LeaveRequestController extends Controller
 
             // Remove 'files' from the validated data to avoid SQL error
             unset($validated['files']);
+
+            $validated['leave_with_pay'] = (bool) $request->input('leave_with_pay', false);
 
             $leaveRequest->update($validated);
 
@@ -514,6 +517,7 @@ class LeaveRequestController extends Controller
                 },
             ],
             'reason'  => 'required|string|max:255',
+            'leave_with_pay' => 'required|boolean',
             'files'   => 'array|max:5', // Max 5 files total
             'files.*' => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx', // 5MB per file
         ]);
@@ -626,7 +630,7 @@ class LeaveRequestController extends Controller
         $companyId = $employee->company_id;
         $year      = \Carbon\Carbon::parse($start)->year;
 
-        // Get leave balance for the year
+        // 1️⃣ Fetch leave balance for the year
         $leaveBalance = \App\Models\LeaveBalance::where('employee_id', $employeeId)
             ->where('company_id', $companyId)
             ->where('year', $year)
@@ -634,7 +638,7 @@ class LeaveRequestController extends Controller
 
         $availableCredits = $leaveBalance?->beginning_balance ?? 0;
 
-        // Get all approved leaves for the year
+        // 2️⃣ Fetch all approved leaves (both paid and unpaid)
         $leaveRequests = \App\Models\LeaveRequest::where('employee_id', $employeeId)
             ->where('company_id', $companyId)
             ->where('status', 'approved')
@@ -644,14 +648,13 @@ class LeaveRequestController extends Controller
             })
             ->get();
 
-        // Step 1: Flatten all leaves into daily leave values
+        // 3️⃣ Flatten approved leaves into daily records
         $dailyLeaves = [];
 
         foreach ($leaveRequests as $leave) {
-            $period    = \Carbon\CarbonPeriod::create($leave->start_date, $leave->end_date);
+            $period = \Carbon\CarbonPeriod::create($leave->start_date, $leave->end_date);
             $daysCount = $period->count();
 
-            // ✅ Skip zero-day leave ranges (for integrity and safety)
             if ($daysCount === 0) {
                 continue;
             }
@@ -662,56 +665,66 @@ class LeaveRequestController extends Controller
 
             foreach ($period as $date) {
                 $dateStr = $date->toDateString();
-
-                if (\Carbon\Carbon::parse($dateStr)->year == $year) {
-                    $dailyLeaves[$dateStr] = isset($dailyLeaves[$dateStr])
-                        ? $dailyLeaves[$dateStr] + $dailyValue
-                        : $dailyValue;
+                if (\Carbon\Carbon::parse($dateStr)->year !== $year) {
+                    continue;
                 }
+
+                // keep only the largest leave value per date
+                $dailyLeaves[$dateStr] = max(
+                    $dailyLeaves[$dateStr] ?? 0,
+                    $dailyValue
+                );
+
+                // mark if it's paid or unpaid
+                $dailyLeaves[$dateStr . '_with_pay'] = (bool) $leave->leave_with_pay;
             }
         }
 
-        // Step 2: Deduct leaves that happened BEFORE the $start date
-        $priorDates     = array_filter(array_keys($dailyLeaves), fn ($date) => \Carbon\Carbon::parse($date)->lessThan($start));
+        // 4️⃣ Deduct *only paid leaves* that occurred before the requested start date
         $preUsedCredits = 0;
-
-        foreach ($priorDates as $date) {
-            $preUsedCredits += $dailyLeaves[$date];
+        foreach ($dailyLeaves as $key => $value) {
+            if (str_ends_with($key, '_with_pay')) continue;
+            $date = \Carbon\Carbon::parse($key);
+            if ($date->lessThan($start) && ($dailyLeaves[$key . '_with_pay'] ?? false)) {
+                $preUsedCredits += $value;
+            }
         }
 
         $remaining = max(0, $availableCredits - $preUsedCredits);
 
-        // Step 3: Loop through each date in the requested range and compute running balance
-        $period                 = \Carbon\CarbonPeriod::create($start, $end);
+        // 5️⃣ Loop through requested period and build result
+        $period = \Carbon\CarbonPeriod::create($start, $end);
         $remainingCreditsByDate = [];
-        $result                 = [];
+        $result = [];
 
         foreach ($period as $date) {
-            $dateStr    = $date->toDateString();
+            $dateStr = $date->toDateString();
             $leaveValue = $dailyLeaves[$dateStr] ?? 0;
+            $isWithPay  = $dailyLeaves[$dateStr . '_with_pay'] ?? false;
 
-            $withPay = $remaining >= $leaveValue;
-
-            if ($leaveValue > 0 && $withPay) {
+            $deductible = $isWithPay && $leaveValue > 0;
+            if ($deductible) {
                 $remaining -= $leaveValue;
             }
 
+            $remaining = max(0, $remaining);
             $remainingCreditsByDate[$dateStr] = round($remaining, 2);
 
             if ($leaveValue > 0) {
                 $result[$dateStr] = [
                     'days'     => round($leaveValue, 2),
-                    'with_pay' => $withPay,
+                    'with_pay' => $isWithPay,
                 ];
             }
         }
 
         return response()->json([
-            'dates'                      => $result,
-            'remaining_credits'          => round($remaining, 2),
-            'remaining_credits_by_date'  => $remainingCreditsByDate,
-            'original_balance'           => $availableCredits,
-            'pre_used_credits'           => round($preUsedCredits, 2),
+            'dates'                     => $result,
+            'remaining_credits'         => round($remaining, 2),
+            'remaining_credits_by_date' => $remainingCreditsByDate,
+            'original_balance'          => $availableCredits,
+            'pre_used_credits'          => round($preUsedCredits, 2),
         ]);
     }
+
 }

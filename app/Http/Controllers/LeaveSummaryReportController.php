@@ -44,12 +44,14 @@ class LeaveSummaryReportController extends Controller
             ->where('employee_id', $employee->id)
             ->whereYear('start_date', $year)
             ->where('status', 'approved')
+            ->where('leave_with_pay', true)
             ->sum('number_of_days');
 
         $leaveDetails = LeaveRequest::where('company_id', $company->id)
             ->where('employee_id', $employee->id)
             ->whereYear('start_date', $year)
             ->where('status', 'approved')
+            ->where('leave_with_pay', true)
             ->orderBy('start_date')
             ->get(['start_date', 'end_date', 'number_of_days', 'reason', 'approval_date']);
 
@@ -103,6 +105,7 @@ class LeaveSummaryReportController extends Controller
             ->where('employee_id', $employee->id)
             ->whereYear('start_date', $year)
             ->where('status', 'approved')
+            ->where('leave_with_pay', true)
             ->sum('number_of_days');
 
         $beginning   = $leaveBalance?->beginning_balance ?? 0;
@@ -126,6 +129,7 @@ class LeaveSummaryReportController extends Controller
             ->where('employee_id', $employee->id)
             ->whereYear('start_date', $year)
             ->where('status', 'approved')
+            ->where('leave_with_pay', true)
             ->orderBy('start_date')
             ->get();
 

@@ -60,6 +60,7 @@ class DashboardController extends Controller
                 ->whereYear('start_date', $year)
                 ->where('start_date', '<=', $endDate)
                 ->where('status', 'approved')
+                ->where('leave_with_pay', true)
                 ->sum('number_of_days');
 
             $remaining = ($leaveBalance->beginning_balance ?? 0) - $approvedLeaveDays;

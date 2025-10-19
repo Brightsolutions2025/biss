@@ -294,6 +294,7 @@ class ReportController extends Controller
         $leaveBalances = $leaveBalancesQuery->get()->map(function ($balance) {
             $used = \App\Models\LeaveRequest::where('employee_id', $balance->employee_id)
                 ->where('status', 'approved')
+                ->where('leave_with_pay', true)
                 ->whereYear('start_date', $balance->year)
                 ->sum('number_of_days');
 
@@ -375,6 +376,7 @@ class ReportController extends Controller
         return $query->get()->map(function ($balance) {
             $used = \App\Models\LeaveRequest::where('employee_id', $balance->employee_id)
                 ->where('status', 'approved')
+                ->where('leave_with_pay', true)
                 ->whereYear('start_date', $balance->year)
                 ->sum('number_of_days');
 

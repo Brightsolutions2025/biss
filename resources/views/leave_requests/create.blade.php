@@ -112,6 +112,25 @@
                         @enderror
                     </div>
 
+                    <!-- Leave With Pay -->
+                    <div class="mb-4 form-check">
+                        <input type="hidden" name="leave_with_pay" value="0">
+                        <input
+                            type="checkbox"
+                            id="leave_with_pay"
+                            name="leave_with_pay"
+                            value="1"
+                            class="form-check-input"
+                            {{ old('leave_with_pay') ? 'checked' : '' }}
+                        >
+                        <label for="leave_with_pay" class="form-check-label">
+                            Leave with Pay
+                        </label>
+                        @error('leave_with_pay')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <!-- Attachments -->
                     <div class="mb-4">
                         <label for="files" class="form-label">Supporting Documents (optional)</label>

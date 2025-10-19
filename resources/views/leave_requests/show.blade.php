@@ -66,6 +66,13 @@
                     <textarea class="form-control bg-light" disabled rows="3">{{ $leaveRequest->reason }}</textarea>
                 </div>
 
+                {{-- Leave With Pay --}}
+                <div class="mb-3">
+                    <label class="form-label">Leave With Pay</label>
+                    <input type="text" class="form-control bg-light" disabled
+                        value="{{ $leaveRequest->leave_with_pay ? 'Yes' : 'No' }}">
+                </div>
+
                 {{-- Created At --}}
                 <div class="mb-3">
                     <label class="form-label">Filed On</label>

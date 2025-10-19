@@ -85,24 +85,25 @@ class LeaveRequestTest extends TestCase
     public function it_stores_a_leave_request()
     {
         Storage::fake('local');
-
         $this->actingAs($this->user);
 
         $data = [
-            'start_date'     => now()->toDateString(),
-            'end_date'       => now()->toDateString(),
-            'number_of_days' => 1,
-            'reason'         => 'Personal reason',
-            'files'          => [UploadedFile::fake()->create('file.pdf')],
+            'start_date'      => now()->toDateString(),
+            'end_date'        => now()->toDateString(),
+            'number_of_days'  => 1,
+            'reason'          => 'Personal reason',
+            'leave_with_pay'  => true, // new column
+            'files'           => [UploadedFile::fake()->create('file.pdf')],
         ];
 
         $response = $this->post(route('leave_requests.store'), $data);
 
         $response->assertRedirect(route('leave_requests.index'));
         $this->assertDatabaseHas('leave_requests', [
-            'reason'      => 'Personal reason',
-            'employee_id' => $this->employee->id,
-            'company_id'  => $this->company->id,
+            'reason'         => 'Personal reason',
+            'employee_id'    => $this->employee->id,
+            'company_id'     => $this->company->id,
+            'leave_with_pay' => true,
         ]);
     }
 
@@ -110,8 +111,9 @@ class LeaveRequestTest extends TestCase
     public function it_shows_a_leave_request()
     {
         $leaveRequest = LeaveRequest::factory()->create([
-            'employee_id' => $this->employee->id,
-            'company_id'  => $this->company->id,
+            'employee_id'    => $this->employee->id,
+            'company_id'     => $this->company->id,
+            'leave_with_pay' => true,
         ]);
 
         $this->actingAs($this->user)
@@ -126,9 +128,10 @@ class LeaveRequestTest extends TestCase
         $this->employee->update(['approver_id' => $this->user->id]);
 
         $leaveRequest = LeaveRequest::factory()->create([
-            'employee_id' => $this->employee->id,
-            'company_id'  => $this->company->id,
-            'status'      => 'pending',
+            'employee_id'    => $this->employee->id,
+            'company_id'     => $this->company->id,
+            'status'         => 'pending',
+            'leave_with_pay' => true,
         ]);
 
         $this->actingAs($this->user)
@@ -143,19 +146,21 @@ class LeaveRequestTest extends TestCase
         $this->employee->update(['approver_id' => $this->user->id]);
 
         $leaveRequest = LeaveRequest::factory()->create([
-            'employee_id' => $this->employee->id,
-            'company_id'  => $this->company->id,
-            'status'      => 'pending',
+            'employee_id'    => $this->employee->id,
+            'company_id'     => $this->company->id,
+            'status'         => 'pending',
+            'leave_with_pay' => true,
         ]);
 
         $this->actingAs($this->user);
 
         $data = [
-            'start_date'     => now()->toDateString(),
-            'end_date'       => now()->toDateString(),
-            'number_of_days' => 1,
-            'reason'         => 'Updated reason',
-            'files'          => [UploadedFile::fake()->create('update.pdf')],
+            'start_date'      => now()->toDateString(),
+            'end_date'        => now()->toDateString(),
+            'number_of_days'  => 1,
+            'reason'          => 'Updated reason',
+            'leave_with_pay'  => false, // updated value
+            'files'           => [UploadedFile::fake()->create('update.pdf')],
         ];
 
         $response = $this->put(route('leave_requests.update', $leaveRequest), $data);
@@ -163,8 +168,9 @@ class LeaveRequestTest extends TestCase
         $response->assertRedirect(route('leave_requests.index'));
 
         $this->assertDatabaseHas('leave_requests', [
-            'id'     => $leaveRequest->id,
-            'reason' => 'Updated reason',
+            'id'             => $leaveRequest->id,
+            'reason'         => 'Updated reason',
+            'leave_with_pay' => false,
         ]);
     }
 
@@ -172,9 +178,10 @@ class LeaveRequestTest extends TestCase
     public function it_deletes_a_leave_request()
     {
         $leaveRequest = LeaveRequest::factory()->create([
-            'employee_id' => $this->employee->id,
-            'company_id'  => $this->company->id,
-            'status'      => 'pending',
+            'employee_id'    => $this->employee->id,
+            'company_id'     => $this->company->id,
+            'status'         => 'pending',
+            'leave_with_pay' => true,
         ]);
 
         $this->actingAs($this->user);
