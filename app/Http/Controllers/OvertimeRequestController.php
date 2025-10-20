@@ -409,6 +409,11 @@ class OvertimeRequestController extends Controller
             ->firstOrFail();
         $employeeId = $employee->id;
 
+        // 🔒 Prevent deletion if overtime is linked to an offset request
+        if ($overtimeRequest->offsetRequests()->exists()) {
+            return back()->withErrors('This overtime request cannot be deleted because it is linked to an offset request.');
+        }
+
         // --- Permission rules ---
         if ($user->hasRole('admin') && $overtimeRequest->employee->company_id === $companyId) {
             // Admin in same company can delete regardless of status
