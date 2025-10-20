@@ -517,7 +517,41 @@ class LeaveRequestController extends Controller
                 },
             ],
             'reason'  => 'required|string|max:255',
-            'leave_with_pay' => 'required|boolean',
+            'leave_with_pay' => [
+                'required',
+                'boolean',
+                function ($attribute, $value, $fail) use ($employee, $request) {
+                    if (!$value) {
+                        return; // Only validate if it's with pay
+                    }
+
+                    $year = \Carbon\Carbon::parse($request->start_date)->year ?? now()->year;
+
+                    // Fetch current leave balance
+                    $leaveBalance = \App\Models\LeaveBalance::where('employee_id', $employee->id)
+                        ->where('company_id', $employee->company_id)
+                        ->where('year', $year)
+                        ->first();
+
+                    $availableCredits = $leaveBalance?->beginning_balance ?? 0;
+
+                    // Compute used paid leaves
+                    $usedCredits = \App\Models\LeaveRequest::where('employee_id', $employee->id)
+                        ->where('company_id', $employee->company_id)
+                        ->where('status', 'approved')
+                        ->where('leave_with_pay', true)
+                        ->whereYear('start_date', $year)
+                        ->sum('number_of_days');
+
+                    $remaining = $availableCredits - $usedCredits;
+
+                    $requestedDays = (float) $request->number_of_days;
+
+                    if ($requestedDays > $remaining) {
+                        $fail("Insufficient leave credits. Only {$remaining} day(s) of paid leave remaining.");
+                    }
+                },
+            ],
             'files'   => 'array|max:5', // Max 5 files total
             'files.*' => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx', // 5MB per file
         ]);
