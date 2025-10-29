@@ -144,6 +144,11 @@ class OvertimeRequestController extends Controller
                         ->withInput();
         }
 
+        if ($this->hasOverlappingOvertime($employee->id, $validated['date'], $validated['time_start'], $validated['time_end'])) {
+            return back()->withErrors(['time_start' => 'This overtime request overlaps with an existing request.'])
+                        ->withInput();
+        }
+
         DB::beginTransaction();
 
         try {
@@ -341,6 +346,11 @@ class OvertimeRequestController extends Controller
 
         if ($validated['number_of_hours'] > $maxHours) {
             return back()->withErrors(['number_of_hours' => 'Number of hours exceeds the actual time duration.'])
+                        ->withInput();
+        }
+
+        if ($this->hasOverlappingOvertime($employee->id, $validated['date'], $validated['time_start'], $validated['time_end'], $overtimeRequest->id)) {
+            return back()->withErrors(['time_start' => 'This overtime request overlaps with an existing request.'])
                         ->withInput();
         }
 
@@ -588,5 +598,42 @@ class OvertimeRequestController extends Controller
             });
 
         return response()->json($requests);
+    }
+    protected function hasOverlappingOvertime($employeeId, $date, $timeStart, $timeEnd, $excludeRequestId = null)
+    {
+        $query = OvertimeRequest::where('employee_id', $employeeId)
+            ->where('date', $date)
+            ->whereIn('status', ['pending', 'approved']); // consider pending & approved as "blocked"
+
+        if ($excludeRequestId) {
+            $query->where('id', '<>', $excludeRequestId);
+        }
+
+        $timeStart = Carbon::createFromFormat('H:i', $timeStart);
+        $timeEnd   = Carbon::createFromFormat('H:i', $timeEnd);
+
+        if ($timeEnd <= $timeStart) {
+            $timeEnd->addDay(); // handle overnight
+        }
+
+        $existingRequests = $query->get();
+
+        $timeStart = Carbon::parse($timeStart);
+        $timeEnd   = Carbon::parse($timeEnd);
+
+        foreach ($existingRequests as $request) {
+            $existingStart = Carbon::parse($request->time_start);
+            $existingEnd   = Carbon::parse($request->time_end);
+
+            if ($existingEnd <= $existingStart) {
+                $existingEnd->addDay(); // handle overnight
+            }
+
+            if ($timeStart < $existingEnd && $timeEnd > $existingStart) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
