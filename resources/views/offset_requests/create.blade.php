@@ -96,7 +96,7 @@
                                     </thead>
                                     <tbody id="overtime-table-body">
                                         @foreach ($overtimeRequests as $ot)
-                                            <tr>
+                                            <tr class="overtime-row" data-date="{{ $ot->date }}">
                                                 <td>{{ $ot->date }}</td>
                                                 <td>{{ $ot->time_start }}</td>
                                                 <td>{{ $ot->time_end }}</td>
@@ -152,9 +152,11 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const inputs = document.querySelectorAll('.hours-to-offset');
+        const OFFSET_VALID_DAYS = {{ $employee->company->offset_valid_after_days ?? 90 }};
 
+        document.addEventListener('DOMContentLoaded', () => {
+            // OT input listeners
+            const inputs = document.querySelectorAll('.hours-to-offset');
             inputs.forEach(input => {
                 input.addEventListener('input', () => {
                     const id = input.dataset.otId;
@@ -167,25 +169,8 @@
                     }
                 });
             });
-        });
 
-        function prepareOvertimeData() {
-            const inputs = document.querySelectorAll('.hours-to-offset');
-            const selected = [];
-
-            inputs.forEach(input => {
-                const value = parseFloat(input.value);
-                if (!isNaN(value) && value >= 0.5) {
-                    selected.push({
-                        id: parseInt(input.dataset.otId),
-                        used_hours: value
-                    });
-                }
-            });
-
-            document.getElementById('overtime_requests').value = JSON.stringify(selected);
-        }
-        document.addEventListener('DOMContentLoaded', () => {
+            // Calculate hours
             const timeStart = document.getElementById('time_start');
             const timeEnd = document.getElementById('time_end');
             const numberOfHours = document.getElementById('number_of_hours');
@@ -198,20 +183,59 @@
                     const startTime = new Date(`1970-01-01T${start}:00`);
                     const endTime = new Date(`1970-01-01T${end}:00`);
 
-                    let diff = (endTime - startTime) / (1000 * 60 * 60); // Convert ms → hours
+                    let diff = (endTime - startTime) / (1000 * 60 * 60); // hours
+                    if (diff < 0) diff += 24;
 
-                    // If end time is past midnight
-                    if (diff < 0) {
-                        diff += 24;
-                    }
-
-                    // Round down to the nearest whole number
                     numberOfHours.value = Math.floor(diff);
                 }
             }
 
             timeStart.addEventListener('change', calculateHours);
             timeEnd.addEventListener('change', calculateHours);
+
+            // Initial expired OT check
+            updateExpiredOvertime();
+            document.getElementById('date').addEventListener('change', e => {
+                updateExpiredOvertime(e.target.value);
+            });
         });
+
+        function prepareOvertimeData() {
+            const inputs = document.querySelectorAll('.hours-to-offset');
+            const selected = [];
+
+            inputs.forEach(input => {
+                const value = parseFloat(input.value);
+                if (!isNaN(value) && value >= 0.5 && !input.disabled) {
+                    selected.push({
+                        id: parseInt(input.dataset.otId),
+                        used_hours: value
+                    });
+                }
+            });
+
+            document.getElementById('overtime_requests').value = JSON.stringify(selected);
+        }
+
+        function updateExpiredOvertime(selectedDate = null) {
+            const rows = document.querySelectorAll('.overtime-row');
+            const today = selectedDate ? new Date(selectedDate) : new Date();
+
+            rows.forEach(row => {
+                const otDate = new Date(row.dataset.date);
+                const diffDays = (today - otDate) / (1000 * 60 * 60 * 24);
+
+                const input = row.querySelector('.hours-to-offset');
+                if (diffDays > OFFSET_VALID_DAYS) {
+                    row.style.backgroundColor = '#f8d7da'; // light red
+                    row.style.color = '#721c24';
+                    if (input) input.disabled = true;
+                } else {
+                    row.style.backgroundColor = '';
+                    row.style.color = '';
+                    if (input) input.disabled = false;
+                }
+            });
+        }
     </script>
 </x-app-layout>
