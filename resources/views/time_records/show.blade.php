@@ -201,13 +201,17 @@
                     $timeRecord->status === 'pending' &&
                     auth()->id() === ($timeRecord->employee->approver_id ?? null)
                 )
-                    <form method="POST" action="{{ route('time_records.approve', $timeRecord->id) }}" class="mb-3">
+                    <!-- Approve Form -->
+                    <form method="POST" action="{{ route('time_records.approve', $timeRecord->id) }}" class="mb-3"
+                        onsubmit="this.querySelector('button').disabled = true; this.querySelector('button').innerText='Approving...';">
                         @csrf
                         @method('PATCH')
                         <button type="submit" class="btn btn-success">Approve</button>
                     </form>
 
-                    <form method="POST" action="{{ route('time_records.reject', $timeRecord->id) }}">
+                    <!-- Reject Form -->
+                    <form method="POST" action="{{ route('time_records.reject', $timeRecord->id) }}"
+                        onsubmit="this.querySelector('button[type=submit]').disabled = true; this.querySelector('button[type=submit]').innerText='Rejecting...';">
                         @csrf
                         @method('PATCH')
                         <div class="mb-2">

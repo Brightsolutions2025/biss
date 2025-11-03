@@ -183,13 +183,15 @@
 
                 {{-- Approve/Reject --}}
                 @if ($overtimeRequest->status === 'pending' && auth()->id() === ($overtimeRequest->employee->approver_id ?? null))
-                    <form method="POST" action="{{ route('overtime_requests.approve', $overtimeRequest->id) }}" class="mt-4">
+                    <form method="POST" action="{{ route('overtime_requests.approve', $overtimeRequest->id) }}" class="mt-4"
+                        onsubmit="this.querySelector('button').disabled = true; this.querySelector('button').innerText='Approving...';">
                         @csrf
                         @method('PATCH')
                         <button type="submit" class="btn btn-success">Approve</button>
                     </form>
 
-                    <form method="POST" action="{{ route('overtime_requests.reject', $overtimeRequest->id) }}" class="mt-3">
+                    <form method="POST" action="{{ route('overtime_requests.reject', $overtimeRequest->id) }}" class="mt-3"
+                        onsubmit="this.querySelector('button[type=submit]').disabled = true; this.querySelector('button[type=submit]').innerText='Rejecting...';">
                         @csrf
                         @method('PATCH')
                         <div class="mb-2">

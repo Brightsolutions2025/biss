@@ -172,13 +172,15 @@
                     $leaveRequest->status === 'pending' &&
                     auth()->id() === ($leaveRequest->employee->approver_id ?? null)
                 )
-                    <form method="POST" action="{{ route('leave_requests.approve', $leaveRequest->id) }}" class="mb-3">
+                    <form method="POST" action="{{ route('leave_requests.approve', $leaveRequest->id) }}" class="mb-3"
+                          onsubmit="this.querySelector('button').disabled = true; this.querySelector('button').innerText='Approving...';">
                         @csrf
                         @method('PATCH')
                         <button type="submit" class="btn btn-success">Approve</button>
                     </form>
 
-                    <form method="POST" action="{{ route('leave_requests.reject', $leaveRequest->id) }}">
+                    <form method="POST" action="{{ route('leave_requests.reject', $leaveRequest->id) }}"
+                          onsubmit="this.querySelector('button[type=submit]').disabled = true; this.querySelector('button[type=submit]').innerText='Rejecting...';">
                         @csrf
                         @method('PATCH')
 

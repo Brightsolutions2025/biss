@@ -150,7 +150,8 @@
 
                     @if ($outbaseRequest->status === 'pending' && auth()->id() === ($outbaseRequest->employee->approver_id ?? null))
                         <!-- Approve Button -->
-                        <form method="POST" action="{{ route('outbase_requests.approve', $outbaseRequest->id) }}" class="mt-4">
+                        <form method="POST" action="{{ route('outbase_requests.approve', $outbaseRequest->id) }}" class="mt-4"
+                            onsubmit="this.querySelector('button').disabled = true; this.querySelector('button').innerText='Approving...';">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-success">
@@ -159,7 +160,8 @@
                         </form>
 
                         <!-- Reject Form -->
-                        <form method="POST" action="{{ route('outbase_requests.reject', $outbaseRequest->id) }}" class="mt-3">
+                        <form method="POST" action="{{ route('outbase_requests.reject', $outbaseRequest->id) }}" class="mt-3"
+                            onsubmit="this.querySelector('button[type=submit]').disabled = true; this.querySelector('button[type=submit]').innerText='Rejecting...';">
                             @csrf
                             @method('PATCH')
 

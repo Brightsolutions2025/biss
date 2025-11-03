@@ -191,13 +191,15 @@
 
                     {{-- Approver Actions --}}
                     @if ($offsetRequest->status === 'pending' && auth()->id() === ($offsetRequest->employee->approver_id ?? null))
-                        <form method="POST" action="{{ route('offset_requests.approve', $offsetRequest->id) }}" class="mb-3">
+                        <form method="POST" action="{{ route('offset_requests.approve', $offsetRequest->id) }}" class="mb-3"
+                            onsubmit="this.querySelector('button').disabled = true; this.querySelector('button').innerText='Approving...';">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-success">Approve</button>
                         </form>
 
-                        <form method="POST" action="{{ route('offset_requests.reject', $offsetRequest->id) }}">
+                        <form method="POST" action="{{ route('offset_requests.reject', $offsetRequest->id) }}"
+                            onsubmit="this.querySelector('button[type=submit]').disabled = true; this.querySelector('button[type=submit]').innerText='Rejecting...';">
                             @csrf
                             @method('PATCH')
                             <div class="mb-2">
