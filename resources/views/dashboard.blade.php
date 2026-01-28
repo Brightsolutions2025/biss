@@ -141,6 +141,16 @@
                                     🕒 View
                                 </a>
                             </div>
+
+                            {{-- Day Off Change Request --}}
+                            <div class="col-md-6 col-lg-4 d-flex gap-2">
+                                <a href="{{ route('day_off_change_requests.create') }}" class="btn btn-outline-primary flex-fill">
+                                    + Day Off Change
+                                </a>
+                                <a href="{{ route('day_off_change_requests.index') }}" class="btn btn-outline-secondary flex-fill">
+                                    📄 View
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

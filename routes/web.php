@@ -39,6 +39,7 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketAssignmentController;
+use App\Http\Controllers\DayOffChangeRequestController;
 use App\Http\Middleware\EnsureUserHasCompany;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
@@ -167,6 +168,22 @@ Route::middleware('auth', EnsureUserHasCompany::class)->group(function () {
     Route::get('/overtime_requests/{employee}/{start}/{end}', [OvertimeRequestController::class, 'fetchApprovedByDate']);
     Route::get('/time_records/{employeeId}/{startDate}/{endDate}', [TimeRecordController::class, 'getTimeLogs'])->name('time_logs.fetch');
     Route::resource('time_records', TimeRecordController::class);
+    
+    Route::patch('/day_off_change_requests/{dayOffChangeRequest}/approve', [
+        DayOffChangeRequestController::class,
+        'approve'
+    ])->name('day_off_change_requests.approve');
+
+    Route::patch('/day_off_change_requests/{dayOffChangeRequest}/reject', [
+        DayOffChangeRequestController::class,
+        'reject'
+    ])->name('day_off_change_requests.reject');
+
+    Route::resource(
+        'day_off_change_requests',
+        DayOffChangeRequestController::class
+    );
+
     Route::patch('/offset_requests/{offset_request}/approve', [OffsetRequestController::class, 'approve'])
         ->name('offset_requests.approve');
     Route::patch('/offset_requests/{offset_request}/reject', [OffsetRequestController::class, 'reject'])

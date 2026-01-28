@@ -104,6 +104,9 @@
                             @if($user->hasPermission('outbase_request.create'))
                                 <li><a class="dropdown-item" href="{{ route('outbase_requests.create') }}">Outbase</a></li>
                             @endif
+                            @if($user->hasPermission('day_off_change_request.create'))
+                                <li><a class="dropdown-item" href="{{ route('day_off_change_requests.create') }}">Day Off Change</a></li>
+                            @endif
                         @endif
 
                         {{-- Timekeeping --}}
@@ -186,6 +189,9 @@
                             @endif
                             @if(auth()->user()->hasPermission('outbase_request.browse'))
                                 <li><a class="dropdown-item" href="{{ route('outbase_requests.index') }}">Outbase Requests</a></li>
+                            @endif
+                            @if(auth()->user()->hasPermission('day_off_change_request.browse'))
+                                <li><a class="dropdown-item" href="{{ route('day_off_change_requests.index') }}">Day Off Change Requests</a></li>
                             @endif
                         @endif
 

@@ -170,7 +170,7 @@ class CompanyController extends Controller
             ]],
             'employee' => ['modules' => [
                 'leave_request', 'overtime_request',
-                'outbase_request', 'offset_request', 'time_record',
+                'outbase_request', 'offset_request', 'time_record', 'day_off_change_request',
             ]],
             'account manager' => ['modules' => ['client', 'client_contact', 'project']],
         ];
