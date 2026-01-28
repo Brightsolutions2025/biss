@@ -160,13 +160,13 @@ class CompanyController extends Controller
                 'department', 'team', 'employee', 'shift',
                 'employee_shift', 'payroll_period', 'time_log', 'leave_balance',
                 'time_record','leave_request', 'overtime_request',
-                'outbase_request', 'offset_request',
+                'outbase_request', 'offset_request', 'day_off_change_request',
             ]],
             'finance hris' => ['modules' => [
                 'department', 'team', 'employee', 'shift',
                 'employee_shift', 'payroll_period', 'time_log', 'leave_balance',
                 'time_record','leave_request', 'overtime_request',
-                'outbase_request', 'offset_request',
+                'outbase_request', 'offset_request', 'day_off_change_request',
             ]],
             'employee' => ['modules' => [
                 'leave_request', 'overtime_request',
