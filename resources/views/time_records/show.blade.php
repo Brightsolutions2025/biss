@@ -70,6 +70,7 @@
                                 <th>Leave Days</th>
                                 <th>Remaining Leave</th>
                                 <th>With Pay?</th>
+                                <th>Schedule Remark</th>
                                 <th>Remarks</th>
                             </tr>
                         </thead>
@@ -93,6 +94,9 @@
                                     <td class="text-center">{{ $line->leave_days == 0 ? '' : $line->leave_days }}</td>
                                     <td class="text-center">{{ $line->remaining_leave_credits == 0 ? '' : $line->remaining_leave_credits }}</td>
                                     <td class="text-center">{{ $line->leave_with_pay ? 'Yes' : '' }}</td>
+                                    <td class="text-warning fw-semibold text-center">
+                                        {{ $dayOffChangeMap[$line->date] ?? '' }}
+                                    </td>
                                     <td>{{ $line->remarks }}</td>
                                 </tr>
                             @endforeach
@@ -365,6 +369,44 @@
                                         <td class="text-center">{{ ucfirst($request->status) }}</td>
                                         <td class="text-center">
                                             <a href="{{ route('offset_requests.show', $request->id) }}" class="btn btn-sm btn-outline-primary">View</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+
+                {{-- DAY OFF CHANGE REQUESTS --}}
+                @if ($dayOffChangeRequests->count())
+                    <h6 class="mt-4">Day Off Change Requests</h6>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm compact-table align-middle">
+                            <thead class="table-light text-center">
+                                <tr>
+                                    <th>Old Day Off</th>
+                                    <th>New Day Off</th>
+                                    <th>Hours</th>
+                                    <th>Reason Type</th>
+                                    <th>Status</th>
+                                    <th>Reason</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($dayOffChangeRequests as $request)
+                                    <tr>
+                                        <td class="text-center">{{ $request->old_date }}</td>
+                                        <td class="text-center">{{ $request->new_date }}</td>
+                                        <td class="text-center">{{ $request->number_of_hours }}</td>
+                                        <td class="text-center">{{ $request->reason_type }}</td>
+                                        <td class="text-center">{{ ucfirst($request->status) }}</td>
+                                        <td>{{ $request->reason }}</td>
+                                        <td class="text-center">
+                                            <a href="{{ route('day_off_change_requests.show', $request->id) }}"
+                                            class="btn btn-sm btn-outline-primary">
+                                                View
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach

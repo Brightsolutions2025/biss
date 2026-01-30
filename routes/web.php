@@ -168,6 +168,11 @@ Route::middleware('auth', EnsureUserHasCompany::class)->group(function () {
     Route::get('/overtime_requests/{employee}/{start}/{end}', [OvertimeRequestController::class, 'fetchApprovedByDate']);
     Route::get('/time_records/{employeeId}/{startDate}/{endDate}', [TimeRecordController::class, 'getTimeLogs'])->name('time_logs.fetch');
     Route::resource('time_records', TimeRecordController::class);
+
+    Route::get(
+        '/day_off_change_requests/{employee}/{start}/{end}',
+        [DayOffChangeRequestController::class, 'byDateRange']
+    );
     
     Route::patch('/day_off_change_requests/{dayOffChangeRequest}/approve', [
         DayOffChangeRequestController::class,

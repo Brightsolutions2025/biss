@@ -11,6 +11,7 @@ use App\Models\OvertimeRequest;
 use App\Models\PayrollPeriod;
 use App\Models\TimeLog;
 use App\Models\TimeRecord;
+use App\Models\DayOffChangeRequest;
 use App\Notifications\TimeRecordStatusChanged;
 use App\Notifications\TimeRecordSubmitted;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -349,12 +350,15 @@ class TimeRecordController extends Controller
             $leaveRequests    = collect();
             $outbaseRequests  = collect();
             $offsetRequests   = collect();
+            $dayOffChangeRequests = collect();
         } else {
             $overtimeRequests = OvertimeRequest::where('employee_id', $employeeId)
+                ->where('status', 'approved')
                 ->whereBetween('date', [$startDate, $endDate])
                 ->get();
 
             $leaveRequests = LeaveRequest::where('employee_id', $employeeId)
+                ->where('status', 'approved')
                 ->where(function ($q) use ($startDate, $endDate) {
                     $q->whereBetween('start_date', [$startDate, $endDate])
                     ->orWhereBetween('end_date', [$startDate, $endDate]);
@@ -362,12 +366,35 @@ class TimeRecordController extends Controller
                 ->get();
 
             $outbaseRequests = OutbaseRequest::where('employee_id', $employeeId)
+                ->where('status', 'approved')
                 ->whereBetween('date', [$startDate, $endDate])
                 ->get();
 
             $offsetRequests = OffsetRequest::where('employee_id', $employeeId)
+                ->where('status', 'approved')
                 ->whereBetween('date', [$startDate, $endDate])
                 ->get();
+
+            $dayOffChangeRequests = DayOffChangeRequest::where('employee_id', $employeeId)
+                ->where('status', 'approved')
+                ->where(function ($q) use ($startDate, $endDate) {
+                    $q->whereBetween('old_date', [$startDate, $endDate])
+                    ->orWhereBetween('new_date', [$startDate, $endDate]);
+                })
+                ->get();
+            
+            $dayOffChangeMap = [];
+
+            foreach ($dayOffChangeRequests as $req) {
+                $dayOffChangeMap[$req->old_date->toDateString()][] =
+                    "Rest day moved to {$req->new_date->format('M d')}";
+
+                $dayOffChangeMap[$req->new_date->toDateString()][] =
+                    "Offset rest day (from {$req->old_date->format('M d')})";
+            }
+
+            $dayOffChangeMap = collect($dayOffChangeMap)
+                ->map(fn ($items) => implode(', ', $items));
         }
 
         return view('time_records.show', compact(
@@ -375,7 +402,9 @@ class TimeRecordController extends Controller
             'overtimeRequests',
             'leaveRequests',
             'outbaseRequests',
-            'offsetRequests'
+            'offsetRequests',
+            'dayOffChangeRequests',
+            'dayOffChangeMap'
         ));
     }
 
@@ -421,9 +450,36 @@ class TimeRecordController extends Controller
         $payrollPeriods = PayrollPeriod::where('company_id', $companyId)->get();
 
         // Load lines with the time record
-        $timeRecord->load('lines');
+        $timeRecord->load(['employee', 'payrollPeriod', 'lines']);
 
-        return view('time_records.edit', compact('timeRecord', 'employees', 'payrollPeriods'));
+        $dates     = $timeRecord->lines->pluck('date');
+        $startDate = $dates->min();
+        $endDate   = $dates->max();
+
+        $employeeId = $timeRecord->employee_id;
+
+        $dayOffChangeRequests = DayOffChangeRequest::where('employee_id', $employeeId)
+            ->where('status', 'approved')
+            ->where(function ($q) use ($startDate, $endDate) {
+                $q->whereBetween('old_date', [$startDate, $endDate])
+                ->orWhereBetween('new_date', [$startDate, $endDate]);
+            })
+            ->get();
+        
+        $dayOffChangeMap = [];
+
+        foreach ($dayOffChangeRequests as $req) {
+            $dayOffChangeMap[$req->old_date->toDateString()][] =
+                "Rest day moved to {$req->new_date->format('M d')}";
+
+            $dayOffChangeMap[$req->new_date->toDateString()][] =
+                "Offset rest day (from {$req->old_date->format('M d')})";
+        }
+
+        $dayOffChangeMap = collect($dayOffChangeMap)
+            ->map(fn ($items) => implode(', ', $items));
+
+        return view('time_records.edit', compact('timeRecord', 'employees', 'payrollPeriods', 'dayOffChangeMap'));
     }
 
     protected function canEditTimeRecord(TimeRecord $timeRecord): bool

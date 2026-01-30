@@ -8,6 +8,7 @@ use App\Models\OffsetRequest;
 use App\Models\OutbaseRequest;
 use App\Models\OvertimeRequest;
 use App\Models\TimeRecordLine;
+use App\Models\DayOffChangeRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -50,6 +51,7 @@ class DashboardController extends Controller
         ];
 
         if ($user->hasRole('Employee') && $employee && $employee->company_id === $company->id) {
+
             $leaveBalance = \App\Models\LeaveBalance::where('employee_id', $employee->id)
                 ->where('company_id', $company->id)
                 ->where('year', $year)
@@ -179,6 +181,19 @@ class DashboardController extends Controller
                     ->whereHas('employee', function ($q) use ($employee) {
                         $q->where('approver_id', $employee->user_id);
                     })
+                    ->latest()
+                    ->get(),
+                
+                'pendingDayOffChangeRequestList' => DayOffChangeRequest::where('company_id', $company->id)
+                    ->where('employee_id', $employee->id)
+                    ->where('status', 'pending')
+                    ->latest()
+                    ->get(),
+
+                'forApprovalDayOffChangeRequestList' => DayOffChangeRequest::with('employee')
+                    ->where('company_id', $company->id)
+                    ->where('status', 'pending')
+                    ->where('approver_id', $employee->user_id)
                     ->latest()
                     ->get(),
             ];

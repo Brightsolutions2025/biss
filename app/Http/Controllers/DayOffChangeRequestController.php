@@ -296,6 +296,17 @@ class DayOffChangeRequestController extends Controller
             ]);
         });
 
+        $employeeUser = $dayOffChangeRequest->employee->user;
+
+        if ($employeeUser && $employeeUser->email) {
+            $employeeUser->notify(
+                new \App\Notifications\DayOffChangeRequestStatusChanged(
+                    $dayOffChangeRequest, 
+                    $dayOffChangeRequest->status
+                )
+            );
+        }
+
         return redirect()
             ->route('day_off_change_requests.show', $dayOffChangeRequest)
             ->with('success', 'Request approved.');
@@ -313,16 +324,27 @@ class DayOffChangeRequestController extends Controller
         }
 
         $request->validate([
-            'reason' => 'required|string|max:255',
+            'rejection_reason' => 'required|string|max:255',
         ]);
 
         DB::transaction(function () use ($dayOffChangeRequest, $request) {
             $dayOffChangeRequest->update([
                 'status'           => 'rejected',
                 'approver_id'      => auth()->id(),
-                'rejection_reason' => $request->reason,
+                'rejection_reason' => $request->rejection_reason,
             ]);
         });
+
+        $employeeUser = $dayOffChangeRequest->employee->user;
+
+        if ($employeeUser && $employeeUser->email) {
+            $employeeUser->notify(
+                new \App\Notifications\DayOffChangeRequestStatusChanged(
+                    $dayOffChangeRequest, 
+                    $dayOffChangeRequest->status
+                )
+            );
+        }
 
         return redirect()
             ->route('day_off_change_requests.show', $dayOffChangeRequest)
@@ -337,5 +359,30 @@ class DayOffChangeRequestController extends Controller
         if (!auth()->user()->companies->contains('id', $companyId)) {
             abort(403, 'Unauthorized company access.');
         }
+    }
+
+    public function byDateRange($employeeId, $start, $end)
+    {
+        $requests = DayOffChangeRequest::where('employee_id', $employeeId)
+            ->where('status', 'approved')
+            ->where(function ($q) use ($start, $end) {
+                $q->whereBetween('old_date', [$start, $end])
+                ->orWhereBetween('new_date', [$start, $end]);
+            })
+            ->get();
+
+        $map = [];
+
+        foreach ($requests as $req) {
+            $map[$req->old_date->toDateString()][] =
+                "Rest day moved to {$req->new_date->format('M d')}";
+
+            $map[$req->new_date->toDateString()][] =
+                "Offset rest day (from {$req->old_date->format('M d')})";
+        }
+
+        return response()->json(
+            collect($map)->map(fn ($v) => implode(', ', $v))
+        );
     }
 }

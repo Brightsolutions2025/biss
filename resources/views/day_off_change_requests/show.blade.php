@@ -162,6 +162,56 @@
                             </a>
                         </div>
 
+                        {{-- Approve / Reject --}}
+                        @if (
+                            $dayOffChangeRequest->status === 'pending' &&
+                            auth()->id() === ($dayOffChangeRequest->employee->approver_id ?? null)
+                        )
+                            <hr class="my-4">
+
+                            {{-- Approve --}}
+                            <form method="POST"
+                                action="{{ route('day_off_change_requests.approve', $dayOffChangeRequest->id) }}"
+                                onsubmit="this.querySelector('button').disabled=true; this.querySelector('button').innerText='Approving...';">
+                                @csrf
+                                @method('PATCH')
+
+                                <button type="submit" class="btn btn-success">
+                                    Approve
+                                </button>
+                            </form>
+
+                            {{-- Reject --}}
+                            <form method="POST"
+                                action="{{ route('day_off_change_requests.reject', $dayOffChangeRequest->id) }}"
+                                class="mt-3"
+                                onsubmit="this.querySelector('button[type=submit]').disabled=true; this.querySelector('button[type=submit]').innerText='Rejecting...';">
+                                @csrf
+                                @method('PATCH')
+
+                                <div class="mb-2">
+                                    <label for="rejection_reason" class="form-label text-danger fw-semibold">
+                                        Reason for Rejection
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="rejection_reason"
+                                        id="rejection_reason"
+                                        class="form-control @error('rejection_reason') is-invalid @enderror"
+                                        value="{{ old('rejection_reason') }}"
+                                        required
+                                    >
+                                    @error('rejection_reason')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <button type="submit" class="btn btn-warning">
+                                    Reject
+                                </button>
+                            </form>
+                        @endif
+
                     </div>
                 </div>
 

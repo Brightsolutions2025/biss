@@ -237,12 +237,30 @@
                                     </tr>
                                 @endforeach
 
+                                {{-- Day Off Change Requests --}}
+                                @foreach($pendingDayOffChangeRequestList ?? [] as $request)
+                                    <tr>
+                                        <td>Day Off Change</td>
+                                        <td>{{ $request->employee->user->name }}</td>
+                                        <td>{{ $request->created_at->format('Y-m-d') }}</td>
+                                        <td>
+                                            {{ $request->old_day_off }} → {{ $request->new_day_off }}
+                                        </td>
+                                        <td><span class="badge bg-warning text-dark">Pending</span></td>
+                                        <td>
+                                            <a href="{{ route('day_off_change_requests.show', $request) }}"
+                                            class="btn btn-sm btn-outline-info">View</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+
                                 @if(
                                     ($pendingTimeRecordList ?? collect())->isEmpty() &&
                                     ($pendingLeaveRequestList ?? collect())->isEmpty() &&
                                     ($pendingOvertimeRequestList ?? collect())->isEmpty() &&
                                     ($pendingOffsetRequestList ?? collect())->isEmpty() &&
-                                    ($pendingOutbaseRequestList ?? collect())->isEmpty()
+                                    ($pendingOutbaseRequestList ?? collect())->isEmpty() &&
+                                    ($pendingDayOffChangeRequestList ?? collect())->isEmpty()
                                 )
                                     <tr>
                                         <td colspan="6" class="text-center text-muted">
@@ -337,12 +355,30 @@
                                     </tr>
                                 @endforeach
 
+                                {{-- Day Off Change Requests --}}
+                                @foreach($forApprovalDayOffChangeRequestList ?? [] as $request)
+                                    <tr>
+                                        <td>Day Off Change</td>
+                                        <td>{{ $request->employee->user->name }}</td>
+                                        <td>{{ $request->created_at->format('Y-m-d') }}</td>
+                                        <td>
+                                            {{ $request->old_day_off }} → {{ $request->new_day_off }}
+                                        </td>
+                                        <td><span class="badge bg-warning text-dark">Pending</span></td>
+                                        <td>
+                                            <a href="{{ route('day_off_change_requests.show', $request) }}"
+                                            class="btn btn-sm btn-outline-info">View</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+
                                 @if(
                                     ($forApprovalTimeRecordList ?? collect())->isEmpty() &&
                                     ($forApprovalLeaveRequestList ?? collect())->isEmpty() &&
                                     ($forApprovalOvertimeRequestList ?? collect())->isEmpty() &&
                                     ($forApprovalOffsetRequestList ?? collect())->isEmpty() &&
-                                    ($forApprovalOutbaseRequestList ?? collect())->isEmpty()
+                                    ($forApprovalOutbaseRequestList ?? collect())->isEmpty() &&
+                                    ($forApprovalDayOffChangeRequestList ?? collect())->isEmpty()
                                 )
                                     <tr>
                                         <td colspan="6" class="text-center text-muted">

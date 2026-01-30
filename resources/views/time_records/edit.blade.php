@@ -13,6 +13,7 @@
         min-width: 80px;
     }
 </style>
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="h4 fw-semibold text-dark">
@@ -76,7 +77,7 @@
                                 </select>
                             </div>
 
-                            <!-- Time Record Lines -->
+                            <!-- Time Record Lines Table -->
                             <div class="table-responsive mb-4" style="zoom: 0.85;">
                                 <table class="table table-bordered table-sm align-middle compact-table">
                                     <thead class="table-light text-center">
@@ -96,9 +97,10 @@
                                             <th>Outbase Start</th>
                                             <th>Outbase End</th>
                                             <th>Leave Days</th>
-                                            <th>Remaining Leave Credits</th>
+                                            <th>Remaining Leave</th>
                                             <th>With Pay?</th>
-                                            <th style="min-width: 200px;">Remarks</th>
+                                            <th>Schedule Remark</th>
+                                            <th>Remarks</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -108,7 +110,7 @@
                                                     <input type="hidden" name="time_record_lines[{{ $i }}][id]" value="{{ $line->id }}">
                                                     <input type="text" readonly name="time_record_lines[{{ $i }}][date]" value="{{ $line->date }}" class="form-control form-control-sm text-center" />
                                                 </td>
-                                                <td>{{ \Carbon\Carbon::parse($line->date)->format('D') }}</td>
+                                                <td class="text-center">{{ \Carbon\Carbon::parse($line->date)->format('D') }}</td>
                                                 <td>
                                                     <input type="time" name="time_record_lines[{{ $i }}][clock_in]" value="{{ $line->clock_in }}" class="form-control form-control-sm text-center" />
                                                 </td>
@@ -138,13 +140,19 @@
                                                 <td class="text-center">{{ $line->leave_days }}</td>
                                                 <td class="text-center">{{ $line->remaining_leave_credits }}</td>
                                                 <td class="text-center">{{ $line->leave_with_pay ? 'Yes' : 'No' }}</td>
-                                                <td><input type="text" name="time_record_lines[{{ $i }}][remarks]" value="{{ $line->remarks }}" class="form-control form-control-sm" /></td>
+                                                <td class="text-warning fw-semibold text-center">
+                                                    {{ $dayOffChangeMap[$line->date] ?? '' }}
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="time_record_lines[{{ $i }}][remarks]" value="{{ $line->remarks }}" class="form-control form-control-sm" />
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
 
+                            <!-- Files -->
                             @if ($timeRecord->files->count())
                                 <div class="mb-3">
                                     <label class="form-label">Attached Files</label>
@@ -154,10 +162,7 @@
                                                 <a href="{{ route('files.download', $file->id) }}" target="_blank">
                                                     {{ $file->file_name }}
                                                 </a>
-
-                                                <a href="#" 
-                                                class="btn btn-sm btn-outline-danger ms-2"
-                                                onclick="event.preventDefault(); deleteFile({{ $file->id }})">
+                                                <a href="#" class="btn btn-sm btn-outline-danger ms-2" onclick="event.preventDefault(); deleteFile({{ $file->id }})">
                                                     Delete
                                                 </a>
                                             </li>
@@ -172,13 +177,8 @@
                             </div>
 
                             <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Update') }}
-                                </button>
-
-                                <a href="javascript:history.back()" class="btn btn-secondary">
-                                    {{ __('Cancel') }}
-                                </a>
+                                <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
+                                <a href="javascript:history.back()" class="btn btn-secondary">{{ __('Cancel') }}</a>
                             </div>
                         </form>
 
@@ -188,6 +188,7 @@
             </div>
         </div>
     </div>
+
     @push('scripts')
     <script>
         const isFlexible = @json(optional($timeRecord->employee)->flexible_time);
@@ -200,102 +201,57 @@
             return h * 60 + m;
         }
 
-        // ✅ New helper to compute overlap with lunch break
         function excludeLunchMinutes(start, end) {
             const lunchStart = 12 * 60;
             const lunchEnd = 13 * 60;
-
             if (end <= lunchStart || start >= lunchEnd) return 0;
-            const overlapStart = Math.max(start, lunchStart);
-            const overlapEnd = Math.min(end, lunchEnd);
-
-            return Math.max(0, overlapEnd - overlapStart);
+            return Math.max(0, Math.min(end, lunchEnd) - Math.max(start, lunchStart));
         }
 
-        // ✅ Updated to subtract lunch overlap (same as Add page)
         function calculateLateMinutes(scheduled, actual) {
             if (!scheduled || !actual) return 0;
-
-            const sched = timeToMinutes(scheduled);
-            const act = timeToMinutes(actual);
-
-            if (act <= sched) return 0;
-
-            let diff = act - sched;
-            diff -= excludeLunchMinutes(sched, act);
-
+            let diff = timeToMinutes(actual) - timeToMinutes(scheduled);
+            diff -= excludeLunchMinutes(timeToMinutes(scheduled), timeToMinutes(actual));
             return Math.max(0, diff);
         }
 
-        // ✅ Updated to subtract lunch overlap (same as Add page)
         function calculateUndertimeMinutes(scheduledOut, actualOut) {
             if (!scheduledOut || !actualOut) return 0;
-
-            const sched = timeToMinutes(scheduledOut);
-            const act = timeToMinutes(actualOut);
-
-            if (act >= sched) return 0;
-
-            let diff = sched - act;
-            diff -= excludeLunchMinutes(act, sched);
-
+            let diff = timeToMinutes(scheduledOut) - timeToMinutes(actualOut);
+            diff -= excludeLunchMinutes(timeToMinutes(actualOut), timeToMinutes(scheduledOut));
             return Math.max(0, diff);
         }
 
-        // ✅ Already handled lunch (kept logic)
         function calculateFlexibleUndertime(clockIn, clockOut) {
             if (!clockIn || !clockOut) return 0;
-
-            let start = timeToMinutes(clockIn);
-            let end = timeToMinutes(clockOut);
-            let worked = end - start;
-
-            // Subtract overlap with 12:00–13:00
-            worked -= excludeLunchMinutes(start, end);
-
-            const required = 480; // 8 hours
-            return worked < required ? required - worked : 0;
+            let worked = timeToMinutes(clockOut) - timeToMinutes(clockIn) - excludeLunchMinutes(timeToMinutes(clockIn), timeToMinutes(clockOut));
+            return worked < 480 ? 480 - worked : 0;
         }
 
         function recomputeAllLateUndertime() {
-            const rows = document.querySelectorAll('table tbody tr');
-            rows.forEach(row => {
-                const clockInInput = row.querySelector('input[name$="[clock_in]"]');
-                const clockOutInput = row.querySelector('input[name$="[clock_out]"]');
+            document.querySelectorAll('table tbody tr').forEach(row => {
+                const clockIn = row.querySelector('input[name$="[clock_in]"]');
+                const clockOut = row.querySelector('input[name$="[clock_out]"]');
                 const lateInput = row.querySelector('input[name$="[late_minutes]"]');
                 const undertimeInput = row.querySelector('input[name$="[undertime_minutes]"]');
 
                 if (isFlexible) {
-                    if (clockInInput && clockOutInput && undertimeInput) {
-                        undertimeInput.value = calculateFlexibleUndertime(clockInInput.value, clockOutInput.value);
+                    if (clockIn && clockOut && undertimeInput) {
+                        undertimeInput.value = calculateFlexibleUndertime(clockIn.value, clockOut.value);
                     }
-                    if (lateInput) {
-                        lateInput.value = 0; // No "late" for flexible-time
-                    }
+                    if (lateInput) lateInput.value = 0;
                 } else {
-                    if (scheduledTimeIn && clockInInput && lateInput) {
-                        lateInput.value = calculateLateMinutes(scheduledTimeIn, clockInInput.value);
-                    }
-                    if (scheduledTimeOut && clockOutInput && undertimeInput) {
-                        undertimeInput.value = calculateUndertimeMinutes(scheduledTimeOut, clockOutInput.value);
-                    }
+                    if (scheduledTimeIn && clockIn && lateInput) lateInput.value = calculateLateMinutes(scheduledTimeIn, clockIn.value);
+                    if (scheduledTimeOut && clockOut && undertimeInput) undertimeInput.value = calculateUndertimeMinutes(scheduledTimeOut, clockOut.value);
                 }
             });
         }
 
-        document.querySelectorAll('input[type="time"]').forEach(input => {
-            input.addEventListener('change', recomputeAllLateUndertime);
-        });
-
+        document.querySelectorAll('input[type="time"]').forEach(input => input.addEventListener('change', recomputeAllLateUndertime));
         document.addEventListener('DOMContentLoaded', recomputeAllLateUndertime);
-    </script>
-    @endpush
 
-    @push('scripts')
-    <script>
         function deleteFile(fileId) {
             if (!confirm('Delete this file?')) return;
-
             fetch(`/files/${fileId}`, {
                 method: 'DELETE',
                 headers: {
@@ -303,12 +259,7 @@
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 }
-            })
-            .then(res => {
-                if (res.ok) {
-                    location.reload();
-                }
-            });
+            }).then(res => { if (res.ok) location.reload(); });
         }
     </script>
     @endpush
