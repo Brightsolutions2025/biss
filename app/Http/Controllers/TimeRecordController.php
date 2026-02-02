@@ -131,7 +131,10 @@ class TimeRecordController extends Controller
         $employees      = Employee::where('company_id', $companyId)->get();
         $payrollPeriods = PayrollPeriod::where('company_id', $companyId)->get();
 
-        return view('time_records.create', compact('employee', 'payrollPeriods'));
+        return view('time_records.create', compact(
+            'employee',
+            'payrollPeriods'
+        ));
     }
 
     public function getTimeLogs($employeeId, $startDate, $endDate)

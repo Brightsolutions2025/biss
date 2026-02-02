@@ -21,13 +21,13 @@
         width: 100%;
     }
 
+    /* Optional: Prevent squishing on mobile */
     @media (max-width: 768px) {
         .remarks-cell {
             min-width: 200px;
         }
     }
 </style>
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="h4 fw-semibold text-dark">
@@ -85,11 +85,13 @@
                             <div class="row mb-3">
                                 <div class="col-md-3">
                                     <label for="corrected_start_date" class="form-label">Corrected Start Date</label>
-                                    <input type="date" id="corrected_start_date" name="corrected_start_date" class="form-control">
+                                    <input type="date" id="corrected_start_date" name="corrected_start_date" class="form-control"
+                                        value="">
                                 </div>
                                 <div class="col-md-3">
                                     <label for="corrected_end_date" class="form-label">Corrected End Date</label>
-                                    <input type="date" id="corrected_end_date" name="corrected_end_date" class="form-control">
+                                    <input type="date" id="corrected_end_date" name="corrected_end_date" class="form-control"
+                                        value="">
                                 </div>
                                 <div class="col-md-3 d-flex align-items-end">
                                     <button type="button" id="apply-date-correction" class="btn btn-outline-primary">
@@ -98,30 +100,29 @@
                                 </div>
                             </div>
 
-                            <!-- Time Record Lines -->
                             <div class="table-responsive mb-4" id="record-lines-wrapper" style="zoom: 0.85;">
                                 <table class="table table-bordered table-sm align-middle text-center mb-0 compact-table">
                                     <thead class="table-light sticky-top">
                                         <tr>
-                                            <th>Date</th>
-                                            <th>Day</th>
-                                            <th>Clock In</th>
-                                            <th>Clock Out</th>
-                                            <th>Late</th>
-                                            <th>Undertime</th>
-                                            <th>OT Start</th>
-                                            <th>OT End</th>
-                                            <th>OT Hours</th>
-                                            <th>Offset Start</th>
-                                            <th>Offset End</th>
-                                            <th>Offset Hours</th>
-                                            <th>Outbase Start</th>
-                                            <th>Outbase End</th>
-                                            <th>Leave Days</th>
-                                            <th>Remaining Leave Credits</th>
-                                            <th>With Pay?</th>
-                                            <th>Schedule Remark</th>
-                                            <th>Remarks</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Day</th>
+                                            <th scope="col">Clock In</th>
+                                            <th scope="col">Clock Out</th>
+                                            <th scope="col">Late</th>
+                                            <th scope="col">Undertime</th>
+                                            <th scope="col">OT Start</th>
+                                            <th scope="col">OT End</th>
+                                            <th scope="col">OT Hours</th>
+                                            <th scope="col">Offset Start</th>
+                                            <th scope="col">Offset End</th>
+                                            <th scope="col">Offset Hours</th>
+                                            <th scope="col">Outbase Start</th>
+                                            <th scope="col">Outbase End</th>
+                                            <th scope="col">Leave Days</th>
+                                            <th scope="col">Remaining Leave Credits</th>
+                                            <th scope="col">With Pay?</th>
+                                            <th scope="col">Schedule Remark</th>
+                                            <th scope="col">Remarks</th>
                                         </tr>
                                     </thead>
                                     <tbody id="record-lines-body">
@@ -133,15 +134,26 @@
                             <!-- Attachments -->
                             <div class="mb-4">
                                 <label for="files" class="form-label">Supporting Documents (optional)</label>
-                                <input id="files" name="files[]" type="file" class="form-control" multiple>
+                                <input
+                                    id="files"
+                                    name="files[]"
+                                    type="file"
+                                    class="form-control"
+                                    multiple
+                                >
                                 @error('files.*')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                                <a href="javascript:history.back()" class="btn btn-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Submit') }}
+                                </button>
+
+                                <a href="javascript:history.back()" class="btn btn-secondary">
+                                    {{ __('Cancel') }}
+                                </a>
                             </div>
                         </form>
 
@@ -168,10 +180,44 @@
         const scheduledTimeOut = @json(optional(optional($employee->employeeShift)->shift)->time_out);
         const approvedOvertimeHours = @json($overtimeByDate);
 
-        function extractTimeOnly(datetime) {
-            if (!datetime) return '';
-            const match = datetime.match(/(\d{2}:\d{2})/);
-            return match ? match[0] : '';
+        function calculateFlexibleUndertime(clockIn, clockOut) {
+            if (!clockIn || !clockOut) return 0;
+
+            let start = timeToMinutes(clockIn);
+            let end = timeToMinutes(clockOut);
+
+            // Define lunch break window: 12:00–13:00
+            const lunchStart = 12 * 60;
+            const lunchEnd = 13 * 60;
+
+            let worked = end - start;
+
+            // Deduct overlap with lunch (if any)
+            const overlapStart = Math.max(start, lunchStart);
+            const overlapEnd = Math.min(end, lunchEnd);
+            if (overlapEnd > overlapStart) {
+                worked -= (overlapEnd - overlapStart);
+            }
+
+            const required = 480; // 8 hours
+            return worked < required ? required - worked : 0;
+        }
+
+        function determineClockInOrOut(attendanceTime, shiftIn, shiftOut) {
+            if (!attendanceTime || !shiftIn || !shiftOut) return { clockIn: '', clockOut: '' };
+
+            const logMinutes = timeToMinutes(attendanceTime);
+            const shiftInMinutes = timeToMinutes(shiftIn);
+            const shiftOutMinutes = timeToMinutes(shiftOut);
+
+            const diffToIn = Math.abs(logMinutes - shiftInMinutes);
+            const diffToOut = Math.abs(logMinutes - shiftOutMinutes);
+
+            if (diffToIn <= diffToOut) {
+                return { clockIn: attendanceTime, clockOut: '' };
+            } else {
+                return { clockIn: '', clockOut: attendanceTime };
+            }
         }
 
         function timeToMinutes(time) {
@@ -179,123 +225,317 @@
             return h * 60 + m;
         }
 
+        function extractTimeOnly(datetime) {
+            if (typeof datetime !== 'string') return '';
+            const match = datetime.match(/(\d{2}:\d{2})(:\d{2})?/);
+            return match ? match[0].substring(0, 5) : '';
+        }
+
+        function excludeLunchMinutes(start, end) {
+            const lunchStart = 12 * 60;
+            const lunchEnd = 13 * 60;
+
+            // no overlap → no adjustment
+            if (end <= lunchStart || start >= lunchEnd) return 0;
+
+            // overlap → compute overlap minutes
+            const overlapStart = Math.max(start, lunchStart);
+            const overlapEnd = Math.min(end, lunchEnd);
+
+            return Math.max(0, overlapEnd - overlapStart);
+        }
+
         function calculateLateMinutes(scheduled, actual) {
             if (!scheduled || !actual) return 0;
+
             const sched = timeToMinutes(scheduled);
             const act = timeToMinutes(actual);
+
             if (act <= sched) return 0;
+
             let diff = act - sched;
-            // lunch overlap adjustment
-            const lunchStart = 12*60, lunchEnd = 13*60;
-            const overlapStart = Math.max(sched, lunchStart), overlapEnd = Math.min(act, lunchEnd);
-            if (overlapEnd > overlapStart) diff -= (overlapEnd - overlapStart);
+
+            // ✅ Subtract any overlap with lunch
+            diff -= excludeLunchMinutes(sched, act);
+
             return Math.max(0, diff);
         }
 
         function calculateUndertimeMinutes(scheduledOut, actualOut) {
             if (!scheduledOut || !actualOut) return 0;
+
             const sched = timeToMinutes(scheduledOut);
             const act = timeToMinutes(actualOut);
+
             if (act >= sched) return 0;
+
             let diff = sched - act;
-            // lunch overlap adjustment
-            const lunchStart = 12*60, lunchEnd = 13*60;
-            const overlapStart = Math.max(act, lunchStart), overlapEnd = Math.min(sched, lunchEnd);
-            if (overlapEnd > overlapStart) diff -= (overlapEnd - overlapStart);
+
+            // ✅ Subtract any overlap with lunch
+            diff -= excludeLunchMinutes(act, sched);
+
             return Math.max(0, diff);
         }
 
-        function determineClockInOrOut(attendanceTime, shiftIn, shiftOut) {
-            if (!attendanceTime) return { clockIn: '', clockOut: '' };
-            const logMins = timeToMinutes(attendanceTime);
-            const inDiff = shiftIn ? Math.abs(logMins - timeToMinutes(shiftIn)) : Infinity;
-            const outDiff = shiftOut ? Math.abs(logMins - timeToMinutes(shiftOut)) : Infinity;
-            return inDiff <= outDiff ? { clockIn: attendanceTime, clockOut: '' } : { clockIn: '', clockOut: attendanceTime };
-        }
-
-        async function fetchTimeData(startDate, endDate) {
-            const [timeLogs, overtimeRequests, outbaseRequests, offsetRequests, leaveRequests, dayOffChanges] = await Promise.all([
-                fetch(`/time_records/${currentEmployeeId}/${startDate}/${endDate}`).then(r=>r.json()),
-                fetch(`/overtime_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(r=>r.json()),
-                fetch(`/outbase_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(r=>r.json()),
-                fetch(`/offset_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(r=>r.json()),
-                fetch(`/leave_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(r=>r.json()),
-                fetch(`/day_off_change_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(r=>r.json())
-            ]);
-            return { timeLogs, overtimeRequests, outbaseRequests, offsetRequests, leaveRequests, dayOffChanges };
-        }
-
-        function renderRows(data, startDate, endDate) {
+        document.getElementById('payroll_period_id').addEventListener('change', function () {
+            const selected = this.options[this.selectedIndex];
+            const startDate = selected.getAttribute('data-start');
+            const endDate = selected.getAttribute('data-end');
             const tbody = document.getElementById('record-lines-body');
             tbody.innerHTML = '';
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            for (let i=0, dt=new Date(start); dt<=end; dt.setDate(dt.getDate()+1), i++) {
-                const dateStr = dt.toLocaleDateString('sv-SE');
-                const logs = data.timeLogs[dateStr] || {};
-                const overtime = data.overtimeRequests[dateStr] || { hours:0,start:'',end:'' };
-                const outbase = data.outbaseRequests[dateStr] || { start:'', end:'' };
-                const offset = data.offsetRequests[dateStr] || { hours:0,start:'',end:'' };
-                const leave = data.leaveRequests.dates?.[dateStr] || { days:0, with_pay:false };
-                const remainingCredits = data.leaveRequests.remaining_credits_by_date?.[dateStr] ?? '';
-                const scheduleRemark = data.dayOffChanges[dateStr] ?? '';
 
-                const timeEntries = Object.values(logs).map(extractTimeOnly).filter(t=>t.match(/^\d{2}:\d{2}$/));
-                let clockIn='', clockOut='';
-                if (timeEntries.length===1) {
-                    const r = determineClockInOrOut(timeEntries[0], scheduledTimeIn, scheduledTimeOut);
-                    clockIn=r.clockIn; clockOut=r.clockOut;
-                } else if (timeEntries.length>=2) {
-                    timeEntries.sort(); clockIn=timeEntries[0]; clockOut=timeEntries[1];
+            if (!startDate || !endDate) return;
+
+            Promise.all([
+                fetch(`/time_records/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
+                fetch(`/overtime_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
+                fetch(`/outbase_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
+                fetch(`/offset_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
+                fetch(`/leave_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
+                fetch(`/day_off_change_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(r => r.json()),
+            ]).then(([timeLogs, overtimeRequests, outbaseRequests, offsetRequests, leaveRequests, dayOffMap]) => {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+
+                if (start > end) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="18" class="text-muted text-center">No data for selected payroll period.</td>`;
+                    tbody.appendChild(row);
+                    return;
                 }
 
-                const row = document.createElement('tr');
-                row.innerHTML=`
-                    <td><input type="text" readonly name="time_record_lines[${i}][date]" class="form-control form-control-sm text-center" value="${dateStr}"></td>
-                    <td>${dt.toLocaleDateString('en-US',{ weekday:'short'})}</td>
-                    <td><input type="time" readonly name="time_record_lines[${i}][clock_in]" class="form-control form-control-sm clock-in-input" value="${clockIn}"></td>
-                    <td><input type="time" readonly name="time_record_lines[${i}][clock_out]" class="form-control form-control-sm clock-out-input" value="${clockOut}"></td>
-                    <td><input type="number" readonly name="time_record_lines[${i}][late_minutes]" class="form-control form-control-sm late-minutes-input" step="0.01"></td>
-                    <td><input type="number" readonly name="time_record_lines[${i}][undertime_minutes]" class="form-control form-control-sm undertime-minutes-input" step="0.01"></td>
-                    <td><input type="time" readonly name="time_record_lines[${i}][overtime_time_start]" class="form-control form-control-sm" value="${extractTimeOnly(overtime.start)}"></td>
-                    <td><input type="time" readonly name="time_record_lines[${i}][overtime_time_end]" class="form-control form-control-sm" value="${extractTimeOnly(overtime.end)}"></td>
-                    <td><input type="number" readonly name="time_record_lines[${i}][overtime_hours]" class="form-control form-control-sm" value="${overtime.hours}" step="0.01"></td>
-                    <td><input type="time" readonly name="time_record_lines[${i}][offset_time_start]" class="form-control form-control-sm" value="${offset.start}"></td>
-                    <td><input type="time" readonly name="time_record_lines[${i}][offset_time_end]" class="form-control form-control-sm" value="${offset.end}"></td>
-                    <td><input type="number" readonly name="time_record_lines[${i}][offset_hours]" class="form-control form-control-sm" value="${offset.hours}" step="0.01"></td>
-                    <td><input type="time" readonly name="time_record_lines[${i}][outbase_time_start]" class="form-control form-control-sm" value="${outbase.start}"></td>
-                    <td><input type="time" readonly name="time_record_lines[${i}][outbase_time_end]" class="form-control form-control-sm" value="${outbase.end}"></td>
-                    <td><input type="number" readonly name="time_record_lines[${i}][leave_days]" class="form-control form-control-sm" value="${parseFloat(leave.days||0).toFixed(2)}" step="0.01"></td>
-                    <td><input type="number" readonly name="time_record_lines[${i}][remaining_leave_credits]" class="form-control form-control-sm" value="${remainingCredits}" step="0.01"></td>
-                    <td><span>${leave.with_pay?'Yes':'No'}</span><input type="hidden" name="time_record_lines[${i}][leave_with_pay]" value="${leave.with_pay?1:0}"></td>
-                    <td class="text-warning fw-semibold"><input type="text" name="time_record_lines[${i}][schedule_remark]" class="form-control form-control-sm" value="${scheduleRemark}"></td>
-                    <td class="remarks-cell"><input type="text" name="time_record_lines[${i}][remarks]" class="form-control form-control-sm remarks-input"></td>
-                `;
-                tbody.appendChild(row);
-            }
-        }
+                for (let i = 0, dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1), i++) {
+                    const dateStr = dt.toLocaleDateString('sv-SE');
+                    const logsForDate = timeLogs[dateStr] || {};
+                    const overtimeForDate = overtimeRequests[dateStr] || { hours: 0, start: '', end: '' };
+                    const outbaseForDate = outbaseRequests[dateStr] || { start: '', end: '' };
+                    const offsetForDate = offsetRequests[dateStr] || { hours: 0, start: '', end: '' };
+                    const leaveForDate = leaveRequests.dates?.[dateStr] || { days: 0, with_pay: '' };
+                    const remainingCredits = leaveRequests.remaining_credits_by_date?.[dateStr] ?? '';
 
-        async function updateTable(startDate, endDate) {
-            const data = await fetchTimeData(startDate,endDate);
-            renderRows(data, startDate, endDate);
-        }
+                    const timeEntries = Object.values(logsForDate)
+                        .map(val => extractTimeOnly(val))
+                        .filter(time => /^\d{2}:\d{2}$/.test(time));
 
-        document.getElementById('payroll_period_id').addEventListener('change', function() {
-            const selected = this.selectedOptions[0];
-            const start = selected.dataset.start, end = selected.dataset.end;
-            if (start && end) updateTable(start,end);
-        });
+                    const dayOffRemark = dayOffMap?.[dateStr] ?? '';
 
-        document.getElementById('apply-date-correction').addEventListener('click', function() {
-            const start = document.getElementById('corrected_start_date').value;
-            const end = document.getElementById('corrected_end_date').value;
-            if (!start || !end) return alert('Please enter both start and end dates.');
-            updateTable(start,end);
+                    let clockIn = '';
+                    let clockOut = '';
+
+                    if (timeEntries.length === 1) {
+                        const actualTime = timeEntries[0];
+                        const result = determineClockInOrOut(actualTime, scheduledTimeIn, scheduledTimeOut);
+                        clockIn = result.clockIn;
+                        clockOut = result.clockOut;
+                    } else {
+                        // If there's multiple entries, try to assign Clock In and Out based on time proximity
+                        timeEntries.sort(); // earliest to latest
+                        if (timeEntries.length >= 2) {
+                            clockIn = timeEntries[0];
+                            clockOut = timeEntries[1]; // or last, depending on your policy
+                        }
+                    }
+
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><input type="text" readonly name="time_record_lines[${i}][date]" class="form-control form-control-sm text-center" value="${dateStr}"></td>
+                        <td>${new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short' })}</td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][clock_in]" class="form-control form-control-sm clock-in-input" value="${clockIn}"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][clock_out]" class="form-control form-control-sm clock-out-input" value="${clockOut}"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][late_minutes]" 
+                            class="form-control form-control-sm late-minutes-input" 
+                            style="min-width: 80px;" step="0.01">
+                        </td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][undertime_minutes]" class="form-control form-control-sm undertime-minutes-input" step="0.01"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][overtime_time_start]" class="form-control form-control-sm" value="${extractTimeOnly(overtimeForDate.start)}"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][overtime_time_end]" class="form-control form-control-sm" value="${extractTimeOnly(overtimeForDate.end)}"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][overtime_hours]" class="form-control form-control-sm" value="${overtimeForDate.hours}" step="0.01"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][offset_time_start]" class="form-control form-control-sm" value="${offsetForDate.start}"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][offset_time_end]" class="form-control form-control-sm" value="${offsetForDate.end}"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][offset_hours]" class="form-control form-control-sm" value="${offsetForDate.hours}" step="0.01"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][outbase_time_start]" class="form-control form-control-sm" value="${outbaseForDate.start}"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][outbase_time_end]" class="form-control form-control-sm" value="${outbaseForDate.end}"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][leave_days]" class="form-control form-control-sm" value="${parseFloat(leaveForDate.days || 0).toFixed(2)}" step="0.01"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][remaining_leave_credits]" class="form-control form-control-sm" value="${remainingCredits}" step="0.01"></td>
+                        <td>
+                            <span>${leaveForDate.with_pay ? 'Yes' : 'No'}</span>
+                            <input type="hidden" name="time_record_lines[${i}][leave_with_pay]" value="${leaveForDate.with_pay ? 1 : 0}">
+                        </td>
+                        <td class="remarks-cell">
+                            <input
+                                type="text"
+                                name="time_record_lines[${i}][remarks]"
+                                class="form-control form-control-sm remarks-input"
+                                value="${dayOffRemark}"
+                                readonly
+                            >
+                        </td>
+                        <td class="remarks-cell"><input type="text" name="time_record_lines[${i}][remarks]" class="form-control form-control-sm remarks-input"></td>
+                    `;
+                    tbody.appendChild(row);
+
+                    if (isFlexible) {
+                        const clockInInput = row.querySelector('.clock-in-input');
+                        const clockOutInput = row.querySelector('.clock-out-input');
+                        const undertimeInput = row.querySelector('.undertime-minutes-input');
+
+                        if (clockInInput && clockOutInput && undertimeInput) {
+                            undertimeInput.value = calculateFlexibleUndertime(clockInInput.value, clockOutInput.value);
+                        }
+                    } else {
+
+                        if (!isFlexible && scheduledTimeIn) {
+                            const clockInInput = row.querySelector('.clock-in-input');
+                            const lateInput = row.querySelector('.late-minutes-input');
+                            if (clockInInput && clockInInput.value && lateInput) {
+                                lateInput.value = calculateLateMinutes(scheduledTimeIn, clockInInput.value);
+                            }
+                        }
+
+                        if (!isFlexible && scheduledTimeOut) {
+                            const clockOutInput = row.querySelector('.clock-out-input');
+                            const undertimeInput = row.querySelector('.undertime-minutes-input');
+                            if (clockOutInput && clockOutInput.value && undertimeInput) {
+                                undertimeInput.value = calculateUndertimeMinutes(scheduledTimeOut, clockOutInput.value);
+                            }
+                        }
+                    }
+                }
+            });
         });
 
         window.addEventListener('DOMContentLoaded', () => {
             const payrollSelect = document.getElementById('payroll_period_id');
-            if (payrollSelect.value) payrollSelect.dispatchEvent(new Event('change'));
+            if (payrollSelect.value) {
+                payrollSelect.dispatchEvent(new Event('change'));
+            }
+        });
+
+        document.getElementById('apply-date-correction').addEventListener('click', function () {
+            const startDate = document.getElementById('corrected_start_date').value;
+            const endDate = document.getElementById('corrected_end_date').value;
+            const tbody = document.getElementById('record-lines-body');
+            tbody.innerHTML = '';
+
+            if (!startDate || !endDate) {
+                alert('Please enter both start and end dates.');
+                return;
+            }
+
+            Promise.all([
+                fetch(`/time_records/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
+                fetch(`/overtime_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
+                fetch(`/outbase_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
+                fetch(`/offset_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
+                fetch(`/leave_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(res => res.json()),
+                fetch(`/day_off_change_requests/${currentEmployeeId}/${startDate}/${endDate}`).then(r => r.json()),
+            ]).then(([timeLogs, overtimeRequests, outbaseRequests, offsetRequests, leaveRequests, dayOffMap]) => {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+
+                if (start > end) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="18" class="text-muted text-center">No data for selected date range.</td>`;
+                    tbody.appendChild(row);
+                    return;
+                }
+
+                for (let i = 0, dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1), i++) {
+                    const dateStr = dt.toLocaleDateString('sv-SE');
+                    const logsForDate = timeLogs[dateStr] || {};
+                    const overtimeForDate = overtimeRequests[dateStr] || { hours: 0, start: '', end: '' };
+                    const outbaseForDate = outbaseRequests[dateStr] || { start: '', end: '' };
+                    const offsetForDate = offsetRequests[dateStr] || { hours: 0, start: '', end: '' };
+                    const leaveForDate = leaveRequests.dates?.[dateStr] || { days: 0, with_pay: '' };
+                    const remainingCredits = leaveRequests.remaining_credits_by_date?.[dateStr] ?? '';
+
+                    const timeEntries = Object.values(logsForDate)
+                        .map(val => extractTimeOnly(val))
+                        .filter(time => /^\d{2}:\d{2}$/.test(time));
+
+                    const dayOffRemark = dayOffMap?.[dateStr] ?? '';
+
+                    let clockIn = '';
+                    let clockOut = '';
+
+                    if (timeEntries.length === 1) {
+                        const actualTime = timeEntries[0];
+                        const result = determineClockInOrOut(actualTime, scheduledTimeIn, scheduledTimeOut);
+                        clockIn = result.clockIn;
+                        clockOut = result.clockOut;
+                    } else {
+                        timeEntries.sort();
+                        if (timeEntries.length >= 2) {
+                            clockIn = timeEntries[0];
+                            clockOut = timeEntries[1];
+                        }
+                    }
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><input type="text" readonly name="time_record_lines[${i}][date]" class="form-control form-control-sm text-center" value="${dateStr}"></td>
+                        <td>${new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short' })}</td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][clock_in]" class="form-control form-control-sm clock-in-input" value="${clockIn}"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][clock_out]" class="form-control form-control-sm clock-out-input" value="${clockOut}"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][late_minutes]" class="form-control form-control-sm late-minutes-input" style="min-width: 80px;" step="0.01"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][undertime_minutes]" class="form-control form-control-sm undertime-minutes-input" step="0.01"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][overtime_time_start]" class="form-control form-control-sm" value="${extractTimeOnly(overtimeForDate.start)}"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][overtime_time_end]" class="form-control form-control-sm" value="${extractTimeOnly(overtimeForDate.end)}"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][overtime_hours]" class="form-control form-control-sm" value="${overtimeForDate.hours}" step="0.01"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][offset_time_start]" class="form-control form-control-sm" value="${offsetForDate.start}"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][offset_time_end]" class="form-control form-control-sm" value="${offsetForDate.end}"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][offset_hours]" class="form-control form-control-sm" value="${offsetForDate.hours}" step="0.01"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][outbase_time_start]" class="form-control form-control-sm" value="${outbaseForDate.start}"></td>
+                        <td><input type="time" readonly name="time_record_lines[${i}][outbase_time_end]" class="form-control form-control-sm" value="${outbaseForDate.end}"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][leave_days]" class="form-control form-control-sm" value="${parseFloat(leaveForDate.days || 0).toFixed(2)}" step="0.01"></td>
+                        <td><input type="number" readonly name="time_record_lines[${i}][remaining_leave_credits]" class="form-control form-control-sm" value="${remainingCredits}" step="0.01"></td>
+                        <td>
+                            <span>${leaveForDate.with_pay ? 'Yes' : 'No'}</span>
+                            <input type="hidden" name="time_record_lines[${i}][leave_with_pay]" value="${leaveForDate.with_pay ? 1 : 0}">
+                        </td>
+                        <td class="remarks-cell">
+                            <input
+                                type="text"
+                                name="time_record_lines[${i}][remarks]"
+                                class="form-control form-control-sm remarks-input"
+                                value="${dayOffRemark}"
+                                readonly
+                            >
+                        </td>
+                        <td class="remarks-cell"><input type="text" name="time_record_lines[${i}][remarks]" class="form-control form-control-sm remarks-input"></td>
+                    `;
+                    tbody.appendChild(row);
+
+                    if (isFlexible) {
+                        const clockInInput = row.querySelector('.clock-in-input');
+                        const clockOutInput = row.querySelector('.clock-out-input');
+                        const undertimeInput = row.querySelector('.undertime-minutes-input');
+
+                        if (clockInInput && clockOutInput && undertimeInput) {
+                            undertimeInput.value = calculateFlexibleUndertime(clockInInput.value, clockOutInput.value);
+                        }
+                    } else {
+
+                        if (!isFlexible && scheduledTimeIn) {
+                            const clockInInput = row.querySelector('.clock-in-input');
+                            const lateInput = row.querySelector('.late-minutes-input');
+                            if (clockInInput && clockInInput.value && lateInput) {
+                                lateInput.value = calculateLateMinutes(scheduledTimeIn, clockInInput.value);
+                            }
+                        }
+
+                        if (!isFlexible && scheduledTimeOut) {
+                            const clockOutInput = row.querySelector('.clock-out-input');
+                            const undertimeInput = row.querySelector('.undertime-minutes-input');
+                            if (clockOutInput && clockOutInput.value && undertimeInput) {
+                                undertimeInput.value = calculateUndertimeMinutes(scheduledTimeOut, clockOutInput.value);
+                            }
+                        }
+                    }
+
+                }
+            });
         });
     </script>
 </x-app-layout>
