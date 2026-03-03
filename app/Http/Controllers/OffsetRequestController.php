@@ -794,26 +794,113 @@ class OffsetRequestController extends Controller
     {
         $this->authorizeCompany($offsetRequest->company_id);
 
-        abort(403, 'Rejection is disabled for this request type. Please delete the request to remove it.');
-
         $approverId = $offsetRequest->employee->approver_id;
 
         if (auth()->id() !== $approverId) {
             abort(403, 'Unauthorized');
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'reason' => 'required|string|max:255',
         ]);
 
         DB::beginTransaction();
 
         try {
+            // Lock row to avoid race conditions while we snapshot + update + delete pivot
+            $offsetRequest = OffsetRequest::query()
+                ->whereKey($offsetRequest->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            /**
+             * 1) Snapshot OT usage BEFORE deleting pivot rows.
+             *    Keep it compact to avoid VARCHAR(255) issues.
+             */
+            $otLines = DB::table('offset_overtime as oo')
+                ->join('overtime_requests as ot', 'ot.id', '=', 'oo.overtime_request_id')
+                ->where('oo.company_id', $offsetRequest->company_id)
+                ->where('oo.offset_request_id', $offsetRequest->id)
+                ->select([
+                    'ot.date',
+                    'ot.reason',
+                    'oo.used_hours',
+                ])
+                ->orderBy('ot.date')
+                ->get();
+
+            $snapshotInline = '';
+            if ($otLines->isNotEmpty()) {
+                // Example: "OT Used: 2026-03-01(2h:Reason A); 2026-03-02(1h:Reason B)"
+                $parts = [];
+
+                foreach ($otLines as $line) {
+                    $date = $line->date ? Carbon::parse($line->date)->toDateString() : 'N/A';
+                    $used = is_numeric($line->used_hours) ? rtrim(rtrim(number_format((float) $line->used_hours, 2), '0'), '.') : (string) $line->used_hours;
+
+                    $reason = trim((string) ($line->reason ?? ''));
+                    if ($reason !== '') {
+                        // keep reason short per item
+                        $reason = mb_substr($reason, 0, 25);
+                    }
+
+                    $parts[] = $reason !== ''
+                        ? "{$date}({$used}h:{$reason})"
+                        : "{$date}({$used}h)";
+                }
+
+                $snapshotInline = ' | OT Used: ' . implode('; ', $parts);
+            }
+
+            /**
+             * 2) Append snapshot to existing project_or_event_description (no schema change).
+             *    Also: prevent duplicate append.
+             *    And: enforce safe max length (assume VARCHAR 255).
+             */
+            $baseDesc = trim((string) ($offsetRequest->project_or_event_description ?? ''));
+
+            if ($snapshotInline !== '' && !str_contains($baseDesc, '| OT Used:')) {
+                // Aim to keep the whole field <= 255 chars
+                $maxLen = 255;
+
+                $newDesc = $baseDesc . $snapshotInline;
+
+                if (mb_strlen($newDesc) > $maxLen) {
+                    // Keep as much of baseDesc as possible, then append truncated snapshot.
+                    $allowedSnapshotLen = max(0, $maxLen - mb_strlen($baseDesc) - 1); // -1 safety
+                    $truncatedSnapshot  = mb_substr($snapshotInline, 0, $allowedSnapshotLen);
+
+                    // Make sure it ends nicely if truncated
+                    if (mb_strlen($snapshotInline) > mb_strlen($truncatedSnapshot)) {
+                        // leave room for ellipsis
+                        $truncatedSnapshot = rtrim(mb_substr($snapshotInline, 0, max(0, $allowedSnapshotLen - 3))) . '...';
+                    }
+
+                    $newDesc = $baseDesc . $truncatedSnapshot;
+                }
+
+                $offsetRequest->project_or_event_description = $newDesc;
+            }
+
+            /**
+             * 3) Mark rejected
+             */
             $offsetRequest->status           = 'rejected';
             $offsetRequest->approver_id      = auth()->id();
-            $offsetRequest->rejection_reason = $request->input('reason');
+            $offsetRequest->rejection_reason = $validated['reason'];
             $offsetRequest->save();
 
+            /**
+             * 4) Delete pivot rows (release OT usage)
+             */
+            DB::table('offset_overtime')
+                ->where('company_id', $offsetRequest->company_id)
+                ->where('offset_request_id', $offsetRequest->id)
+                ->delete();
+
+            /**
+             * 5) Notify
+             */
             $employeeUser = $offsetRequest->employee->user;
 
             if ($employeeUser && $employeeUser->email) {
@@ -825,11 +912,13 @@ class OffsetRequestController extends Controller
             Log::info('Offset request rejected', [
                 'offset_request_id' => $offsetRequest->id,
                 'approver_id'       => auth()->id(),
-                'reason'            => $request->input('reason'),
+                'reason'            => $validated['reason'],
+                'ot_snapshot_count' => $otLines->count(),
             ]);
 
-            return redirect()->route('offset_requests.show', $offsetRequest->id)
-                            ->with('success', 'Offset request rejected successfully.');
+            return redirect()
+                ->route('offset_requests.show', $offsetRequest->id)
+                ->with('success', 'Offset request rejected successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -839,9 +928,10 @@ class OffsetRequestController extends Controller
                 'approver_id'       => auth()->id(),
             ]);
 
-            return back()->withErrors('An error occurred while rejecting the request.');
+            return back()->withErrors($e->getMessage());
         }
     }
+
     public function fetchApprovedByDate($employeeId, $start, $end)
     {
         $requests = OffsetRequest::where('employee_id', $employeeId)
