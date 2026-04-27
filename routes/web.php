@@ -39,7 +39,9 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketAssignmentController;
+use App\Http\Controllers\TicketAssignController;
 use App\Http\Controllers\DayOffChangeRequestController;
+use App\Http\Controllers\OvertimePreApprovalController;
 use App\Http\Middleware\EnsureUserHasCompany;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
@@ -189,6 +191,12 @@ Route::middleware('auth', EnsureUserHasCompany::class)->group(function () {
         DayOffChangeRequestController::class
     );
 
+    Route::patch('/overtime_pre_approvals/{overtime_pre_approval}/approve', [OvertimePreApprovalController::class, 'approve'])
+        ->name('overtime_pre_approvals.approve');
+    Route::patch('/overtime_pre_approvals/{overtime_pre_approval}/reject', [OvertimePreApprovalController::class, 'reject'])
+        ->name('overtime_pre_approvals.reject');
+    Route::resource('overtime_pre_approvals', OvertimePreApprovalController::class);
+
     Route::patch('/offset_requests/{offset_request}/approve', [OffsetRequestController::class, 'approve'])
         ->name('offset_requests.approve');
     Route::patch('/offset_requests/{offset_request}/reject', [OffsetRequestController::class, 'reject'])
@@ -229,6 +237,7 @@ Route::middleware('auth', EnsureUserIsAdmin::class, EnsureUserHasCompany::class)
     Route::resource('roles', RoleController::class);
     Route::resource('company_users', CompanyUserController::class);
     Route::resource('users', UserController::class);
+    Route::resource('ticket_assigns', TicketAssignController::class);
 });
 
 //Route::middleware(['auth'])->group(function () {

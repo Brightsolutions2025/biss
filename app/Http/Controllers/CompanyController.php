@@ -159,17 +159,17 @@ class CompanyController extends Controller
             'hr supervisor' => ['modules' => [
                 'department', 'team', 'employee', 'shift',
                 'employee_shift', 'payroll_period', 'time_log', 'leave_balance',
-                'time_record','leave_request', 'overtime_request',
+                'time_record','leave_request', 'overtime_request', 'overtime_pre_approval',
                 'outbase_request', 'offset_request', 'day_off_change_request',
             ]],
             'finance hris' => ['modules' => [
                 'department', 'team', 'employee', 'shift',
                 'employee_shift', 'payroll_period', 'time_log', 'leave_balance',
-                'time_record','leave_request', 'overtime_request',
+                'time_record','leave_request', 'overtime_request', 'overtime_pre_approval',
                 'outbase_request', 'offset_request', 'day_off_change_request',
             ]],
             'employee' => ['modules' => [
-                'leave_request', 'overtime_request',
+                'leave_request', 'overtime_request', 'overtime_pre_approval',
                 'outbase_request', 'offset_request', 'time_record', 'day_off_change_request',
             ]],
             'account manager' => ['modules' => ['client', 'client_contact', 'project']],
@@ -204,6 +204,7 @@ class CompanyController extends Controller
         // Shared permissions (browse_all, read, etc.)
         $sharedPermissions = collect([
             ['overtime_request.browse_all', 'Can view all overtime requests for the company'],
+            ['overtime_pre_approval.browse_all', 'Can view all overtime pre-approvals for the company'],
             ['leave_request.browse_all', 'Can view all leave requests for the company'],
             ['outbase_request.browse_all', 'Can view all outbase requests for the company'],
             ['offset_request.browse_all', 'Can view all offset requests for the company'],

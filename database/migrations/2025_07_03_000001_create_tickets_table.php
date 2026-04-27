@@ -53,8 +53,7 @@ return new class () extends Migration {
             $table->foreignId('assigned_to')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('assigned_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('assigned_at')->nullable();
-
-            // Approval flow
+                        // Approval flow
             $table->boolean('requires_approval')->default(false);
             $table->foreignId('approved_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('approved_at')->nullable();

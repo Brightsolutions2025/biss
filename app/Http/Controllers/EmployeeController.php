@@ -150,7 +150,7 @@ class EmployeeController extends Controller
                 'user_id' => auth()->id(),
             ]);
 
-            return back()->withErrors('An error occurred while creating the employee.')->withInput();
+            return back()->withErrors($e->getMessage())->withInput();
         }
     }
 

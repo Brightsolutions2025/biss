@@ -88,7 +88,7 @@
 
                         {{-- Requests --}}
                         @if($user && $user->hasAnyPermission([
-                            'leave_request.create', 'overtime_request.create',
+                            'leave_request.create', 'overtime_request.create', 'overtime_pre_approval.create',
                             'offset_request.create', 'outbase_request.create'
                         ]))
                             <li><h6 class="dropdown-header">Requests</h6></li>
@@ -97,6 +97,9 @@
                             @endif
                             @if($user->hasPermission('overtime_request.create'))
                                 <li><a class="dropdown-item" href="{{ route('overtime_requests.create') }}">Overtime</a></li>
+                            @endif
+                            @if($user->hasPermission('overtime_pre_approval.create'))
+                                <li><a class="dropdown-item" href="{{ route('overtime_pre_approvals.create') }}">Overtime Pre-Approval</a></li>
                             @endif
                             @if($user->hasPermission('offset_request.create'))
                                 <li><a class="dropdown-item" href="{{ route('offset_requests.create') }}">Offset</a></li>
@@ -174,7 +177,7 @@
 
                         {{-- Requests --}}
                         @if(auth()->user()->hasAnyPermission([
-                            'leave_request.browse', 'overtime_request.browse',
+                            'leave_request.browse', 'overtime_request.browse', 'overtime_pre_approval.browse',
                             'offset_request.browse', 'outbase_request.browse'
                         ]))
                             <li><h6 class="dropdown-header">Requests</h6></li>
@@ -183,6 +186,9 @@
                             @endif
                             @if(auth()->user()->hasPermission('overtime_request.browse'))
                                 <li><a class="dropdown-item" href="{{ route('overtime_requests.index') }}">Overtime Requests</a></li>
+                            @endif
+                            @if(auth()->user()->hasPermission('overtime_pre_approval.browse'))
+                                <li><a class="dropdown-item" href="{{ route('overtime_pre_approvals.index') }}">Overtime Pre-Approvals</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('offset_request.browse'))
                                 <li><a class="dropdown-item" href="{{ route('offset_requests.index') }}">Offset Requests</a></li>
