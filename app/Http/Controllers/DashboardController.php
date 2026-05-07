@@ -9,6 +9,8 @@ use App\Models\OutbaseRequest;
 use App\Models\OvertimeRequest;
 use App\Models\TimeRecordLine;
 use App\Models\DayOffChangeRequest;
+use App\Models\OvertimePreApproval;
+use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -84,6 +86,9 @@ class DashboardController extends Controller
                 })
                 ->sum();
 
+$overtimePreApprovalTable = (new OvertimePreApproval)->getTable();
+$overtimePreApprovalHasApproverColumn = Schema::hasColumn($overtimePreApprovalTable, 'approver_id');
+
             $data += [
                 'employeeLeaveBalance'   => max(0, $remaining),
                 'employeeUpcomingLeaves' => $employee->leaveRequests()
@@ -144,6 +149,30 @@ class DashboardController extends Controller
                     ->where('employee_id', $employee->id)
                     ->latest()
                     ->get(),
+
+'pendingOvertimePreApprovalList' => OvertimePreApproval::with('employee.user')
+    ->where('company_id', $company->id)
+    ->where('employee_id', $employee->id)
+    ->where('status', 'pending')
+    ->latest()
+    ->get(),
+
+'forApprovalOvertimePreApprovalList' => OvertimePreApproval::with('employee.user')
+    ->where('company_id', $company->id)
+    ->where('status', 'pending')
+    ->where(function ($query) use ($employee, $overtimePreApprovalHasApproverColumn) {
+        if ($overtimePreApprovalHasApproverColumn) {
+            $query->where('approver_id', $employee->user_id);
+        }
+
+        $method = $overtimePreApprovalHasApproverColumn ? 'orWhereHas' : 'whereHas';
+
+        $query->{$method}('employee', function ($q) use ($employee) {
+            $q->where('approver_id', $employee->user_id);
+        });
+    })
+    ->latest()
+    ->get(),
 
                 'forApprovalLeaveRequestList' => LeaveRequest::with('employee')
                     ->where('company_id', $company->id)

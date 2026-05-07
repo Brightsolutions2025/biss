@@ -39,9 +39,9 @@
                 @php
                     $employeeCards = [
                         ['Leave Balance (days)', $employeeLeaveBalance ?? 0],
-                        ['OT Hours Available for Offset', $employeeOffsetEligibleOtHours ?? 0],
                         ['Upcoming Leaves', $employeeUpcomingLeaves ?? 0],
                         ['Filed Overtime (hrs)', $employeeFiledOtHours ?? 0],
+                        ['Pending OT Pre-Approvals', $employeePendingOvertimePreApprovals ?? 0],
                         ['Late Time-ins', $employeeLateCount ?? 0],
                         ['Undertime Records', $employeeUndertimeCount ?? 0],
                     ];
@@ -213,6 +213,30 @@
                                     </tr>
                                 @endforeach
 
+{{-- Overtime Pre-Approvals --}}
+@foreach($pendingOvertimePreApprovalList ?? [] as $request)
+    <tr>
+        <td>OT Pre-Approval</td>
+        <td>{{ $request->employee->user->name ?? '-' }}</td>
+        <td>{{ optional($request->created_at)->format('Y-m-d') }}</td>
+        <td>
+            {{ $request->date ?? $request->overtime_date ?? '-' }}
+            @if(($request->time_start ?? $request->start_time ?? null) || ($request->time_end ?? $request->end_time ?? null))
+                ({{ $request->time_start ?? $request->start_time ?? '-' }} - {{ $request->time_end ?? $request->end_time ?? '-' }})
+            @endif
+            @if(($request->number_of_hours ?? $request->hours ?? null))
+                — {{ $request->number_of_hours ?? $request->hours }} hrs
+            @endif
+        </td>
+        <td><span class="badge bg-warning text-dark">Pending</span></td>
+        <td>
+            <a href="{{ route('overtime_pre_approvals.show', $request) }}" class="btn btn-sm btn-outline-info">
+                View
+            </a>
+        </td>
+    </tr>
+@endforeach
+
                                 {{-- Offset Requests --}}
                                 @foreach($pendingOffsetRequestList ?? [] as $request)
                                     <tr>
@@ -258,6 +282,7 @@
                                     ($pendingTimeRecordList ?? collect())->isEmpty() &&
                                     ($pendingLeaveRequestList ?? collect())->isEmpty() &&
                                     ($pendingOvertimeRequestList ?? collect())->isEmpty() &&
+($pendingOvertimePreApprovalList ?? collect())->isEmpty() &&
                                     ($pendingOffsetRequestList ?? collect())->isEmpty() &&
                                     ($pendingOutbaseRequestList ?? collect())->isEmpty() &&
                                     ($pendingDayOffChangeRequestList ?? collect())->isEmpty()
@@ -331,6 +356,26 @@
                                     </tr>
                                 @endforeach
 
+{{-- Overtime Pre-Approvals --}}
+                                @foreach($forApprovalOvertimePreApprovalList ?? [] as $request)
+                                    <tr>
+                                        <td>OT Pre-Approval</td>
+                                        <td>{{ $request->employee->user->name ?? '-' }}</td>
+                                        <td>{{ optional($request->created_at)->format('Y-m-d') }}</td>
+                                        <td>
+                                            {{ $request->date ?? $request->overtime_date ?? '-' }}
+                                            @if(($request->time_start ?? $request->start_time ?? null) || ($request->time_end ?? $request->end_time ?? null))
+                                                ({{ $request->time_start ?? $request->start_time ?? '-' }} - {{ $request->time_end ?? $request->end_time ?? '-' }})
+                                            @endif
+                                            @if(($request->number_of_hours ?? $request->hours ?? null))
+                                                — {{ $request->number_of_hours ?? $request->hours }} hrs
+                                            @endif
+                                        </td>
+                                        <td><span class="badge bg-warning text-dark">Pending</span></td>
+                                        <td><a href="{{ route('overtime_pre_approvals.show', $request) }}" class="btn btn-sm btn-outline-info">View</a></td>
+                                    </tr>
+                                @endforeach
+
                                 {{-- Offset Requests --}}
                                 @foreach($forApprovalOffsetRequestList ?? [] as $request)
                                     <tr>
@@ -376,6 +421,7 @@
                                     ($forApprovalTimeRecordList ?? collect())->isEmpty() &&
                                     ($forApprovalLeaveRequestList ?? collect())->isEmpty() &&
                                     ($forApprovalOvertimeRequestList ?? collect())->isEmpty() &&
+($forApprovalOvertimePreApprovalList ?? collect())->isEmpty() &&
                                     ($forApprovalOffsetRequestList ?? collect())->isEmpty() &&
                                     ($forApprovalOutbaseRequestList ?? collect())->isEmpty() &&
                                     ($forApprovalDayOffChangeRequestList ?? collect())->isEmpty()
