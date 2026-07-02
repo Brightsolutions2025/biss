@@ -1,4 +1,5 @@
 <x-app-layout>
+
     @php
         $user = auth()->user();
         $company = $user->preference->company ?? null;
