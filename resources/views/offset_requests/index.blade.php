@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="h4 fw-semibold text-dark">
-            {{ __('Offset Requests') }}
+            {{ __('Compensatory Time-Off Requests') }}
         </h2>
     </x-slot>
 

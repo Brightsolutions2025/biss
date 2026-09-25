@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="h4 text-dark">{{ __('Overtime Request Details') }}</h2>
+        <h2 class="h4 text-dark">{{ __('Compensatory Overtime Credit Date') }}</h2>
     </x-slot>
 
     <div class="container py-5">

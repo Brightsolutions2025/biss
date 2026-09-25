@@ -4,7 +4,7 @@
             <th colspan="7" style="font-weight: bold; font-size: 16px;">{{ $companyName ?? 'Company Name' }}</th>
         </tr>
         <tr>
-            <th colspan="7" style="font-weight: bold; font-size: 14px;">Offset Usage and Expiry Tracker</th>
+            <th colspan="7" style="font-weight: bold; font-size: 14px;">Compensatory Time-Off Usage and Expiry Tracker</th>
         </tr>
         <tr>
             <th colspan="7">

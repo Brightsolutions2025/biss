@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Overtime vs Offset Report</title>
+    <title>Compensatory Overtime Credit vs Compensatory Time-Off Report</title>
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;

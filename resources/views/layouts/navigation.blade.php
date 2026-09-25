@@ -92,23 +92,28 @@
                             'offset_request.create', 'outbase_request.create'
                         ]))
                             <li><h6 class="dropdown-header">Requests</h6></li>
-                            @if($user->hasPermission('leave_request.create'))
-                                <li><a class="dropdown-item" href="{{ route('leave_requests.create') }}">Leave</a></li>
-                            @endif
                             @if($user->hasPermission('overtime_request.create'))
-                                <li><a class="dropdown-item" href="{{ route('overtime_requests.create') }}">Overtime</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('overtime_requests.create') }}">
+                                        Compensatory Overtime Credit
+                                    </a>
+                                </li>
                             @endif
+
                             @if($user->hasPermission('overtime_pre_approval.create'))
-                                <li><a class="dropdown-item" href="{{ route('overtime_pre_approvals.create') }}">Overtime Pre-Approval</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('overtime_pre_approvals.create') }}">
+                                        Compensatory Overtime Credit Pre-Approval
+                                    </a>
+                                </li>
                             @endif
+
                             @if($user->hasPermission('offset_request.create'))
-                                <li><a class="dropdown-item" href="{{ route('offset_requests.create') }}">Offset</a></li>
-                            @endif
-                            @if($user->hasPermission('outbase_request.create'))
-                                <li><a class="dropdown-item" href="{{ route('outbase_requests.create') }}">Outbase</a></li>
-                            @endif
-                            @if($user->hasPermission('day_off_change_request.create'))
-                                <li><a class="dropdown-item" href="{{ route('day_off_change_requests.create') }}">Day Off Change</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('offset_requests.create') }}">
+                                        Compensatory Time-Off
+                                    </a>
+                                </li>
                             @endif
                         @endif
 
@@ -185,13 +190,13 @@
                                 <li><a class="dropdown-item" href="{{ route('leave_requests.index') }}">Leave Requests</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('overtime_request.browse'))
-                                <li><a class="dropdown-item" href="{{ route('overtime_requests.index') }}">Overtime Requests</a></li>
+                                <li><a class="dropdown-item" href="{{ route('overtime_requests.index') }}">Compensatory Overtime Credit Requests</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('overtime_pre_approval.browse'))
-                                <li><a class="dropdown-item" href="{{ route('overtime_pre_approvals.index') }}">Overtime Pre-Approvals</a></li>
+                                <li><a class="dropdown-item" href="{{ route('overtime_pre_approvals.index') }}">Compensatory Overtime Credit Pre-Approvals</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('offset_request.browse'))
-                                <li><a class="dropdown-item" href="{{ route('offset_requests.index') }}">Offset Requests</a></li>
+                                <li><a class="dropdown-item" href="{{ route('offset_requests.index') }}"> Compensatory Time-Off Requests</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('outbase_request.browse'))
                                 <li><a class="dropdown-item" href="{{ route('outbase_requests.index') }}">Outbase Requests</a></li>
@@ -264,7 +269,7 @@
 
                             <li><a class="dropdown-item" href="{{ route('reports.dtr_status_by_team') }}">DTR Status by Team</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.leave_utilization') }}">Leave Utilization Summary</a></li>
-                            <li><a class="dropdown-item" href="{{ route('reports.overtime_offset_comparison') }}">Overtime vs Offset Report</a></li>
+                            <li><a class="dropdown-item" href="{{ route('reports.overtime_offset_comparison') }}">Compensatory Overtime Credit vs Compensatory Time-Off Report</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.late_undertime') }}">Late and Undertime Report</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.leave_status_overview') }}">Leave Requests by Status</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.outbase_summary') }}">Outbase Request Summary</a></li>
@@ -275,12 +280,12 @@
                             <li><hr class="dropdown-divider"></li>
                             <li><h6 class="dropdown-header">Employee Reports</h6></li>
 
-                            <li><a class="dropdown-item" href="{{ route('reports.offset_tracker') }}">Offset Usage and Expiry Tracker</a></li>
+                            <li><a class="dropdown-item" href="{{ route('reports.offset_tracker') }}"> Compensatory Time-Off Usage and Expiry Tracker</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.leave_summary') }}">Leave Summary Report</a></li>
-                            <li><a class="dropdown-item" href="{{ route('reports.overtime_history') }}">Filed Overtime Report</a></li>
+                            <li><a class="dropdown-item" href="{{ route('reports.overtime_history') }}"> Compensatory Overtime Credit Report</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.leave_timeline') }}">Approved Leaves Timeline</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.outbase_history') }}">Outbase Request Report</a></li>
-                            <li><a class="dropdown-item" href="{{ route('reports.offset_summary') }}">Offset Request Summary</a></li>
+                            <li><a class="dropdown-item" href="{{ route('reports.offset_summary') }}"> Compensatory Time-Off Summary</a></li>
                         @endif
                     </ul>
                 </li>

@@ -20,6 +20,7 @@ class LeaveBalanceFactory extends Factory
             'company_id'        => Company::factory(),
             'employee_id'       => Employee::factory(),
             'year'              => $this->faker->numberBetween(2020, 2030),
+            'leave_type'        => $this->faker->randomElement(['vacation', 'emergency']),
             'beginning_balance' => $this->faker->numberBetween(0, 30),
         ];
     }

@@ -39,10 +39,11 @@
             @if($user->hasAnyRole(['employee']))
                 @php
                     $employeeCards = [
-                        ['Leave Balance (days)', $employeeLeaveBalance ?? 0],
+                        ['VL Balance (days)', $employeeVacationLeaveBalance ?? 0],
+                        ['EL Balance (days)', $employeeEmergencyLeaveBalance ?? 0],
                         ['Upcoming Leaves', $employeeUpcomingLeaves ?? 0],
-                        ['Filed Overtime (hrs)', $employeeFiledOtHours ?? 0],
-                        ['Pending OT Pre-Approvals', $employeePendingOvertimePreApprovals ?? 0],
+                        ['Compensatory Over Time Credit (hrs)', $employeeFiledOtHours ?? 0],
+                        ['Pending Compensatory Over Time Credit Pre-Approvals', $employeePendingOvertimePreApprovals ?? 0],
                         ['Late Time-ins', $employeeLateCount ?? 0],
                         ['Undertime Records', $employeeUndertimeCount ?? 0],
                     ];
@@ -64,8 +65,8 @@
                 @php
                     $adminCards = [
                         ['Pending Leave Requests', $pendingLeaveRequests ?? 0],
-                        ['Pending OT Requests', $pendingOvertimeRequests ?? 0],
-                        ['Pending Offset Requests', $pendingOffsetRequests ?? 0],
+                        ['Pending Compensatory Overtime Credit Requests', $pendingOvertimeRequests ?? 0],
+                        ['Pending Compensatory Time-Off Requests', $pendingOffsetRequests ?? 0],
                         ['Pending Outbase Requests', $pendingOutbaseRequests ?? 0],
                         ['Pending Time Records', $pendingTimeRecords ?? 0],
                         ['Total OT Hours (Period)', $monthlyOtHours ?? 0],
@@ -106,7 +107,7 @@
                             {{-- Overtime --}}
                             <div class="col-md-6 col-lg-4 d-flex gap-2">
                                 <a href="{{ route('overtime_requests.create') }}" class="btn btn-outline-primary flex-fill">
-                                    + Overtime Request
+                                    + Compensatory Overtime Credit
                                 </a>
                                 <a href="{{ route('overtime_requests.index') }}" class="btn btn-outline-secondary flex-fill">
                                     📄 View
@@ -116,7 +117,7 @@
                             {{-- Offset --}}
                             <div class="col-md-6 col-lg-4 d-flex gap-2">
                                 <a href="{{ route('offset_requests.create') }}" class="btn btn-outline-primary flex-fill">
-                                    + Offset Request
+                                    + Compensatory Time-Off
                                 </a>
                                 <a href="{{ route('offset_requests.index') }}" class="btn btn-outline-secondary flex-fill">
                                     📄 View
@@ -205,7 +206,7 @@
                                 {{-- Overtime Requests --}}
                                 @foreach($pendingOvertimeRequestList ?? [] as $request)
                                     <tr>
-                                        <td>Overtime</td>
+                                        <td>Compensatory Over Time Credit</td>
                                         <td>{{ $request->employee->user->name }}</td>
                                         <td>{{ $request->created_at->format('Y-m-d') }}</td>
                                         <td>{{ $request->date }} ({{ $request->number_of_hours }} hrs)</td>
@@ -217,7 +218,7 @@
 {{-- Overtime Pre-Approvals --}}
 @foreach($pendingOvertimePreApprovalList ?? [] as $request)
     <tr>
-        <td>OT Pre-Approval</td>
+        <td>Compensatory Over Time Credit Pre-Approval</td>
         <td>{{ $request->employee->user->name ?? '-' }}</td>
         <td>{{ optional($request->created_at)->format('Y-m-d') }}</td>
         <td>
@@ -241,7 +242,7 @@
                                 {{-- Offset Requests --}}
                                 @foreach($pendingOffsetRequestList ?? [] as $request)
                                     <tr>
-                                        <td>Offset</td>
+                                        <td>Compensatory Time-Off</td>
                                         <td>{{ $request->employee->user->name }}</td>
                                         <td>{{ $request->created_at->format('Y-m-d') }}</td>
                                         <td>{{ $request->date }} ({{ $request->number_of_hours }} hrs)</td>

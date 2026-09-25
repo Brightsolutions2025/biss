@@ -34,31 +34,113 @@
         <div class="card shadow-sm">
             <div class="card-body table-responsive">
                 <table class="table table-bordered table-striped table-hover align-middle">
-                    <thead class="table-light">
+                <thead class="table-light">
+                    <tr>
+                        <th>Employee</th>
+                        <th>Department</th>
+                        <th>Year</th>
+
+                        <th class="text-end">
+                            Vacation Leave Opening Balance
+                        </th>
+
+                        <th class="text-end">
+                            Vacation Leave Used
+                        </th>
+
+                        <th class="text-end">
+                            Remaining
+                        </th>
+
+                        <th class="text-end">
+                            Emergency Leave Opening Balance
+                        </th>
+
+                        <th class="text-end">
+                            Emergency Leave Used
+                        </th>
+
+                        <th class="text-end">
+                            Remaining
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse($leaveBalances as $row)
                         <tr>
-                            <th>Employee</th>
-                            <th>Department</th>
-                            <th>Year</th>
-                            <th class="text-end">Beginning Balance</th>
-                            <th class="text-end">Used</th>
-                            <th class="text-end">Remaining</th>
+                            <td>
+                                {{ $row['employee_name'] }}
+                            </td>
+
+                            <td>
+                                {{ $row['department'] }}
+                            </td>
+
+                            <td>
+                                {{ $row['year'] }}
+                            </td>
+
+                            {{-- VL Opening --}}
+                            <td class="text-end">
+                                {{ number_format(
+                                    $row['vacation_opening'],
+                                    2
+                                ) }}
+                            </td>
+
+                            {{-- VL Used --}}
+                            <td class="text-end">
+                                {{ number_format(
+                                    $row['vacation_used'],
+                                    2
+                                ) }}
+                            </td>
+
+                            {{-- VL Remaining --}}
+                            <td class="text-end fw-semibold">
+                                {{ number_format(
+                                    $row['vacation_remaining'],
+                                    2
+                                ) }}
+                            </td>
+
+                            {{-- EL Opening --}}
+                            <td class="text-end">
+                                {{ number_format(
+                                    $row['emergency_opening'],
+                                    2
+                                ) }}
+                            </td>
+
+                            {{-- EL Used --}}
+                            <td class="text-end">
+                                {{ number_format(
+                                    $row['emergency_used'],
+                                    2
+                                ) }}
+                            </td>
+
+                            {{-- EL Remaining --}}
+                            <td class="text-end fw-semibold">
+                                {{ number_format(
+                                    $row['emergency_remaining'],
+                                    2
+                                ) }}
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($leaveBalances as $row)
-                            <tr>
-                                <td>{{ $row['employee_name'] }}</td>
-                                <td>{{ $row['department'] }}</td>
-                                <td>{{ $row['year'] }}</td>
-                                <td class="text-end">{{ number_format($row['beginning'], 2) }}</td>
-                                <td class="text-end text-danger">{{ number_format($row['used'], 2) }}</td>
-                                <td class="text-end text-success">{{ number_format($row['remaining'], 2) }}</td>
-                            </tr>
-                        @empty
-                            <tr><td colspan="6" class="text-center">No data available.</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                    @empty
+                        <tr>
+                            <td
+                                colspan="9"
+                                class="text-center"
+                            >
+                                No data available.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
                 <!-- Download Buttons -->
                 <div class="d-flex gap-2 mb-3">
                     <a id="pdfLink"

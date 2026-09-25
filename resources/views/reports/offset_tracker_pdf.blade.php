@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Offset Usage and Expiry Tracker</title>
+    <title>Compensatory Time-Off Usage and Expiry Tracker</title>
     <style>
         body { font-family: sans-serif; font-size: 12px; }
         h2, h4 { margin: 0; padding: 0; }
@@ -15,7 +15,7 @@
 <body>
     <div class="header">
         <h2>{{ $companyName ?? 'Company Name' }}</h2>
-        <h4>Offset Usage and Expiry Tracker</h4>
+        <h4>Compensatory Time-Off Usage and Expiry Tracker/h4>
     </div>
     <div class="subheader">
         <strong>Period Covered:</strong> {{ $periodText ?? 'All Dates' }}

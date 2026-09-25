@@ -9,6 +9,9 @@ class LeaveRequest extends Model
 {
     use HasFactory;
 
+    public const TYPE_VACATION = 'vacation';
+    public const TYPE_EMERGENCY = 'emergency';
+
     protected $guarded = [];
 
     /**
@@ -47,4 +50,15 @@ class LeaveRequest extends Model
     {
         return $this->morphMany(File::class, 'fileable');
     }
+
+    public function getLeaveTypeLabelAttribute(): string
+    {
+        return config("leave.types.{$this->leave_type}.label", ucfirst((string) $this->leave_type));
+    }
+
+    public function isEmergencyLeave(): bool
+    {
+        return $this->leave_type === self::TYPE_EMERGENCY;
+    }
 }
+

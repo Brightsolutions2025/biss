@@ -37,7 +37,7 @@
                         <dt class="col-sm-3">Flexible Time</dt>
                         <dd class="col-sm-9">{{ $employee->flexible_time ? 'Yes' : 'No' }}</dd>
 
-                        <dt class="col-sm-3">OT Not Convertible to Offset</dt>
+                        <dt class="col-sm-3">Compensatory Overtime Credit cannot be used for Compensatory Time-Off</dt>
                         <dd class="col-sm-9">{{ $employee->ot_not_convertible_to_offset ? 'Yes' : 'No' }}</dd>
                     </dl>
                 </div>

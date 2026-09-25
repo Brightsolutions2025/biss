@@ -2,7 +2,7 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="h4 text-dark">{{ __('Edit Overtime Pre-Approval') }}</h2>
+        <h2 class="h4 text-dark">{{ __('Edit Compensatory Over Time Credit Pre-Approval') }}</h2>
     </x-slot>
 
     <div class="container py-5">

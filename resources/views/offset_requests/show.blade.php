@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="h4 fw-semibold text-dark">
-            {{ __('Offset Request Details') }}
+            {{ __('Compensatory Time-Off Request Details') }}
         </h2>
     </x-slot>
 
@@ -35,7 +35,7 @@
 
                     {{-- Date --}}
                     <div class="mb-3">
-                        <label class="form-label">Date to Offset</label>
+                        <label class="form-label">Compensatory Time-Off Date</label>
                         <input type="text" disabled class="form-control bg-light"
                             value="{{ $offsetRequest->date }}">
                     </div>
@@ -121,7 +121,7 @@
 
                     {{-- Linked Overtime --}}
                     <div class="mb-4">
-                        <label class="form-label mb-2">Used Overtime</label>
+                        <label class="form-label mb-2">Used Compensatory Overtime Credit</label>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead class="table-light">
@@ -130,7 +130,7 @@
                                         <th>Start</th>
                                         <th>End</th>
                                         <th>Total OT</th>
-                                        <th>Used for Offset</th>
+                                        <th>Used for Compensatory Time-Off</th>
                                     </tr>
                                 </thead>
                                 <tbody>

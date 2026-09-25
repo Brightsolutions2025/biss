@@ -1,6 +1,6 @@
 <table>
     <tr>
-        <td colspan="8" style="font-weight: bold; font-size: 16px;">Offset Request Summary</td>
+        <td colspan="8" style="font-weight: bold; font-size: 16px;">Compensatory Time-Off Summary</td>
     </tr>
     <tr>
         <td colspan="8">

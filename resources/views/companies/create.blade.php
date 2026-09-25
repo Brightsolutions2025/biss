@@ -76,7 +76,7 @@
 
                             {{-- Offset Valid After Days --}}
                             <div class="mb-3">
-                                <label for="offset_valid_after_days" class="form-label">Offset Valid After Days</label>
+                                <label for="offset_valid_after_days" class="form-label">Compensatory Time-Off Valid After Days</label>
                                 <input type="number" name="offset_valid_after_days" id="offset_valid_after_days"
                                     class="form-control @error('offset_valid_after_days') is-invalid @enderror"
                                     value="{{ old('offset_valid_after_days', 90) }}">
@@ -87,7 +87,7 @@
 
                             {{-- Offset Filing Grace Period --}}
                             <div class="mb-4">
-                                <label for="offset_valid_before_days" class="form-label">Offset Filing Grace Period</label>
+                                <label for="offset_valid_before_days" class="form-label">Compensatory Time-Off Filing Grace Period</label>
                                 <input type="number" name="offset_valid_before_days" id="offset_valid_before_days"
                                     class="form-control @error('offset_valid_before_days') is-invalid @enderror"
                                     value="{{ old('offset_valid_before_days', 26) }}">

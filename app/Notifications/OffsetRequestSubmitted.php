@@ -28,9 +28,9 @@ class OffsetRequestSubmitted extends Notification
         $employeeName = $this->offsetRequest->employee->user->name ?? 'An employee';
 
         return (new MailMessage())
-            ->subject('New Offset Request Submitted')
+            ->subject('New Compensatory Time-Off Request Submitted')
             ->greeting("Hello {$notifiable->name},")
-            ->line("{$employeeName} submitted an offset request.")
+            ->line("{$employeeName} submitted a Compensatory Time-Off request.")
             ->line('Date: ' . $this->offsetRequest->date)
             ->line('Time: ' . $this->offsetRequest->time_start . ' to ' . $this->offsetRequest->time_end)
             ->line('Project/Description: ' . $this->offsetRequest->project)

@@ -42,6 +42,12 @@
                     <input type="text" class="form-control bg-light" disabled value="{{ $leaveRequest->employee->company->name }}">
                 </div>
 
+                {{-- Leave Type --}}
+                <div class="mb-3">
+                    <label class="form-label">Leave Type</label>
+                    <input type="text" class="form-control bg-light" disabled value="{{ $leaveRequest->leave_type_label }}">
+                </div>
+
                 {{-- Start Date --}}
                 <div class="mb-3">
                     <label class="form-label">Start Date</label>

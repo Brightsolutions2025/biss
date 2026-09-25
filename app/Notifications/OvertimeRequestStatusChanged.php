@@ -38,9 +38,9 @@ class OvertimeRequestStatusChanged extends Notification
         }
 
         $mail = (new MailMessage())
-            ->subject("Overtime Request {$statusLabel}")
+            ->subject("Compensatory Overtime Credit Request {$statusLabel}")
             ->greeting("Hi {$notifiable->name},")
-            ->line("Your overtime request dated {$this->overtimeRequest->date} {$statusMessage}")
+           ->line("Your Compensatory Overtime Credit request dated {$this->overtimeRequest->date} {$statusMessage}")
             ->line("Reason: {$this->overtimeRequest->reason}");
 
         // ✅ Only add rejection reason if rejected

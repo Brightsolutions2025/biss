@@ -26,6 +26,7 @@ class EmployeeFactory extends Factory
             'department_id'   => Department::factory(),
             'team_id'         => Team::factory(),
             'user_id'         => User::factory(),
+            'employment_type' => 'Regular',
         ];
     }
 }

@@ -35,6 +35,7 @@
                 <th>Department</th>
                 <th>Team</th>
                 <th>Approver</th>
+                <th>Leave Type</th>
                 <th>Beginning Balance</th>
                 <th>Used</th>
                 <th>Remaining</th>
@@ -48,6 +49,7 @@
                     <td>{{ $row['department_name'] ?? '—' }}</td>
                     <td>{{ $row['team_name'] ?? '—' }}</td>
                     <td>{{ $row['approver_name'] ?? '—' }}</td>
+                    <td>{{ $row['leave_type'] }}</td>
                     <td>{{ number_format($row['beginning_balance'], 2) }}</td>
                     <td>{{ number_format($row['used'], 2) }}</td>
                     <td>{{ number_format($row['remaining'], 2) }}</td>
@@ -61,6 +63,7 @@
     <table>
         <thead>
             <tr>
+                <th>Leave Type</th>
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Number of Days</th>
@@ -71,6 +74,7 @@
         <tbody>
             @forelse ($leaveDetails as $leave)
                 <tr>
+                    <td>{{ $leave->leave_type_label }}</td>
                     <td>{{ \Carbon\Carbon::parse($leave->start_date)->toFormattedDateString() }}</td>
                     <td>{{ \Carbon\Carbon::parse($leave->end_date)->toFormattedDateString() }}</td>
                     <td>{{ number_format($leave->number_of_days, 2) }}</td>
@@ -79,7 +83,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="text-center text-muted">No approved leave records found.</td>
+                    <td colspan="6" class="text-center text-muted">No approved leave records found.</td>
                 </tr>
             @endforelse
         </tbody>

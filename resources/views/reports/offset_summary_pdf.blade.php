@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Offset Request Summary PDF</title>
+    <title>Compensatory Time-Off Summary PDF</title>
     <style>
         body { font-family: sans-serif; font-size: 12px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
@@ -17,7 +17,7 @@
     </style>
 </head>
 <body>
-    <h2>Offset Request Summary</h2>
+    <h2>Compensatory Time-Off Summary</h2>
     <p><strong>Period:</strong> {{ \Carbon\Carbon::parse($startDate)->format('M d, Y') }} to {{ \Carbon\Carbon::parse($endDate)->format('M d, Y') }}</p>
 
     <table>

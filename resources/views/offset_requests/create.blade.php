@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="h4 fw-semibold text-dark">
-            {{ __('Add New Offset Request') }}
+            {{ __('Add New Compensatory Time-Off Request') }}
         </h2>
     </x-slot>
 
@@ -81,7 +81,7 @@
 
                         <!-- Approved & Upcoming Overtime -->
                         <div class="mb-4">
-                            <label class="form-label">Approved and Upcoming Overtime Requests</label>
+                            <label class="form-label">Available Compensatory Overtime Credits</label>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-sm align-middle">
                                     <thead class="table-light">
@@ -89,9 +89,9 @@
                                             <th>Date</th>
                                             <th>Start</th>
                                             <th>End</th>
-                                            <th>Total OT</th>
+                                            <th>Total Credit</th>
                                             <th>Remaining</th>
-                                            <th>Hours to Offset</th>
+                                            <th>Hours to Use</th>
                                         </tr>
                                     </thead>
                                     <tbody id="overtime-table-body">

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="h4 text-dark">
-            {{ __('Overtime Pre-Approvals') }}
+            {{ __('Compensatory Over Time Credit Pre-Approval Details') }}
         </h2>
     </x-slot>
 

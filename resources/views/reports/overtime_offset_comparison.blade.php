@@ -19,7 +19,7 @@
         }
     </style>
     <x-slot name="header">
-        <h2 class="h4 fw-semibold text-dark">Overtime vs Offset Report</h2>
+        <h2 class="h4 fw-semibold text-dark">Compensatory Overtime Credit vs Compensatory Time-Off Report</h2>
     </x-slot>
 
     <div class="container py-4">

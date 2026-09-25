@@ -36,9 +36,9 @@ class OffsetRequestStatusChanged extends Notification
         };
 
         $mail = (new MailMessage())
-            ->subject("Offset Request {$statusLabel}")
+            ->subject("Compensatory Time-Off Request {$statusLabel}")
             ->greeting("Hi {$notifiable->name},")
-            ->line("Your offset request dated {$this->offsetRequest->date} {$statusMessage}")
+            ->line("Your Compensatory Time-Off request dated {$this->offsetRequest->date} {$statusMessage}")
             ->line("Project: {$this->offsetRequest->project}")
             ->line("Time: {$this->offsetRequest->time_start} to {$this->offsetRequest->time_end}");
 

@@ -6,7 +6,7 @@
     </tr>
     <tr>
         <td colspan="7" style="text-align: center; font-weight: bold; font-size: 16px;">
-            Overtime vs Offset Report
+            Compensatory Overtime Credit vs Compensatory Time-Off Report
         </td>
     </tr>
     <tr>

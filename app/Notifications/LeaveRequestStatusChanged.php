@@ -35,7 +35,7 @@ class LeaveRequestStatusChanged extends Notification
         $mail = (new MailMessage())
             ->subject("Leave Request {$statusLabel}")
             ->greeting("Hi {$notifiable->name},")
-            ->line("Your leave request from {$this->leaveRequest->date_start} to {$this->leaveRequest->date_end} {$message}")
+            ->line("Your {$this->leaveRequest->leave_type_label} request from {$this->leaveRequest->start_date} to {$this->leaveRequest->end_date} {$message}")
             ->line("Reason: {$this->leaveRequest->reason}");
 
         if ($this->status === 'rejected' && $this->leaveRequest->rejection_reason) {
