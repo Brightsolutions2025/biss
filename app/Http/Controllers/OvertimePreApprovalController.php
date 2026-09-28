@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\OvertimePreApproval;
+use App\Notifications\OvertimePreApprovalStatusChanged;
+use App\Notifications\OvertimePreApprovalSubmitted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -178,14 +180,30 @@ class OvertimePreApprovalController extends Controller
                 'status' => 'pending',
             ]);
 
-            $approver = $overtimePreApproval->employee->approver ?? null;
-
-            if ($approver && $approver->email) {
-                // Optional: create this notification later
-                // $approver->notify(new \App\Notifications\OvertimePreApprovalSubmitted($overtimePreApproval));
-            }
-
             DB::commit();
+
+            try {
+                $approver = $overtimePreApproval->employee->approver ?? null;
+
+                if ($approver && $approver->email) {
+                    $approver->notify(
+                        new OvertimePreApprovalSubmitted(
+                            $overtimePreApproval
+                        )
+                    );
+                }
+            } catch (\Throwable $mailException) {
+                Log::warning(
+                    'Compensatory OT credit pre-approval submission email failed',
+                    [
+                        'overtime_pre_approval_id' =>
+                            $overtimePreApproval->id,
+
+                        'error' =>
+                            $mailException->getMessage(),
+                    ]
+                );
+            }
 
             Log::info('Overtime pre-approval created', [
                 'overtime_pre_approval_id' => $overtimePreApproval->id,
@@ -446,14 +464,32 @@ class OvertimePreApprovalController extends Controller
             $overtimePreApproval->rejection_reason = null;
             $overtimePreApproval->save();
 
-            $employeeUser = $overtimePreApproval->employee->user ?? null;
+            DB::commit();
+
+        try {
+            $employeeUser =
+                $overtimePreApproval->employee->user ?? null;
 
             if ($employeeUser && $employeeUser->email) {
-                // Optional: create this notification later
-                // $employeeUser->notify(new \App\Notifications\OvertimePreApprovalStatusChanged($overtimePreApproval, 'approved'));
+                $employeeUser->notify(
+                    new OvertimePreApprovalStatusChanged(
+                        $overtimePreApproval,
+                        'approved'
+                    )
+                );
             }
+        } catch (\Throwable $mailException) {
+            Log::warning(
+                'Compensatory OT credit pre-approval approval email failed',
+                [
+                    'overtime_pre_approval_id' =>
+                        $overtimePreApproval->id,
 
-            DB::commit();
+                    'error' =>
+                        $mailException->getMessage(),
+                ]
+            );
+        }
 
             Log::info('Overtime pre-approval approved', [
                 'overtime_pre_approval_id' => $overtimePreApproval->id,
@@ -507,14 +543,32 @@ class OvertimePreApprovalController extends Controller
             $overtimePreApproval->rejection_reason = $request->input('reason');
             $overtimePreApproval->save();
 
-            $employeeUser = $overtimePreApproval->employee->user ?? null;
-
-            if ($employeeUser && $employeeUser->email) {
-                // Optional: create this notification later
-                // $employeeUser->notify(new \App\Notifications\OvertimePreApprovalStatusChanged($overtimePreApproval, 'rejected'));
-            }
-
             DB::commit();
+
+            try {
+                $employeeUser =
+                    $overtimePreApproval->employee->user ?? null;
+
+                if ($employeeUser && $employeeUser->email) {
+                    $employeeUser->notify(
+                        new OvertimePreApprovalStatusChanged(
+                            $overtimePreApproval,
+                            'rejected'
+                        )
+                    );
+                }
+            } catch (\Throwable $mailException) {
+                Log::warning(
+                    'Compensatory OT credit pre-approval rejection email failed',
+                    [
+                        'overtime_pre_approval_id' =>
+                            $overtimePreApproval->id,
+
+                        'error' =>
+                            $mailException->getMessage(),
+                    ]
+                );
+            }
 
             Log::info('Overtime pre-approval rejected', [
                 'overtime_pre_approval_id' => $overtimePreApproval->id,
