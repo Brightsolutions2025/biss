@@ -42,12 +42,7 @@ return new class extends Migration
 
                 $existing = DB::table('leave_balances')->where($identity)->exists();
 
-                if ($existing) {
-                    DB::table('leave_balances')->where($identity)->update([
-                        'beginning_balance' => $credits,
-                        'updated_at' => $now,
-                    ]);
-                } else {
+                if (! $existing) {
                     DB::table('leave_balances')->insert($identity + [
                         'beginning_balance' => $credits,
                         'created_at' => $now,

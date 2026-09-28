@@ -84,7 +84,7 @@
 
                     <h5 class="mb-2">Add</h5>
                     <p class="mb-4">
-                        Want to file a new offset request? Click 
+                        Want to file a new Compensatory Time-Off request? Click 
                         <a href="{{ route('offset_requests.create') }}" class="link-primary">here</a>!
                     </p>
 
@@ -117,7 +117,7 @@
                             </div>
                         </div>
                     @empty
-                        <div class="text-muted">No offset requests recorded yet.</div>
+                        <div class="text-muted">No Compensatory Time-Off requests recorded yet.</div>
                     @endforelse
 
                     {{-- Pagination --}}

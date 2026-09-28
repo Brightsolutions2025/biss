@@ -193,7 +193,7 @@
                                 <div class="form-check mt-2">
                                     <input class="form-check-input" type="checkbox" name="ot_not_convertible_to_offset" value="1" id="ot_not_convertible_to_offset" {{ old('ot_not_convertible_to_offset') ? 'checked' : '' }}>
                                     <label class="form-check-label" for="ot_not_convertible_to_offset">
-                                        Compensatory Overtime Credit <strong>cannot</strong>  be used for Compensatory Time-Off
+                                        Compensatory Over Time Credit cannot be used for Compensatory Time-Off
                                     </label>
                                 </div>
                             </div>

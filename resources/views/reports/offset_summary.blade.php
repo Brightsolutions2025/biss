@@ -68,7 +68,7 @@
         </div>
 
         @if ($offsetRequests->isEmpty())
-            <div class="alert alert-info">No offset requests found for the selected period.</div>
+            <div class="alert alert-info">No Compensatory Time-Off requests found for the selected period.</div>
         @else
             <div class="table-responsive">
                 <table class="table table-bordered table-striped table-sm">

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Compensatory Overtime Credit Report</title>
+    <title>Compensatory Over Time Credit Report</title>
     <style>
         body {
             font-family: sans-serif;
@@ -41,7 +41,7 @@
 
     <div class="text-center mb-3">
         <h2>{{ $companyName }}</h2>
-        <h4>Compensatory Overtime Credit Report</h4>
+        <h4>Compensatory Over Time Credit Report</h4>
         <p class="mb-2">
             @if (!empty($filters['start_date']) && !empty($filters['end_date']))
                 Period Covered: {{ \Carbon\Carbon::parse($filters['start_date'])->format('F d, Y') }} to {{ \Carbon\Carbon::parse($filters['end_date'])->format('F d, Y') }}
@@ -86,7 +86,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8" class="text-center text-muted">No Compensatory Overtime Credit records found.</td>
+                    <td colspan="8" class="text-center text-muted">No Compensatory Over Time Credit records found.</td>
                 </tr>
             @endforelse
         </tbody>

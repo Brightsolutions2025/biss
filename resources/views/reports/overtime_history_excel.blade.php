@@ -3,7 +3,7 @@
         <td colspan="8" style="font-weight: bold; font-size: 16px;">{{ $companyName }}</td>
     </tr>
     <tr>
-        <td colspan="8" style="font-weight: bold;">Compensatory Overtime Credit Report</td>
+        <td colspan="8" style="font-weight: bold;">Compensatory Over Time Credit Report</td>
     </tr>
     <tr>
         <td colspan="8">

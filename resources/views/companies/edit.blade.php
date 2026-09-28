@@ -87,10 +87,10 @@
                                 @enderror
                             </div>
 
-                            <!-- Offset Validity Settings -->
+                            <!-- Compensatory Time-Off Validity Settings -->
                             <div class="mb-3">
                                 <label for="offset_valid_after_days" class="form-label">
-                                   Compensatory Time-Off Valid After (days)
+                                    Compensatory Time-Off Valid After (days)
                                 </label>
                                 <input
                                     id="offset_valid_after_days"
@@ -106,7 +106,7 @@
 
                             <div class="mb-4">
                                 <label for="offset_valid_before_days" class="form-label">
-                                   Compensatory Time-Off Filing Grace Period
+                                    Compensatory Time-Off Filing Grace Period
                                 </label>
                                 <input
                                     id="offset_valid_before_days"

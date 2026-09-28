@@ -51,7 +51,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8" class="text-center">No offset requests found.</td>
+                    <td colspan="8" class="text-center">No Compensatory Time-Off requests found.</td>
                 </tr>
             @endforelse
         </tbody>

@@ -6,7 +6,7 @@
     </tr>
     <tr>
         <td colspan="7" style="text-align: center; font-weight: bold; font-size: 16px;">
-            Compensatory Overtime Credit vs Compensatory Time-Off Report
+            Compensatory Over Time Credit vs Compensatory Time-Off Report
         </td>
     </tr>
     <tr>
@@ -23,10 +23,10 @@
         <tr>
             <th>Employee</th>
             <th>Department</th>
-            <th>Total OT</th>
-            <th>Expired OT</th>
-            <th>Valid OT</th>
-            <th>Offset Used</th>
+            <th>Total Credit</th>
+            <th>Expired Credit</th>
+            <th>Valid Credit</th>
+            <th>Compensatory Time-Off Used</th>
             <th>Remaining Balance</th>
         </tr>
     </thead>

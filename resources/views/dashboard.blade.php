@@ -65,11 +65,11 @@
                 @php
                     $adminCards = [
                         ['Pending Leave Requests', $pendingLeaveRequests ?? 0],
-                        ['Pending Compensatory Overtime Credit Requests', $pendingOvertimeRequests ?? 0],
+                        ['Pending Compensatory Over Time Credit Requests', $pendingOvertimeRequests ?? 0],
                         ['Pending Compensatory Time-Off Requests', $pendingOffsetRequests ?? 0],
                         ['Pending Outbase Requests', $pendingOutbaseRequests ?? 0],
                         ['Pending Time Records', $pendingTimeRecords ?? 0],
-                        ['Total OT Hours (Period)', $monthlyOtHours ?? 0],
+                        ['Total Compensatory Over Time Credit Hours (Period)', $monthlyOtHours ?? 0],
                     ];
                 @endphp
                 @foreach($adminCards as [$title, $value])
@@ -104,17 +104,17 @@
                                 </a>
                             </div>
 
-                            {{-- Overtime --}}
+                            {{-- Compensatory Over Time Credit --}}
                             <div class="col-md-6 col-lg-4 d-flex gap-2">
                                 <a href="{{ route('overtime_requests.create') }}" class="btn btn-outline-primary flex-fill">
-                                    + Compensatory Overtime Credit
+                                    + Compensatory Over Time Credit
                                 </a>
                                 <a href="{{ route('overtime_requests.index') }}" class="btn btn-outline-secondary flex-fill">
                                     📄 View
                                 </a>
                             </div>
 
-                            {{-- Offset --}}
+                            {{-- Compensatory Time-Off --}}
                             <div class="col-md-6 col-lg-4 d-flex gap-2">
                                 <a href="{{ route('offset_requests.create') }}" class="btn btn-outline-primary flex-fill">
                                     + Compensatory Time-Off
@@ -203,7 +203,7 @@
                                     </tr>
                                 @endforeach
 
-                                {{-- Overtime Requests --}}
+                                {{-- Compensatory Over Time Credit Requests --}}
                                 @foreach($pendingOvertimeRequestList ?? [] as $request)
                                     <tr>
                                         <td>Compensatory Over Time Credit</td>
@@ -215,7 +215,7 @@
                                     </tr>
                                 @endforeach
 
-{{-- Overtime Pre-Approvals --}}
+{{-- Compensatory Over Time Credit Pre-Approvals --}}
 @foreach($pendingOvertimePreApprovalList ?? [] as $request)
     <tr>
         <td>Compensatory Over Time Credit Pre-Approval</td>
@@ -239,7 +239,7 @@
     </tr>
 @endforeach
 
-                                {{-- Offset Requests --}}
+                                {{-- Compensatory Time-Off Requests --}}
                                 @foreach($pendingOffsetRequestList ?? [] as $request)
                                     <tr>
                                         <td>Compensatory Time-Off</td>
@@ -346,10 +346,10 @@
                                     </tr>
                                 @endforeach
 
-                                {{-- Overtime Requests --}}
+                                {{-- Compensatory Over Time Credit Requests --}}
                                 @foreach($forApprovalOvertimeRequestList ?? [] as $request)
                                     <tr>
-                                        <td>Overtime</td>
+                                        <td>Compensatory Over Time Credit</td>
                                         <td>{{ $request->employee->user->name }}</td>
                                         <td>{{ $request->created_at->format('Y-m-d') }}</td>
                                         <td>{{ $request->date }} ({{ $request->number_of_hours }} hrs)</td>
@@ -358,10 +358,10 @@
                                     </tr>
                                 @endforeach
 
-{{-- Overtime Pre-Approvals --}}
+{{-- Compensatory Over Time Credit Pre-Approvals --}}
                                 @foreach($forApprovalOvertimePreApprovalList ?? [] as $request)
                                     <tr>
-                                        <td>OT Pre-Approval</td>
+                                        <td>Compensatory Over Time Credit Pre-Approval</td>
                                         <td>{{ $request->employee->user->name ?? '-' }}</td>
                                         <td>{{ optional($request->created_at)->format('Y-m-d') }}</td>
                                         <td>
@@ -378,10 +378,10 @@
                                     </tr>
                                 @endforeach
 
-                                {{-- Offset Requests --}}
+                                {{-- Compensatory Time-Off Requests --}}
                                 @foreach($forApprovalOffsetRequestList ?? [] as $request)
                                     <tr>
-                                        <td>Offset</td>
+                                        <td>Compensatory Time-Off</td>
                                         <td>{{ $request->employee->user->name }}</td>
                                         <td>{{ $request->created_at->format('Y-m-d') }}</td>
                                         <td>{{ $request->date }} ({{ $request->number_of_hours }} hrs)</td>

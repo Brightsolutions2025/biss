@@ -3,7 +3,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="h4 text-dark">
-            {{ __('Overtime Pre-Approval Details') }}
+            {{ __('Compensatory Over Time Credit Pre-Approval Details') }}
         </h2>
     </x-slot>
 
@@ -59,7 +59,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Overtime Date</label>
+                            <label class="form-label fw-semibold">Compensatory Over Time Credit Date</label>
                             <input type="text" class="form-control bg-light"
                                 value="{{ optional($overtimePreApproval->date)->format('Y-m-d') ?? 'N/A' }}" disabled>
                         </div>
@@ -85,7 +85,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Reason for Overtime</label>
+                            <label class="form-label fw-semibold">Reason for Compensatory Over Time Credit</label>
                             <textarea class="form-control bg-light" rows="3" disabled>{{ $overtimePreApproval->reason ?? 'N/A' }}</textarea>
                         </div>
 
@@ -149,7 +149,7 @@
                                 @method('DELETE')
 
                                 <button type="submit" class="btn btn-danger"
-                                    onclick="return confirm('Are you sure you want to delete this overtime pre-approval?')">
+                                    onclick="return confirm('Are you sure you want to delete this Compensatory Over Time Credit Pre-Approval?')">
                                     Delete
                                 </button>
                             </form>

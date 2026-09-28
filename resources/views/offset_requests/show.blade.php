@@ -119,9 +119,9 @@
                         </div>
                     @endif
 
-                    {{-- Linked Overtime --}}
+                    {{-- Linked Compensatory Over Time Credit --}}
                     <div class="mb-4">
-                        <label class="form-label mb-2">Used Compensatory Overtime Credit</label>
+                        <label class="form-label mb-2">Used Compensatory Over Time Credit</label>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead class="table-light">
@@ -129,7 +129,7 @@
                                         <th>Date</th>
                                         <th>Start</th>
                                         <th>End</th>
-                                        <th>Total OT</th>
+                                        <th>Total Credit</th>
                                         <th>Used for Compensatory Time-Off</th>
                                     </tr>
                                 </thead>
@@ -181,7 +181,7 @@
                         <form method="POST" action="{{ route('offset_requests.destroy', $offsetRequest->id) }}">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" onclick="return confirm('Are you sure you want to delete this offset request?')"
+                            <button type="submit" onclick="return confirm('Are you sure you want to delete this Compensatory Time-Off request?')"
                                 class="btn btn-outline-danger">Delete</button>
                         </form>
                         <a href="javascript:history.back()" class="btn btn-secondary">

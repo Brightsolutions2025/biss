@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="h4 text-dark">{{ __('Compensatory Overtime Credit Requests') }}</h2>
+        <h2 class="h4 text-dark">{{ __('Compensatory Over Time Credit Requests') }}</h2>
     </x-slot>
 
     <div class="container py-5">
@@ -69,14 +69,14 @@
                 <div class="mb-4">
                     <h5>Add</h5>
                     <p>
-                        Want to submit a new Compensatory Overtime Credit request?
+                        Want to submit a new Compensatory Over Time Credit request?
                         <a href="{{ route('overtime_requests.create') }}" class="link-primary">Click here</a>!
                     </p>
                 </div>
 
                 <!-- List Section -->
                 <div class="mb-3">
-                    <h5>Overtime Requests</h5>
+                    <h5>Compensatory Over Time Credit Requests</h5>
                 </div>
 
                 @forelse ($overtimeRequests as $request)
@@ -114,7 +114,7 @@
                         </div>
                     </div>
                 @empty
-                    <p class="text-muted">No Compensatory Over Time Credit requests recorded.{{ request('date') ? ' on this date' : '' }}.</p>
+                    <p class="text-muted">No Compensatory Over Time Credit requests recorded{{ request('date') ? ' on this date' : '' }}.</p>
                 @endforelse
 
                 @php

@@ -79,9 +79,9 @@
                             @error('reason') <div class="text-danger small">{{ $message }}</div> @enderror
                         </div>
 
-                        <!-- Approved & Upcoming Overtime -->
+                        <!-- Available Compensatory Over Time Credits -->
                         <div class="mb-4">
-                            <label class="form-label">Available Compensatory Overtime Credits</label>
+                            <label class="form-label">Available Compensatory Over Time Credits</label>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-sm align-middle">
                                     <thead class="table-light">
@@ -155,7 +155,7 @@
         const OFFSET_VALID_DAYS = {{ $employee->company->offset_valid_after_days ?? 90 }};
 
         document.addEventListener('DOMContentLoaded', () => {
-            // OT input listeners
+            // Compensatory Over Time Credit input listeners
             const inputs = document.querySelectorAll('.hours-to-offset');
             inputs.forEach(input => {
                 input.addEventListener('input', () => {
@@ -193,7 +193,7 @@
             timeStart.addEventListener('change', calculateHours);
             timeEnd.addEventListener('change', calculateHours);
 
-            // Initial expired OT check
+            // Initial expired Compensatory Over Time Credit check
             updateExpiredOvertime();
             document.getElementById('date').addEventListener('change', e => {
                 updateExpiredOvertime(e.target.value);

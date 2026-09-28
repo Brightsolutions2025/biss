@@ -13,7 +13,7 @@
         </tr>
         <tr>
             <th>Employee</th>
-            <th>Overtime Date</th>
+            <th>Compensatory Over Time Credit Date</th>
             <th>Approved Hours</th>
             <th>Used Hours</th>
             <th>Remaining</th>

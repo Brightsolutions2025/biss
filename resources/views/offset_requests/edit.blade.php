@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="h4 fw-semibold text-dark">
-            {{ __('Add New Compensatory Time-Off Request') }}
+            {{ __('Edit Compensatory Time-Off Request') }}
         </h2>
     </x-slot>
 
@@ -71,9 +71,9 @@
                             <textarea id="reason" name="reason" rows="3" class="form-control">{{ old('reason', $offsetRequest->reason) }}</textarea>
                         </div>
 
-                        <!-- Overtime Mapping -->
+                        <!-- Compensatory Over Time Credit Mapping -->
                         <div class="mb-4">
-                            <label class="form-label">Approved and Upcoming Overtime Requests</label>
+                            <label class="form-label">Available Compensatory Over Time Credits</label>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-sm align-middle">
                                     <thead class="table-light">
@@ -81,9 +81,9 @@
                                             <th>Date</th>
                                             <th>Start</th>
                                             <th>End</th>
-                                            <th>Total OT</th>
+                                            <th>Total Credit</th>
                                             <th>Remaining</th>
-                                            <th>Hours to Offset</th>
+                                            <th>Hours to Use</th>
                                         </tr>
                                     </thead>
                                     <tbody id="overtime-table-body">
@@ -162,7 +162,7 @@
             timeStart.addEventListener('change', calculateHours);
             timeEnd.addEventListener('change', calculateHours);
 
-            // Expired OT check on load
+            // Expired Compensatory Over Time Credit check on load
             updateExpiredOvertime();
             document.getElementById('date').addEventListener('change', e => {
                 updateExpiredOvertime(e.target.value);

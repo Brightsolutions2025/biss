@@ -22,7 +22,7 @@
                 <thead class="table-light">
                     <tr>
                         <th>Employee</th>
-                        <th>Overtime Date</th>
+                        <th>Compensatory Over Time Credit Date</th>
                         <th>Approved Hours</th>
                         <th>Used Hours</th>
                         <th>Remaining</th>
@@ -69,16 +69,16 @@
                 </a>
             </div>
             @if ($employeeModel)
-                <h5 class="fw-bold mt-4">Detailed Overtime & Offset Requests: {{ $employeeModel->user->name }}</h5>
+                <h5 class="fw-bold mt-4">Detailed Compensatory Over Time Credit & Compensatory Time-Off Requests: {{ $employeeModel->user->name }}</h5>
 
                 <table class="table table-bordered table-sm table-hover align-middle mt-2">
                     <thead class="table-light">
                         <tr>
-                            <th>OT Date</th>
-                            <th class="text-end">OT Hours</th>
+                            <th>Credit Date</th>
+                            <th class="text-end">Credit Hours</th>
                             <th class="text-end text-danger">Expired?</th>
-                            <th>Offset Date</th>
-                            <th class="text-end">Offset Hours</th>
+                            <th>Compensatory Time-Off Date</th>
+                            <th class="text-end">Compensatory Time-Off Hours</th>
                             <th class="text-end text-success">Remaining Balance (Unexpired)</th>
                         </tr>
                     </thead>
@@ -131,7 +131,7 @@
                             @endforeach
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center">No overtime or offset records found.</td>
+                                <td colspan="6" class="text-center">No Compensatory Over Time Credit or Compensatory Time-Off records found.</td>
                             </tr>
                         @endforelse
                     </tbody>

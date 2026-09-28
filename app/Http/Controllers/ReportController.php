@@ -77,7 +77,7 @@ class ReportController extends Controller
             ],
 
             // Filed Overtime Report
-           [
+            [
                 'title'       => 'Compensatory Over Time Credit Report',
                 'description' => 'List all Compensatory Over Time Credit requests with status, hours, and usage.',
                 'route'       => 'reports.overtime_history',
@@ -263,81 +263,70 @@ class ReportController extends Controller
         return Excel::download(new DtrStatusExport($reportData, $payrollPeriod), 'DTR_Status_Report.xlsx');
     }
     public function leaveUtilization(Request $request)
-{
-    $user    = auth()->user();
-    $company = $user->preference->company;
+    {
+        $user = auth()->user();
+        $company = $user->preference->company;
 
-    if (!$user->hasPermission('view leave report')) {
-        abort(403, 'Unauthorized to view leave reports.');
-    }
+        if (!$user->hasPermission('view leave report')) {
+            abort(403, 'Unauthorized to view leave reports.');
+        }
 
-    $yearFilter       = $request->input('year');
-    $departmentFilter = $request->input('department_id');
+        $yearFilter = $request->input('year');
+        $departmentFilter = $request->input('department_id');
 
-    // Use the same data builder used by PDF and Excel.
-    // This now returns one row per employee/year,
-    // with separate VL and EL columns.
-    $leaveBalances = $this->getLeaveUtilizationData(
-        $request,
-        $company
-    );
+        // Use one shared data builder so the web, PDF, and Excel reports stay consistent.
+        $leaveBalances = $this->getLeaveUtilizationData($request, $company);
 
-    $departments = \App\Models\Department::where(
-        'company_id',
-        $company->id
-    )
-        ->orderBy('name')
-        ->get();
+        $departments = \App\Models\Department::where('company_id', $company->id)
+            ->orderBy('name')
+            ->get();
 
-    $years = \App\Models\LeaveBalance::where(
-        'company_id',
-        $company->id
-    )
-        ->select('year')
-        ->distinct()
-        ->pluck('year')
-        ->sortDesc();
+        $years = \App\Models\LeaveBalance::where('company_id', $company->id)
+            ->select('year')
+            ->distinct()
+            ->pluck('year')
+            ->sortDesc();
 
-    return view(
-        'reports.leave_utilization',
-        compact(
+        return view('reports.leave_utilization', compact(
             'leaveBalances',
             'departments',
             'years',
             'yearFilter',
             'departmentFilter'
-        )
-    );
-}
+        ));
+    }
+
     public function leaveUtilizationPdf(Request $request)
     {
-        $user    = auth()->user();
+        $user = auth()->user();
         $company = $user->preference->company;
+
         if (!$user->hasPermission('view leave report')) {
             abort(403, 'Unauthorized to view leave reports.');
         }
 
-        $data          = $this->getLeaveUtilizationData($request, $company);
+        $data = $this->getLeaveUtilizationData($request, $company);
         $periodCovered = $this->getPeriodText($request);
 
         $pdf = Pdf::loadView('reports.leave_utilization_pdf', [
-            'company'       => $company,
+            'company' => $company,
             'leaveBalances' => $data,
             'periodCovered' => $periodCovered,
-        ])->setPaper('A4', 'portrait');
+        ])->setPaper('A4', 'landscape');
 
         return $pdf->download('leave_utilization_summary.pdf');
     }
 
     public function leaveUtilizationExcel(Request $request)
     {
-        $user    = auth()->user();
+        $user = auth()->user();
         $company = $user->preference->company;
+
         if (!$user->hasPermission('view leave report')) {
             abort(403, 'Unauthorized to view leave reports.');
         }
 
-        $data          = $this->getLeaveUtilizationData($request, $company);
+        $data = $this->getLeaveUtilizationData($request, $company);
         $periodCovered = $this->getPeriodText($request);
 
         return Excel::download(
@@ -345,198 +334,78 @@ class ReportController extends Controller
             'leave_utilization_summary.xlsx'
         );
     }
+
     protected function getLeaveUtilizationData(Request $request, $company)
-{
-    $yearFilter       = $request->input('year');
-    $departmentFilter = $request->input('department_id');
+    {
+        $yearFilter = $request->input('year');
+        $departmentFilter = $request->input('department_id');
 
-    /*
-     * Get all leave balances first.
-     *
-     * There may be:
-     *
-     * Employee 102 | 2026 | vacation  | 12
-     * Employee 102 | 2026 | emergency | 3
-     *
-     * Later below, these two records will be combined
-     * into ONE report row.
-     */
-    $query = \App\Models\LeaveBalance::with([
-        'employee.user',
-        'employee.department',
-    ])
-        ->where('company_id', $company->id);
+        $query = \App\Models\LeaveBalance::with([
+            'employee.user',
+            'employee.department',
+        ])->where('company_id', $company->id);
 
-    /*
-     * Preserve the existing Department Head restriction.
-     */
-    $query->whereHas('employee', function ($q) {
-        $this->restrictToDepartmentHead($q);
-    });
+        $query->whereHas('employee', function ($q) {
+            $this->restrictToDepartmentHead($q);
+        });
 
-    /*
-     * Filter by year when selected.
-     */
-    if ($yearFilter) {
-        $query->where('year', $yearFilter);
+        if ($yearFilter) {
+            $query->where('year', $yearFilter);
+        }
+
+        if ($departmentFilter) {
+            $query->whereHas('employee', function ($q) use ($departmentFilter) {
+                $q->where('department_id', $departmentFilter);
+            });
+        }
+
+        $balances = $query->get();
+
+        return $balances
+            ->groupBy(function ($balance) {
+                return $balance->employee_id . '-' . $balance->year;
+            })
+            ->map(function ($employeeBalances) {
+                $firstBalance = $employeeBalances->first();
+
+                $vacationBalance = $employeeBalances->firstWhere('leave_type', 'vacation');
+                $emergencyBalance = $employeeBalances->firstWhere('leave_type', 'emergency');
+
+                $usedByType = \App\Models\LeaveRequest::where(
+                    'employee_id',
+                    $firstBalance->employee_id
+                )
+                    ->where('company_id', $firstBalance->company_id)
+                    ->where('status', 'approved')
+                    ->where('leave_with_pay', true)
+                    ->whereYear('start_date', $firstBalance->year)
+                    ->whereIn('leave_type', ['vacation', 'emergency'])
+                    ->selectRaw('leave_type, SUM(number_of_days) as total_used')
+                    ->groupBy('leave_type')
+                    ->pluck('total_used', 'leave_type');
+
+                $vacationOpening = (float) ($vacationBalance?->beginning_balance ?? 0);
+                $vacationUsed = (float) ($usedByType->get('vacation') ?? 0);
+                $emergencyOpening = (float) ($emergencyBalance?->beginning_balance ?? 0);
+                $emergencyUsed = (float) ($usedByType->get('emergency') ?? 0);
+
+                return [
+                    'employee_name' => $firstBalance->employee->user->name ?? 'N/A',
+                    'department' => $firstBalance->employee->department->name ?? 'Unassigned',
+                    'year' => $firstBalance->year,
+
+                    'vacation_opening' => $vacationOpening,
+                    'vacation_used' => $vacationUsed,
+                    'vacation_remaining' => $vacationOpening - $vacationUsed,
+
+                    'emergency_opening' => $emergencyOpening,
+                    'emergency_used' => $emergencyUsed,
+                    'emergency_remaining' => $emergencyOpening - $emergencyUsed,
+                ];
+            })
+            ->values();
     }
 
-    /*
-     * Filter by department when selected.
-     */
-    if ($departmentFilter) {
-        $query->whereHas(
-            'employee',
-            function ($q) use ($departmentFilter) {
-                $q->where(
-                    'department_id',
-                    $departmentFilter
-                );
-            }
-        );
-    }
-
-    $balances = $query->get();
-
-    /*
-     * Group VL and EL balances together using:
-     *
-     * employee_id + year
-     *
-     * Example:
-     *
-     * Employee 102 / 2026 / Vacation
-     * Employee 102 / 2026 / Emergency
-     *
-     * becomes:
-     *
-     * Employee 102 / 2026
-     */
-    return $balances
-        ->groupBy(function ($balance) {
-            return $balance->employee_id
-                . '-'
-                . $balance->year;
-        })
-        ->map(function ($employeeBalances) {
-
-            /*
-             * Get the common employee/year information.
-             */
-            $firstBalance = $employeeBalances->first();
-
-            /*
-             * Find this employee's VL balance.
-             */
-            $vacationBalance = $employeeBalances->firstWhere(
-                'leave_type',
-                'vacation'
-            );
-
-            /*
-             * Find this employee's EL balance.
-             */
-            $emergencyBalance = $employeeBalances->firstWhere(
-                'leave_type',
-                'emergency'
-            );
-
-            /*
-             * Calculate approved PAID leave usage
-             * separately for VL and EL.
-             *
-             * Only approved leave_with_pay requests
-             * consume leave credits.
-             */
-            $usedByType = \App\Models\LeaveRequest::where(
-                'employee_id',
-                $firstBalance->employee_id
-            )
-                ->where(
-                    'company_id',
-                    $firstBalance->company_id
-                )
-                ->where('status', 'approved')
-                ->where('leave_with_pay', true)
-                ->whereYear(
-                    'start_date',
-                    $firstBalance->year
-                )
-                ->whereIn(
-                    'leave_type',
-                    [
-                        'vacation',
-                        'emergency',
-                    ]
-                )
-                ->selectRaw(
-                    'leave_type, SUM(number_of_days) as total_used'
-                )
-                ->groupBy('leave_type')
-                ->pluck(
-                    'total_used',
-                    'leave_type'
-                );
-
-            return [
-                'employee_name' =>
-                    $firstBalance->employee->user->name
-                    ?? 'N/A',
-
-                'department' =>
-                    $firstBalance->employee->department->name
-                    ?? 'Unassigned',
-
-                'year' =>
-                    $firstBalance->year,
-
-                /*
-                    * VACATION LEAVE
-                    */
-                    'vacation_opening' =>
-                        (float) (
-                            $vacationBalance?->beginning_balance
-                            ?? 0
-                        ),
-
-                    'vacation_used' =>
-                        (float) (
-                            $usedByType->get('vacation')
-                            ?? 0
-                        ),
-
-                    'vacation_remaining' =>
-                        (float) (
-                            ($vacationBalance?->beginning_balance ?? 0)
-                            -
-                            ($usedByType->get('vacation') ?? 0)
-                        ),
-
-                    /*
-                    * EMERGENCY LEAVE
-                    */
-                    'emergency_opening' =>
-                        (float) (
-                            $emergencyBalance?->beginning_balance
-                            ?? 0
-                        ),
-
-                    'emergency_used' =>
-                        (float) (
-                            $usedByType->get('emergency')
-                            ?? 0
-                        ),
-
-                    'emergency_remaining' =>
-                        (float) (
-                            ($emergencyBalance?->beginning_balance ?? 0)
-                            -
-                            ($usedByType->get('emergency') ?? 0)
-                        ),
-            ];
-        })
-        ->values();
-}
     protected function getPeriodText(Request $request): string
     {
         $year         = $request->input('year');
