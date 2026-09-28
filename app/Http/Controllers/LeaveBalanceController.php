@@ -177,15 +177,19 @@ class LeaveBalanceController extends Controller
         }
 
         $employees = Employee::where('company_id', $leaveBalance->company_id)
-            ->where(function ($query) use ($leaveBalance) {
-                $query->whereIn(DB::raw('LOWER(TRIM(employment_type))'), ['regular', 'regular employee'])
-                    ->orWhereKey($leaveBalance->employee_id);
-            })
-            ->get();
+        ->where(function ($query) use ($leaveBalance) {
+        $query->whereIn(
+            DB::raw('LOWER(TRIM(employment_type))'),
+            ['regular', 'regular employee']
+        )
+        ->orWhere(
+            'employees.id',
+            $leaveBalance->employee_id
+        );
+    })
+    ->get();
 
-        $leaveTypes = $this->leaveCredits->labels();
-
-        return view('leave_balances.edit', compact('leaveBalance', 'employees', 'leaveTypes'));
+        return view('leave_balances.edit', compact('leaveBalance'));
     }
 
     /**
