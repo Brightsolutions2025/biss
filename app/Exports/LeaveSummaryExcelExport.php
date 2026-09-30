@@ -2,55 +2,42 @@
 
 namespace App\Exports;
 
-use App\Models\LeaveBalance;
 use App\Models\LeaveRequest;
+use App\Services\LeaveCreditService;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 
 class LeaveSummaryExcelExport implements FromView
 {
-    protected $user;
-    protected $company;
-    protected $year;
-
-    public function __construct($user, $company, $year)
-    {
-        $this->user    = $user;
-        $this->company = $company;
-        $this->year    = $year;
+    public function __construct(
+        protected $user,
+        protected $company,
+        protected $year
+    ) {
     }
 
     public function view(): View
     {
         $employee = $this->user->employee;
+        $leaveCredits = app(LeaveCreditService::class);
 
-        $leaveBalance = LeaveBalance::with(['employee.user', 'employee.department', 'employee.team', 'employee.approver'])
-            ->where('company_id', $this->company->id)
-            ->where('employee_id', $employee->id)
-            ->where('year', $this->year)
-            ->first();
+        $leaveBalances = collect($leaveCredits->types())->map(function (string $leaveType) use ($employee, $leaveCredits) {
+            $summary = $leaveCredits->summary($employee, (int) $this->year, $leaveType);
+            $beginning = $summary['beginning'];
+            $used = $summary['used'];
 
-        $used = LeaveRequest::where('company_id', $this->company->id)
-            ->where('employee_id', $employee->id)
-            ->whereYear('start_date', $this->year)
-            ->where('status', 'approved')
-            ->where('leave_with_pay', true)
-            ->sum('number_of_days');
-
-        $beginning   = $leaveBalance?->beginning_balance ?? 0;
-        $remaining   = max(0, $beginning - $used);
-        $utilization = $beginning > 0 ? round(($used / $beginning) * 100, 1) : 0;
-
-        $leaveBalances = collect([[
-            'employee_name'     => $employee->user->name       ?? 'N/A',
-            'department_name'   => $employee->department->name ?? null,
-            'team_name'         => $employee->team->name       ?? null,
-            'approver_name'     => $employee->approver->name   ?? null,
-            'beginning_balance' => $beginning,
-            'used'              => $used,
-            'remaining'         => $remaining,
-            'utilization'       => $utilization,
-        ]]);
+            return [
+                'employee_name' => $employee->user->name ?? 'N/A',
+                'department_name' => $employee->department->name ?? null,
+                'team_name' => $employee->team->name ?? null,
+                'approver_name' => $employee->approver->name ?? null,
+                'leave_type' => $summary['label'],
+                'beginning_balance' => $beginning,
+                'used' => $used,
+                'remaining' => $summary['remaining'],
+                'utilization' => $beginning > 0 ? round(($used / $beginning) * 100, 1) : 0,
+            ];
+        });
 
         $leaveDetails = LeaveRequest::where('company_id', $this->company->id)
             ->where('employee_id', $employee->id)
@@ -62,9 +49,9 @@ class LeaveSummaryExcelExport implements FromView
 
         return view('reports.leave_summary_excel', [
             'leaveBalances' => $leaveBalances,
-            'leaveDetails'  => $leaveDetails,
-            'year'          => $this->year,
-            'companyName'   => $this->company->name,
+            'leaveDetails' => $leaveDetails,
+            'year' => $this->year,
+            'companyName' => $this->company->name,
         ]);
     }
 }

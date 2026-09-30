@@ -39,7 +39,8 @@
             @if($user->hasAnyRole(['employee']))
                 @php
                     $employeeCards = [
-                        ['Leave Balance (days)', $employeeLeaveBalance ?? 0],
+                        ['VL Balance (days)', $employeeVacationLeaveBalance ?? 0],
+                        ['EL Balance (days)', $employeeEmergencyLeaveBalance ?? 0],
                         ['Upcoming Leaves', $employeeUpcomingLeaves ?? 0],
                         ['Compensatory Overtime Credit (hrs)', $employeeFiledOtHours ?? 0],
                         ['Pending Compensatory Overtime Credit Pre-Approvals', $employeePendingOvertimePreApprovals ?? 0],

@@ -114,7 +114,7 @@
                                 <div class="leave-entry">
                                     {{ $entry->employee->user->name ?? 'N/A' }}
                                     <br>
-                                    <small>{{ $entry->type ?? 'Leave' }}</small>
+                                    <small>{{ $entry->leave_type_label }}</small>
                                 </div>
                             @endforeach
                         @endif

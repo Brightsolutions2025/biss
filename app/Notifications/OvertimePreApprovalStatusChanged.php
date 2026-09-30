@@ -37,11 +37,11 @@ class OvertimePreApprovalStatusChanged extends Notification
 
         $mail = (new MailMessage())
             ->subject(
-                "Compensatory Over Time Credit Pre-Approval {$statusLabel}"
+                "Compensatory Overtime Credit Pre-Approval {$statusLabel}"
             )
             ->greeting("Hello {$notifiable->name},")
             ->line(
-                "Your Compensatory Over Time Credit Pre-Approval for {$date} {$statusMessage}"
+                "Your Compensatory Overtime Credit Pre-Approval for {$date} {$statusMessage}"
             )
             ->line(
                 'Estimated Credit Hours: ' .

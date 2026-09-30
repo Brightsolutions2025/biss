@@ -35,11 +35,11 @@ class OvertimePreApprovalSubmitted extends Notification
 
         $mail = (new MailMessage())
             ->subject(
-                'New Compensatory Over Time Credit Pre-Approval Submitted'
+                'New Compensatory Overtime Credit Pre-Approval Submitted'
             )
             ->greeting("Hello {$notifiable->name},")
             ->line(
-                "{$employeeName} submitted a Compensatory Over Time Credit Pre-Approval."
+                "{$employeeName} submitted a Compensatory Overtime Credit Pre-Approval."
             )
             ->line("Date: {$date}")
             ->line(

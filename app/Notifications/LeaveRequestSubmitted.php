@@ -30,8 +30,8 @@ class LeaveRequestSubmitted extends Notification
         return (new MailMessage())
             ->subject('New Leave Request Submitted')
             ->greeting("Hello {$notifiable->name},")
-            ->line("{$employeeName} submitted a leave request.")
-            ->line('Date: ' . $this->leaveRequest->date_start . ' to ' . $this->leaveRequest->date_end)
+            ->line("{$employeeName} submitted a {$this->leaveRequest->leave_type_label} request.")
+            ->line('Date: ' . $this->leaveRequest->start_date . ' to ' . $this->leaveRequest->end_date)
             ->line('Reason: ' . $this->leaveRequest->reason)
             ->action('View Request', route('leave_requests.show', $this->leaveRequest->id))
             ->line('Please review and take action.');

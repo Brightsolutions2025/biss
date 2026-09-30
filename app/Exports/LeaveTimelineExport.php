@@ -58,7 +58,7 @@ class LeaveTimelineExport implements FromArray, WithTitle, WithStyles
 
             if ($entries->isNotEmpty()) {
                 foreach ($entries as $entry) {
-                    $cell .= "\n" . $entry->type . ': ' . $entry->reason;
+                    $cell .= "\n" . $entry->leave_type_label . ': ' . $entry->reason;
                 }
             }
 
