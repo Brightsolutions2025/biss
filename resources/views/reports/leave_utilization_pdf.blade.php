@@ -34,7 +34,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($leaveBalances as $row)
+            @forelse ($leaveBalances as $row)
                 <tr>
                     <td>{{ $row['employee_name'] }}</td>
                     <td>{{ $row['department'] }}</td>
@@ -46,7 +46,9 @@
                     <td class="text-right">{{ number_format($row['emergency_used'], 2) }}</td>
                     <td class="text-right">{{ number_format($row['emergency_remaining'], 2) }}</td>
                 </tr>
-            @endforeach
+            @empty
+                <tr><td colspan="9" class="text-center">No data available.</td></tr>
+            @endforelse
         </tbody>
     </table>
 

@@ -14,6 +14,7 @@ use App\Models\TimeRecord;
 use App\Models\DayOffChangeRequest;
 use App\Notifications\TimeRecordStatusChanged;
 use App\Notifications\TimeRecordSubmitted;
+use App\Services\AttendancePolicyService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -113,7 +114,7 @@ class TimeRecordController extends Controller
     /**
      * Show the form for creating a new time record.
      */
-    public function create()
+    public function create(AttendancePolicyService $attendancePolicyService)
     {
         if (!auth()->user()->hasPermission('time_record.create')) {
             abort(403, 'Unauthorized to create time records.');
@@ -130,10 +131,12 @@ class TimeRecordController extends Controller
 
         $employees      = Employee::where('company_id', $companyId)->get();
         $payrollPeriods = PayrollPeriod::where('company_id', $companyId)->get();
+        $attendancePolicy = $attendancePolicyService->frontendConfig($employee);
 
         return view('time_records.create', compact(
             'employee',
-            'payrollPeriods'
+            'payrollPeriods',
+            'attendancePolicy'
         ));
     }
 
@@ -159,7 +162,7 @@ class TimeRecordController extends Controller
     /**
      * Store a newly created time record in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, AttendancePolicyService $attendancePolicyService)
     {
         if (!auth()->user()->hasPermission('time_record.create')) {
             abort(403, 'Unauthorized to create time records.');
@@ -226,13 +229,20 @@ class TimeRecordController extends Controller
             ]);
 
             foreach ($validated['time_record_lines'] as $line) {
+                $attendance = $attendancePolicyService->calculate(
+                    $employee,
+                    $line['date'],
+                    $line['clock_in'] ?? null,
+                    $line['clock_out'] ?? null
+                );
+
                 $timeRecord->lines()->create([
                     'company_id'              => $companyId,
                     'date'                    => $line['date'],
                     'clock_in'                => $line['clock_in']                ?? null,
                     'clock_out'               => $line['clock_out']               ?? null,
-                    'late_minutes'            => $line['late_minutes']            ?? 0,
-                    'undertime_minutes'       => $line['undertime_minutes']       ?? 0,
+                    'late_minutes'            => $attendance['late_minutes'],
+                    'undertime_minutes'       => $attendance['undertime_minutes'],
                     'overtime_time_start'     => $line['overtime_time_start']     ?? null,
                     'overtime_time_end'       => $line['overtime_time_end']       ?? null,
                     'overtime_hours'          => $line['overtime_hours']          ?? 0,
@@ -288,7 +298,7 @@ class TimeRecordController extends Controller
     /**
      * Display the specified time record.
      */
-    public function show(TimeRecord $timeRecord)
+    public function show(TimeRecord $timeRecord, AttendancePolicyService $attendancePolicyService)
     {
         $user = auth()->user();
 
@@ -369,6 +379,7 @@ class TimeRecordController extends Controller
                 ->get();
 
             $outbaseRequests = OutbaseRequest::where('employee_id', $employeeId)
+                ->where('company_id', $timeRecord->company_id)
                 ->where('status', 'approved')
                 ->whereBetween('date', [$startDate, $endDate])
                 ->get();
@@ -400,6 +411,32 @@ class TimeRecordController extends Controller
                 ->map(fn ($items) => implode(', ', $items));
         }
 
+        $outbaseRequestsByDate = $outbaseRequests->groupBy(
+            fn (OutbaseRequest $request) => Carbon::parse($request->date)->toDateString()
+        );
+
+        $dailyWorkTotals = $timeRecord->lines->mapWithKeys(function ($line) use (
+            $timeRecord,
+            $attendancePolicyService,
+            $outbaseRequestsByDate
+        ) {
+            $date = Carbon::parse($line->date)->toDateString();
+            $approvedOutbase = $outbaseRequestsByDate->get($date, collect());
+
+            $minutes = $attendancePolicyService->totalCreditedWorkMinutes(
+                $timeRecord->employee,
+                $date,
+                $line->clock_in,
+                $line->clock_out,
+                $approvedOutbase
+            );
+
+            return [$date => [
+                'minutes' => $minutes,
+                'hours' => round($minutes / 60, 2),
+            ]];
+        });
+
         return view('time_records.show', compact(
             'timeRecord',
             'overtimeRequests',
@@ -407,14 +444,15 @@ class TimeRecordController extends Controller
             'outbaseRequests',
             'offsetRequests',
             'dayOffChangeRequests',
-            'dayOffChangeMap'
+            'dayOffChangeMap',
+            'dailyWorkTotals'
         ));
     }
 
     /**
      * Show the form for editing the specified time record.
      */
-    public function edit(TimeRecord $timeRecord)
+    public function edit(TimeRecord $timeRecord, AttendancePolicyService $attendancePolicyService)
     {
         $user = auth()->user();
 
@@ -482,7 +520,15 @@ class TimeRecordController extends Controller
         $dayOffChangeMap = collect($dayOffChangeMap)
             ->map(fn ($items) => implode(', ', $items));
 
-        return view('time_records.edit', compact('timeRecord', 'employees', 'payrollPeriods', 'dayOffChangeMap'));
+        $attendancePolicy = $attendancePolicyService->frontendConfig($timeRecord->employee);
+
+        return view('time_records.edit', compact(
+            'timeRecord',
+            'employees',
+            'payrollPeriods',
+            'dayOffChangeMap',
+            'attendancePolicy'
+        ));
     }
 
     protected function canEditTimeRecord(TimeRecord $timeRecord): bool
@@ -507,7 +553,7 @@ class TimeRecordController extends Controller
     /**
      * Update the specified time record in storage.
      */
-    public function update(Request $request, TimeRecord $timeRecord)
+    public function update(Request $request, TimeRecord $timeRecord, AttendancePolicyService $attendancePolicyService)
     {
         $this->authorizeCompany($timeRecord->company_id);
 
@@ -572,12 +618,19 @@ class TimeRecordController extends Controller
                 $line = $timeRecord->lines()->where('id', $lineData['id'])->first();
 
                 if ($line) {
+                    $attendance = $attendancePolicyService->calculate(
+                        $timeRecord->employee,
+                        $line->date,
+                        $lineData['clock_in'] ?? null,
+                        $lineData['clock_out'] ?? null
+                    );
+
                     $line->update([
                         'clock_in'          => $lineData['clock_in'] ?? null,
                         'clock_out'         => $lineData['clock_out'] ?? null,
-                        'late_minutes'      => $lineData['late_minutes'] ?? 0,
-                        'undertime_minutes' => $lineData['undertime_minutes'] ?? 0,
-                        'remarks' => $lineData['remarks'] ?? null,
+                        'late_minutes'      => $attendance['late_minutes'],
+                        'undertime_minutes' => $attendance['undertime_minutes'],
+                        'remarks'           => $lineData['remarks'] ?? null,
                     ]);
                 }
             }

@@ -67,6 +67,7 @@
                                 <th>Offset Hours</th>
                                 <th>Outbase Start</th>
                                 <th>Outbase End</th>
+                                <th>Total Hours</th>
                                 <th>Leave Days</th>
                                 <th>Remaining Leave</th>
                                 <th>With Pay?</th>
@@ -91,6 +92,13 @@
                                     <td class="text-center">{{ $line->offset_hours == 0 ? '' : $line->offset_hours }}</td>
                                     <td class="text-center">{{ $line->outbase_time_start }}</td>
                                     <td class="text-center">{{ $line->outbase_time_end }}</td>
+                                    @php
+                                        $workDate = \Carbon\Carbon::parse($line->date)->toDateString();
+                                        $dailyTotal = $dailyWorkTotals[$workDate] ?? ['hours' => 0, 'minutes' => 0];
+                                    @endphp
+                                    <td class="text-center fw-semibold">
+                                        {{ number_format($dailyTotal['hours'], 2) }}
+                                    </td>
                                     <td class="text-center">{{ $line->leave_days == 0 ? '' : $line->leave_days }}</td>
                                     <td class="text-center">{{ $line->remaining_leave_credits == 0 ? '' : $line->remaining_leave_credits }}</td>
                                     <td class="text-center">{{ $line->leave_with_pay ? 'Yes' : '' }}</td>

@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="h4 text-dark">{{ __('Edit Compensatory Over Time Credit') }}</h2>
+        <h2 class="h4 text-dark">{{ __('Edit Compensatory Overtime Credit Request') }}</h2>
     </x-slot>
 
     <div class="container py-5">
@@ -39,9 +39,9 @@
                         <input type="hidden" name="employee_id" value="{{ $overtimeRequest->employee_id }}">
                     </div>
 
-                    <!-- Compensatory Over Time Credit Date -->
+                    <!-- Compensatory Overtime Credit Date -->
                     <div class="mb-3">
-                        <label for="date" class="form-label">Compensatory Over Time Credit Date</label>
+                        <label for="date" class="form-label">Compensatory Overtime Credit Date</label>
                         <input type="date" name="date" id="date" class="form-control"
                                value="{{ old('date', $overtimeRequest->date) }}" required>
                         @error('date')

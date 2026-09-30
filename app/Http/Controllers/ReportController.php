@@ -33,8 +33,8 @@ class ReportController extends Controller
                 'roles'       => ['admin', 'hr supervisor', 'department head', 'finance hris'],
             ],
             [
-                'title'       => 'Compensatory Over Time Credit vs Compensatory Time-Off Report',
-                'description' => 'Compare earned Compensatory Over Time Credit against hours used for Compensatory Time-Off.',
+                'title'       => 'Compensatory Overtime Credit vs Compensatory Time-Off Report',
+                'description' => 'Compare total overtime filed vs. how much has been used for offset.',
                 'route'       => 'reports.overtime_offset_comparison',
                 'permission'  => 'view overtime report',
                 'roles'       => ['admin', 'hr supervisor', 'department head', 'finance hris'],
@@ -62,7 +62,7 @@ class ReportController extends Controller
             ],
             [
                 'title'       => 'Compensatory Time-Off Usage and Expiry Tracker',
-                'description' => 'Track Compensatory Time-Off usage and monitor expiration of eligible Compensatory Over Time Credit hours.',
+                'description' => 'Track Compensatory Time-Off usage and monitor expiration of eligible Compensatory Overtime Credit hours.',
                 'route'       => 'reports.offset_tracker',
                 'permission'  => 'view offset report',
                 'roles'       => ['admin', 'hr supervisor', 'employee'],
@@ -76,10 +76,10 @@ class ReportController extends Controller
                 'roles'       => ['admin', 'hr supervisor', 'employee'],
             ],
 
-            // Filed Overtime Report
+            // Compensatory Overtime Credit Report
             [
-                'title'       => 'Compensatory Over Time Credit Report',
-                'description' => 'List all Compensatory Over Time Credit requests with status, hours, and usage.',
+                'title'       => 'Compensatory Overtime Credit Report',
+                'description' => 'List all your Compensatory Overtime Credit requests with status, hours, and usage.',
                 'route'       => 'reports.overtime_history',
                 'permission'  => 'view overtime report',
                 'roles'       => ['admin', 'hr supervisor', 'employee'],
@@ -103,10 +103,10 @@ class ReportController extends Controller
                 'roles'       => ['admin', 'hr supervisor', 'employee'],
             ],
 
-            // Offset Request Usage Summary
+            // Compensatory Time-Off Request Usage Summary
             [
                 'title'       => 'Compensatory Time-Off Summary',
-                'description' => 'Detailed view of how Compensatory Time-Off hours were applied.',
+                'description' => 'Detailed view of how your Compensatory Time-Off hours were applied to absences or undertime.',
                 'route'       => 'reports.offset_summary',
                 'permission'  => 'view offset report',
                 'roles'       => ['admin', 'hr supervisor', 'employee'],
@@ -264,19 +264,18 @@ class ReportController extends Controller
     }
     public function leaveUtilization(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         if (!$user->hasPermission('view leave report')) {
             abort(403, 'Unauthorized to view leave reports.');
         }
 
-        $yearFilter = $request->input('year');
+        $yearFilter       = $request->input('year');
         $departmentFilter = $request->input('department_id');
+        $leaveBalances    = $this->getLeaveUtilizationData($request, $company);
 
-        // Use one shared data builder so the web, PDF, and Excel reports stay consistent.
-        $leaveBalances = $this->getLeaveUtilizationData($request, $company);
-
+        // Needed for the filter dropdowns.
         $departments = \App\Models\Department::where('company_id', $company->id)
             ->orderBy('name')
             ->get();
@@ -284,8 +283,8 @@ class ReportController extends Controller
         $years = \App\Models\LeaveBalance::where('company_id', $company->id)
             ->select('year')
             ->distinct()
-            ->pluck('year')
-            ->sortDesc();
+            ->orderByDesc('year')
+            ->pluck('year');
 
         return view('reports.leave_utilization', compact(
             'leaveBalances',
@@ -298,18 +297,18 @@ class ReportController extends Controller
 
     public function leaveUtilizationPdf(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         if (!$user->hasPermission('view leave report')) {
             abort(403, 'Unauthorized to view leave reports.');
         }
 
-        $data = $this->getLeaveUtilizationData($request, $company);
+        $data          = $this->getLeaveUtilizationData($request, $company);
         $periodCovered = $this->getPeriodText($request);
 
         $pdf = Pdf::loadView('reports.leave_utilization_pdf', [
-            'company' => $company,
+            'company'       => $company,
             'leaveBalances' => $data,
             'periodCovered' => $periodCovered,
         ])->setPaper('A4', 'landscape');
@@ -319,14 +318,14 @@ class ReportController extends Controller
 
     public function leaveUtilizationExcel(Request $request)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $company = $user->preference->company;
 
         if (!$user->hasPermission('view leave report')) {
             abort(403, 'Unauthorized to view leave reports.');
         }
 
-        $data = $this->getLeaveUtilizationData($request, $company);
+        $data          = $this->getLeaveUtilizationData($request, $company);
         $periodCovered = $this->getPeriodText($request);
 
         return Excel::download(
@@ -335,15 +334,17 @@ class ReportController extends Controller
         );
     }
 
+    /**
+     * Build one leave-utilization row per employee/year and keep Vacation Leave
+     * and Emergency Leave completely separate.
+     */
     protected function getLeaveUtilizationData(Request $request, $company)
     {
-        $yearFilter = $request->input('year');
+        $yearFilter       = $request->input('year');
         $departmentFilter = $request->input('department_id');
 
-        $query = \App\Models\LeaveBalance::with([
-            'employee.user',
-            'employee.department',
-        ])->where('company_id', $company->id);
+        $query = \App\Models\LeaveBalance::with(['employee.user', 'employee.department'])
+            ->where('company_id', $company->id);
 
         $query->whereHas('employee', function ($q) {
             $this->restrictToDepartmentHead($q);
@@ -361,51 +362,69 @@ class ReportController extends Controller
 
         $balances = $query->get();
 
+        if ($balances->isEmpty()) {
+            return collect();
+        }
+
+        $employeeIds = $balances->pluck('employee_id')->unique()->values();
+        $years       = $balances->pluck('year')->map(fn ($year) => (int) $year)->unique()->values();
+        $minYear     = (int) $years->min();
+        $maxYear     = (int) $years->max();
+
+        // Aggregate approved paid usage once, by employee/year/leave type.
+        $usedCredits = \App\Models\LeaveRequest::query()
+            ->selectRaw("employee_id, YEAR(start_date) as leave_year, COALESCE(leave_type, 'vacation') as leave_type, SUM(number_of_days) as used")
+            ->where('company_id', $company->id)
+            ->whereIn('employee_id', $employeeIds)
+            ->where('status', 'approved')
+            ->where('leave_with_pay', true)
+            ->whereDate('start_date', '>=', sprintf('%04d-01-01', $minYear))
+            ->whereDate('start_date', '<=', sprintf('%04d-12-31', $maxYear))
+            ->groupBy('employee_id', \Illuminate\Support\Facades\DB::raw('YEAR(start_date)'), \Illuminate\Support\Facades\DB::raw("COALESCE(leave_type, 'vacation')"))
+            ->get()
+            ->keyBy(fn ($row) => $row->employee_id . '|' . $row->leave_year . '|' . $row->leave_type);
+
         return $balances
-            ->groupBy(function ($balance) {
-                return $balance->employee_id . '-' . $balance->year;
-            })
-            ->map(function ($employeeBalances) {
-                $firstBalance = $employeeBalances->first();
+            ->groupBy(fn ($balance) => $balance->employee_id . '|' . $balance->year)
+            ->map(function ($group) use ($usedCredits) {
+                $first      = $group->first();
+                $employeeId = $first->employee_id;
+                $year       = (int) $first->year;
 
-                $vacationBalance = $employeeBalances->firstWhere('leave_type', 'vacation');
-                $emergencyBalance = $employeeBalances->firstWhere('leave_type', 'emergency');
+                $vacationBalance  = $group->firstWhere('leave_type', 'vacation');
+                $emergencyBalance = $group->firstWhere('leave_type', 'emergency');
 
-                $usedByType = \App\Models\LeaveRequest::where(
-                    'employee_id',
-                    $firstBalance->employee_id
-                )
-                    ->where('company_id', $firstBalance->company_id)
-                    ->where('status', 'approved')
-                    ->where('leave_with_pay', true)
-                    ->whereYear('start_date', $firstBalance->year)
-                    ->whereIn('leave_type', ['vacation', 'emergency'])
-                    ->selectRaw('leave_type, SUM(number_of_days) as total_used')
-                    ->groupBy('leave_type')
-                    ->pluck('total_used', 'leave_type');
+                $vacationBeginning  = (float) ($vacationBalance?->beginning_balance ?? 0);
+                $emergencyBeginning = (float) ($emergencyBalance?->beginning_balance ?? 0);
 
-                $vacationOpening = (float) ($vacationBalance?->beginning_balance ?? 0);
-                $vacationUsed = (float) ($usedByType->get('vacation') ?? 0);
-                $emergencyOpening = (float) ($emergencyBalance?->beginning_balance ?? 0);
-                $emergencyUsed = (float) ($usedByType->get('emergency') ?? 0);
+                $vacationUsed = (float) optional(
+                    $usedCredits->get($employeeId . '|' . $year . '|vacation')
+                )->used;
+
+                $emergencyUsed = (float) optional(
+                    $usedCredits->get($employeeId . '|' . $year . '|emergency')
+                )->used;
 
                 return [
-                    'employee_name' => $firstBalance->employee->user->name ?? 'N/A',
-                    'department' => $firstBalance->employee->department->name ?? 'Unassigned',
-                    'year' => $firstBalance->year,
+                    'employee_name' => $first->employee->user->name       ?? 'N/A',
+                    'department'    => $first->employee->department->name ?? 'Unassigned',
+                    'year'          => $year,
 
-                    'vacation_opening' => $vacationOpening,
-                    'vacation_used' => $vacationUsed,
-                    'vacation_remaining' => $vacationOpening - $vacationUsed,
+                    'vacation_opening'   => $vacationBeginning,
+                    'vacation_used'      => $vacationUsed,
+                    'vacation_remaining' => $vacationBeginning - $vacationUsed,
 
-                    'emergency_opening' => $emergencyOpening,
-                    'emergency_used' => $emergencyUsed,
-                    'emergency_remaining' => $emergencyOpening - $emergencyUsed,
+                    'emergency_opening'   => $emergencyBeginning,
+                    'emergency_used'      => $emergencyUsed,
+                    'emergency_remaining' => $emergencyBeginning - $emergencyUsed,
                 ];
             })
+            ->sortBy([
+                ['employee_name', 'asc'],
+                ['year', 'desc'],
+            ])
             ->values();
     }
-
     protected function getPeriodText(Request $request): string
     {
         $year         = $request->input('year');

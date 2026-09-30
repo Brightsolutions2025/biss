@@ -51,7 +51,7 @@
 
                         <!-- Compensatory Time-Off Validity Duration Info -->
                         <div class="mb-3">
-                            <label class="form-label">Compensatory Time-Off Valid After (days from credit)</label>
+                            <label class="form-label">Compensatory Time-Off Valid After (days from Compensatory Overtime Credit)</label>
                             <input type="text" class="form-control" value="{{ $company->offset_valid_after_days }}" disabled>
                         </div>
 

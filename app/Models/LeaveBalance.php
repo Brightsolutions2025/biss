@@ -34,10 +34,4 @@ class LeaveBalance extends Model
     {
         return route('leave-balances.show', $this);
     }
-
-    public function getLeaveTypeLabelAttribute(): string
-    {
-        return config("leave.types.{$this->leave_type}.label", ucfirst((string) $this->leave_type));
-    }
 }
-

@@ -1,11 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="h4 fw-semibold text-dark">{{ __('Compensatory Over Time Credit Report') }}</h2>
+        <h2 class="h4 fw-semibold text-dark">{{ __('Compensatory Overtime Credit Report') }}</h2>
     </x-slot>
 
     <div class="container py-4">
         <div class="mb-3">
-            <p class="fw-semibold">List of all your Compensatory Over Time Credit requests including status, hours, and expiration date.</p>
+            <p class="fw-semibold">List of all your Compensatory Overtime Credit requests including status, hours, and expiration date.</p>
         </div>
 
         <form method="GET" class="row g-2 mb-4">
@@ -67,7 +67,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center text-muted">No Compensatory Over Time Credit records found.</td>
+                            <td colspan="8" class="text-center text-muted">No overtime records found.</td>
                         </tr>
                     @endforelse
                 </tbody>

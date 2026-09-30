@@ -167,13 +167,16 @@
 
                             <div class="form-check mt-3 mb-4">
                                 <input class="form-check-input" type="checkbox" name="flexible_time" id="flexible_time" value="1" {{ $employee->flexible_time ? 'checked' : '' }}>
-                                <label class="form-check-label" for="flexible_time">Flexible Time</label>
+                                <label class="form-check-label" for="flexible_time">Legacy Flexible Time (before October 1, 2026)</label>
+                                <div class="form-text">
+                                    From October 1, 2026, attendance policy is automatic: Warehouseman uses the fixed assigned shift, non-directors are flexible until 11:00 AM, and Directors have unrestricted flexible arrival. Break time is flexible; BISS deducts the configured standard break duration ({{ config('attendance.break_minutes', 60) }} minutes) for flexible employees.
+                                </div>
                             </div>
 
                             <div class="form-check mb-4">
                                 <input class="form-check-input" type="checkbox" name="ot_not_convertible_to_offset" id="ot_not_convertible_to_offset" value="1" {{ $employee->ot_not_convertible_to_offset ? 'checked' : '' }}>
                                 <label class="form-check-label" for="ot_not_convertible_to_offset">
-                                    Compensatory Over Time Credit Not Usable for Compensatory Time-Off
+                                    Compensatory Overtime Credit Not Convertible to Compensatory Time-Off
                                 </label>
                             </div>
 

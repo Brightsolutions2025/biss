@@ -23,7 +23,6 @@ class LeaveRequestFactory extends Factory
         return [
             'company_id'       => Company::factory(),
             'employee_id'      => Employee::factory(),
-            'leave_type'       => 'vacation',
             'start_date'       => $startDate->format('Y-m-d'),
             'end_date'         => $endDate->format('Y-m-d'),
             'number_of_days'   => (new \Carbon\Carbon($startDate))->diffInDays($endDate) + 1,

@@ -35,7 +35,7 @@
 
                     {{-- Date --}}
                     <div class="mb-3">
-                        <label class="form-label">Compensatory Time-Off Date</label>
+                        <label class="form-label">Date to Compensatory Time-Off</label>
                         <input type="text" disabled class="form-control bg-light"
                             value="{{ $offsetRequest->date }}">
                     </div>
@@ -119,9 +119,9 @@
                         </div>
                     @endif
 
-                    {{-- Linked Compensatory Over Time Credit --}}
+                    {{-- Linked Compensatory Overtime Credit --}}
                     <div class="mb-4">
-                        <label class="form-label mb-2">Used Compensatory Over Time Credit</label>
+                        <label class="form-label mb-2">Used Compensatory Overtime Credit</label>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead class="table-light">
@@ -129,7 +129,7 @@
                                         <th>Date</th>
                                         <th>Start</th>
                                         <th>End</th>
-                                        <th>Total Credit</th>
+                                        <th>Total OT</th>
                                         <th>Used for Compensatory Time-Off</th>
                                     </tr>
                                 </thead>

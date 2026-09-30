@@ -21,7 +21,7 @@
             <tr>
                 <td>{{ $leave->employee->user->name ?? 'N/A' }}</td>
                 <td>{{ $leave->employee->department->name ?? 'N/A' }}</td>
-                <td>{{ $leave->leave_type_label }}</td>
+                <td>{{ $leave->type ?? 'N/A' }}</td>
                 <td>{{ $leave->reason }}</td>
                 <td>{{ \Carbon\Carbon::parse($leave->start_date)->toDateString() }}</td>
                 <td>{{ \Carbon\Carbon::parse($leave->end_date)->toDateString() }}</td>

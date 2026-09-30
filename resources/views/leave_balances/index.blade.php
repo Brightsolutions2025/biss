@@ -37,15 +37,6 @@
                             <label for="year" class="form-label">Year</label>
                             <input type="number" name="year" id="year" class="form-control" value="{{ request('year') }}">
                         </div>
-                        <div class="col-md-4">
-                            <label for="leave_type" class="form-label">Leave Type</label>
-                            <select name="leave_type" id="leave_type" class="form-select">
-                                <option value="">-- All Leave Types --</option>
-                                @foreach ($leaveTypes as $value => $label)
-                                    <option value="{{ $value }}" {{ request('leave_type') === $value ? 'selected' : '' }}>{{ $label }}</option>
-                                @endforeach
-                            </select>
-                        </div>
                         <div class="col-md-4 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary w-100">Search</button>
                         </div>
@@ -69,7 +60,6 @@
                                 <h6 class="card-title mb-1">
                                     {{ $balance->employee->last_name }}, {{ $balance->employee->first_name }} – {{ $balance->year }}
                                 </h6>
-                                <p class="mb-1"><strong>{{ $balance->leave_type_label }}</strong></p>
                                 <p class="mb-0 text-muted small">
                                     Beginning Balance: {{ $balance->beginning_balance }}
                                 </p>

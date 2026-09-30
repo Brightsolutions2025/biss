@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="h4 text-dark">{{ __('Compensatory Over Time Credit Details') }}</h2>
+        <h2 class="h4 text-dark">{{ __('Compensatory Overtime Credit Request Details') }}</h2>
     </x-slot>
 
     <div class="container py-5">
@@ -172,7 +172,7 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger"
-                            onclick="return confirm('Are you sure you want to delete this Compensatory Over Time Credit request?')">
+                            onclick="return confirm('Are you sure you want to delete this Compensatory Overtime Credit request?')">
                             Delete
                         </button>
                     </form>

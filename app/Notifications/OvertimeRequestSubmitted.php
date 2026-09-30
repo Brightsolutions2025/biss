@@ -39,9 +39,9 @@ class OvertimeRequestSubmitted extends Notification
         $employeeName = $this->overtimeRequest->employee->user->name ?? 'An employee';
 
         return (new MailMessage())
-            ->subject('New Compensatory Over Time Credit Request Submitted')
+            ->subject('New Compensatory Overtime Credit Request Submitted')
             ->greeting("Hello {$notifiable->name},")
-            ->line("{$employeeName} submitted a Compensatory Over Time Credit request.")
+            ->line("{$employeeName} submitted a Compensatory Overtime Credit request.")
             ->line('Date: ' . $this->overtimeRequest->date)
             ->line('From: ' . $this->overtimeRequest->time_start . ' to ' . $this->overtimeRequest->time_end)
             ->line('Reason: ' . $this->overtimeRequest->reason)

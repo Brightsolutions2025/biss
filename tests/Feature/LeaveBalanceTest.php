@@ -72,14 +72,13 @@ class LeaveBalanceTest extends TestCase
     /** @test */
     public function it_stores_a_leave_balance()
     {
-        $employee = Employee::factory()->create(['company_id' => $this->company->id, 'employment_type' => 'Regular']);
+        $employee = Employee::factory()->create(['company_id' => $this->company->id]);
 
         $this->actingAs($this->user);
 
         $data = [
             'employee_id'       => $employee->id,
             'year'              => 2025,
-            'leave_type'        => 'vacation',
             'beginning_balance' => 10,
         ];
 
@@ -89,7 +88,6 @@ class LeaveBalanceTest extends TestCase
         $this->assertDatabaseHas('leave_balances', [
             'employee_id' => $data['employee_id'],
             'year'        => $data['year'],
-            'leave_type' => $data['leave_type'],
             'company_id'  => $this->company->id,
         ]);
     }
@@ -120,14 +118,13 @@ class LeaveBalanceTest extends TestCase
     public function it_updates_a_leave_balance()
     {
         $leaveBalance = LeaveBalance::factory()->create(['company_id' => $this->company->id]);
-        $employee     = Employee::factory()->create(['company_id' => $this->company->id, 'employment_type' => 'Regular']);
+        $employee     = Employee::factory()->create(['company_id' => $this->company->id]);
 
         $this->actingAs($this->user);
 
         $data = [
             'employee_id'       => $employee->id,
             'year'              => 2026,
-            'leave_type'        => $leaveBalance->leave_type,
             'beginning_balance' => 15,
         ];
 

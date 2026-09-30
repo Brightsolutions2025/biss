@@ -96,10 +96,10 @@
                                 <li><a class="dropdown-item" href="{{ route('leave_requests.create') }}">Leave</a></li>
                             @endif
                             @if($user->hasPermission('overtime_request.create'))
-                                <li><a class="dropdown-item" href="{{ route('overtime_requests.create') }}">Compensatory Over Time Credit</a></li>
+                                <li><a class="dropdown-item" href="{{ route('overtime_requests.create') }}">Compensatory Overtime Credit</a></li>
                             @endif
                             @if($user->hasPermission('overtime_pre_approval.create'))
-                                <li><a class="dropdown-item" href="{{ route('overtime_pre_approvals.create') }}">Compensatory Over Time Credit Pre-Approval</a></li>
+                                <li><a class="dropdown-item" href="{{ route('overtime_pre_approvals.create') }}">Compensatory Overtime Credit Pre-Approval</a></li>
                             @endif
                             @if($user->hasPermission('offset_request.create'))
                                 <li><a class="dropdown-item" href="{{ route('offset_requests.create') }}">Compensatory Time-Off</a></li>
@@ -185,10 +185,10 @@
                                 <li><a class="dropdown-item" href="{{ route('leave_requests.index') }}">Leave Requests</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('overtime_request.browse'))
-                                <li><a class="dropdown-item" href="{{ route('overtime_requests.index') }}">Compensatory Over Time Credit Requests</a></li>
+                                <li><a class="dropdown-item" href="{{ route('overtime_requests.index') }}">Compensatory Overtime Credit Requests</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('overtime_pre_approval.browse'))
-                                <li><a class="dropdown-item" href="{{ route('overtime_pre_approvals.index') }}">Compensatory Over Time Credit Pre-Approvals</a></li>
+                                <li><a class="dropdown-item" href="{{ route('overtime_pre_approvals.index') }}">Compensatory Overtime Credit Pre-Approvals</a></li>
                             @endif
                             @if(auth()->user()->hasPermission('offset_request.browse'))
                                 <li><a class="dropdown-item" href="{{ route('offset_requests.index') }}">Compensatory Time-Off Requests</a></li>
@@ -264,7 +264,7 @@
 
                             <li><a class="dropdown-item" href="{{ route('reports.dtr_status_by_team') }}">DTR Status by Team</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.leave_utilization') }}">Leave Utilization Summary</a></li>
-                            <li><a class="dropdown-item" href="{{ route('reports.overtime_offset_comparison') }}">Compensatory Over Time Credit vs Compensatory Time-Off Report</a></li>
+                            <li><a class="dropdown-item" href="{{ route('reports.overtime_offset_comparison') }}">Compensatory Overtime Credit vs Compensatory Time-Off Report</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.late_undertime') }}">Late and Undertime Report</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.leave_status_overview') }}">Leave Requests by Status</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.outbase_summary') }}">Outbase Request Summary</a></li>
@@ -277,7 +277,7 @@
 
                             <li><a class="dropdown-item" href="{{ route('reports.offset_tracker') }}">Compensatory Time-Off Usage and Expiry Tracker</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.leave_summary') }}">Leave Summary Report</a></li>
-                            <li><a class="dropdown-item" href="{{ route('reports.overtime_history') }}">Compensatory Over Time Credit Report</a></li>
+                            <li><a class="dropdown-item" href="{{ route('reports.overtime_history') }}">Compensatory Overtime Credit Report</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.leave_timeline') }}">Approved Leaves Timeline</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.outbase_history') }}">Outbase Request Report</a></li>
                             <li><a class="dropdown-item" href="{{ route('reports.offset_summary') }}">Compensatory Time-Off Summary</a></li>

@@ -91,10 +91,4 @@ class Employee extends Model
     {
         return $this->hasMany(Ticket::class);
     }
-
-    public function isRegular(): bool
-    {
-        return in_array(strtolower(trim((string) $this->employment_type)), ['regular', 'regular employee'], true);
-    }
 }
-

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Compensatory Over Time Credit vs Compensatory Time-Off Report</title>
+    <title>Compensatory Overtime Credit vs Compensatory Time-Off Report</title>
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
@@ -55,7 +55,7 @@
     <p class="text-center mb-2">
         {{ $employees[0]['company_name'] ?? 'Company Name' }}
     </p>
-    <h2 class="text-center fw-bold">Compensatory Over Time Credit vs Compensatory Time-Off Report</h2>
+    <h2 class="text-center fw-bold">Compensatory Overtime Credit vs Compensatory Time-Off Report</h2>
     <p class="text-center mb-4">
         <strong>As of:</strong> {{ \Carbon\Carbon::parse($asOf)->format('F j, Y') }}
     </p>
@@ -65,9 +65,9 @@
             <tr>
                 <th>Employee</th>
                 <th>Department</th>
-                <th>Total Credit</th>
-                <th>Expired Credit</th>
-                <th>Valid Credit</th>
+                <th>Total OT</th>
+                <th>Expired OT</th>
+                <th>Valid OT</th>
                 <th>Compensatory Time-Off Used</th>
                 <th>Remaining Balance</th>
             </tr>
@@ -92,7 +92,7 @@
     </table>
 
     <p class="note">
-        Note: Remaining Balance = Valid Compensatory Over Time Credit – Compensatory Time-Off Used. Expired Compensatory Over Time Credit is not usable.
+        Note: Remaining Balance = Valid Compensatory Overtime Credit – Compensatory Time-Off Used. Expired Compensatory Overtime Credit is not usable.
     </p>
 
 </body>

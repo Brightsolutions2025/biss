@@ -5,19 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\File;
 use App\Models\LeaveRequest;
-use App\Services\LeaveCreditService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rule;
 
 class LeaveRequestController extends Controller
 {
-    public function __construct(private LeaveCreditService $leaveCredits)
-    {
-    }
-
     /**
      * Display a listing of leave requests for the active company.
      */
@@ -76,10 +70,6 @@ class LeaveRequestController extends Controller
             $query->where('employee_id', $request->employee_id);
         }
 
-        if ($request->filled('leave_type')) {
-            $query->where('leave_type', $request->leave_type);
-        }
-
         if ($request->filled('date_from') && $request->filled('date_to')) {
             $query->whereBetween('start_date', [$request->date_from, $request->date_to]);
         }
@@ -91,9 +81,7 @@ class LeaveRequestController extends Controller
             ->orderBy('first_name')
             ->get();
 
-        $leaveTypes = $this->leaveCredits->labels();
-
-        return view('leave_requests.index', compact('leaveRequests', 'employeeList', 'leaveTypes'));
+        return view('leave_requests.index', compact('leaveRequests', 'employeeList'));
     }
 
     /**
@@ -106,14 +94,11 @@ class LeaveRequestController extends Controller
         }
 
         $companyId = auth()->user()->preference->company_id;
-        $employee = Employee::where('user_id', auth()->id())
+        $employee  = Employee::where('user_id', auth()->id())
             ->where('company_id', $companyId)
             ->firstOrFail();
 
-        $leaveTypes = $this->leaveCredits->labels();
-        $creditSummary = $this->leaveCredits->summaries($employee, now()->year);
-
-        return view('leave_requests.create', compact('employee', 'leaveTypes', 'creditSummary'));
+        return view('leave_requests.create', compact('employee'));
     }
 
     /**
@@ -131,11 +116,10 @@ class LeaveRequestController extends Controller
             ->where('company_id', $companyId)
             ->firstOrFail();
 
-        $validated = $this->validateLeave($request);
-
         DB::beginTransaction();
 
         try {
+            $validated = $this->validateLeave($request);
 
             $startDate = Carbon::parse($request->start_date)->startOfDay();
             $endDate   = Carbon::parse($request->end_date)->endOfDay();
@@ -160,7 +144,6 @@ class LeaveRequestController extends Controller
             $leaveRequest = LeaveRequest::create([
                 'company_id'     => $companyId,
                 'employee_id'    => $employee->id,
-                'leave_type'     => $validated['leave_type'],
                 'start_date'     => $validated['start_date'],
                 'end_date'       => $validated['end_date'],
                 'number_of_days' => $validated['number_of_days'],
@@ -275,11 +258,8 @@ class LeaveRequestController extends Controller
         }
 
         $leaveRequest->load('employee', 'files');
-        $leaveTypes = $this->leaveCredits->labels();
-        $creditYear = Carbon::parse($leaveRequest->start_date)->year;
-        $creditSummary = $this->leaveCredits->summaries($leaveRequest->employee, $creditYear);
 
-        return view('leave_requests.edit', compact('leaveRequest', 'leaveTypes', 'creditSummary'));
+        return view('leave_requests.edit', compact('leaveRequest'));
     }
 
     /**
@@ -299,11 +279,11 @@ class LeaveRequestController extends Controller
 
         $companyId = auth()->user()->preference->company_id;
 
-        $validated = $this->validateLeave($request, $leaveRequest->id);
-
         DB::beginTransaction();
 
         try {
+            $validated = $this->validateLeave($request, $leaveRequest->id);
+
             // Remove 'files' from the validated data to avoid SQL error
             unset($validated['files']);
 
@@ -345,7 +325,7 @@ class LeaveRequestController extends Controller
                 'user_id'          => auth()->id(),
             ]);
 
-            return back()->withErrors($e->getMessage())->withInput();
+            return back()->withErrors($e->getMessage());
         }
     }
 
@@ -450,20 +430,10 @@ class LeaveRequestController extends Controller
     private function validateLeave(Request $request, $excludeId = null)
     {
         $companyId = auth()->user()->preference->company_id;
-        $employee = Employee::where('user_id', auth()->id())
+        $employee  = Employee::where('user_id', auth()->id())
             ->where('company_id', $companyId)
             ->firstOrFail();
-
-        $existingFileCount = 0;
-        if ($excludeId) {
-            $existingFileCount = LeaveRequest::where('company_id', $companyId)
-                ->whereKey($excludeId)
-                ->first()?->files()
-                ->count() ?? 0;
-        }
-
         return $request->validate([
-            'leave_type' => ['required', Rule::in($this->leaveCredits->types())],
             'start_date' => [
                 'required',
                 'date',
@@ -473,10 +443,9 @@ class LeaveRequestController extends Controller
                     }
 
                     $start = Carbon::parse($request->start_date);
-                    $end = Carbon::parse($request->end_date);
+                    $end   = Carbon::parse($request->end_date);
 
                     $hasOverlap = LeaveRequest::where('employee_id', $employee->id)
-                        ->where('company_id', $employee->company_id)
                         ->whereIn('status', ['pending', 'approved'])
                         ->when($excludeId, function ($query) use ($excludeId) {
                             $query->where('id', '!=', $excludeId);
@@ -506,7 +475,7 @@ class LeaveRequestController extends Controller
                     }
 
                     $start = Carbon::parse($request->start_date);
-                    $end = Carbon::parse($request->end_date);
+                    $end   = Carbon::parse($request->end_date);
 
                     if ($start->year !== $end->year) {
                         $fail('Start date and end date must be within the same calendar year.');
@@ -522,9 +491,13 @@ class LeaveRequestController extends Controller
                     }
 
                     $start = Carbon::parse($request->start_date);
-                    $end = Carbon::parse($request->end_date);
-                    $calculatedDays = $start->diffInDays($end) + 1;
+                    $end   = Carbon::parse($request->end_date);
 
+                    $calculatedDays = $start->diffInDaysFiltered(function ($date) {
+                        return true; // Include all days
+                    }, $end) + 1; // +1 to include start date
+
+                    // Validation: must be 0.5 or whole number
                     if ($value != 0.5 && intval($value) != $value) {
                         $fail('The number of days must be 0.5 or a whole number.');
                     }
@@ -533,6 +506,7 @@ class LeaveRequestController extends Controller
                         $fail('The number of days must be 0.5 or at least 1.');
                     }
 
+                    // Validation: number_of_days must match calculatedDays
                     if ($value == 0.5 && $calculatedDays != 1) {
                         $fail('0.5 day leave is only allowed for a 1-day leave period.');
                     }
@@ -542,64 +516,46 @@ class LeaveRequestController extends Controller
                     }
                 },
             ],
-            'reason' => 'required|string|max:255',
+            'reason'  => 'required|string|max:255',
             'leave_with_pay' => [
                 'required',
                 'boolean',
-                function ($attribute, $value, $fail) use ($employee, $request, $excludeId) {
+                function ($attribute, $value, $fail) use ($employee, $request) {
                     if (!$value) {
-                        return;
+                        return; // Only validate if it's with pay
                     }
 
-                    if (!$employee->isRegular()) {
-                        $fail('Paid VL and EL credits are available only to regular employees.');
-                        return;
-                    }
+                    $year = \Carbon\Carbon::parse($request->start_date)->year ?? now()->year;
 
-                    if (!$request->start_date || !$request->leave_type) {
-                        return;
-                    }
+                    // Fetch current leave balance
+                    $leaveBalance = \App\Models\LeaveBalance::where('employee_id', $employee->id)
+                        ->where('company_id', $employee->company_id)
+                        ->where('year', $year)
+                        ->first();
 
-                    $year = Carbon::parse($request->start_date)->year;
-                    $leaveType = $request->leave_type;
-                    $summary = $this->leaveCredits->summary($employee, $year, $leaveType, $excludeId);
+                    $availableCredits = $leaveBalance?->beginning_balance ?? 0;
 
-                    if (!$summary['configured']) {
-                        $fail("No {$summary['label']} balance is configured for {$year}.");
-                        return;
-                    }
+                    // Compute used paid leaves
+                    $usedCredits = \App\Models\LeaveRequest::where('employee_id', $employee->id)
+                        ->where('company_id', $employee->company_id)
+                        ->where('status', 'approved')
+                        ->where('leave_with_pay', true)
+                        ->whereYear('start_date', $year)
+                        ->sum('number_of_days');
+
+                    $remaining = $availableCredits - $usedCredits;
 
                     $requestedDays = (float) $request->number_of_days;
-                    if ($requestedDays > $summary['remaining']) {
-                        $remaining = number_format($summary['remaining'], 2);
-                        $fail("Insufficient {$summary['label']} credits. Only {$remaining} day(s) remain.");
+
+                    if ($requestedDays > $remaining) {
+                        $fail("Insufficient leave credits. Only {$remaining} day(s) of paid leave remaining.");
                     }
                 },
             ],
-            'files' => [
-                Rule::requiredIf(fn () => $request->leave_type === LeaveRequest::TYPE_EMERGENCY && $existingFileCount < 1),
-                'nullable',
-                'array',
-                'max:5',
-                function ($attribute, $value, $fail) use ($request, $existingFileCount) {
-                    $newFileCount = is_array($value) ? count($value) : 0;
-                    $totalFileCount = $existingFileCount + $newFileCount;
-
-                    if ($totalFileCount > 5) {
-                        $fail('A leave request may have a maximum of 5 supporting documents.');
-                    }
-
-                    if ($request->leave_type === LeaveRequest::TYPE_EMERGENCY && $totalFileCount < 1) {
-                        $fail('At least one supporting document is required for Emergency Leave (EL).');
-                    }
-                },
-            ],
-            'files.*' => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx',
-        ], [
-            'leave_type.required' => 'Please select Vacation Leave (VL) or Emergency Leave (EL).',
+            'files'   => 'array|max:5', // Max 5 files total
+            'files.*' => 'file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx,xlsx', // 5MB per file
         ]);
     }
-
     public function approve(Request $request, LeaveRequest $leaveRequest)
     {
         $this->authorizeCompany($leaveRequest->company_id);
@@ -610,44 +566,11 @@ class LeaveRequestController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        if ($leaveRequest->isEmergencyLeave() && !$leaveRequest->files()->exists()) {
-            return back()->withErrors([
-                'files' => 'Emergency Leave (EL) cannot be approved without at least one supporting document.',
-            ]);
-        }
-
-        if ($leaveRequest->leave_with_pay) {
-            $employee = $leaveRequest->employee;
-
-            if (!$employee->isRegular()) {
-                return back()->withErrors([
-                    'leave_with_pay' => 'Paid VL and EL credits are available only to regular employees.',
-                ]);
-            }
-
-            $year = Carbon::parse($leaveRequest->start_date)->year;
-            $summary = $this->leaveCredits->summary($employee, $year, $leaveRequest->leave_type, $leaveRequest->id);
-
-            if (!$summary['configured']) {
-                return back()->withErrors([
-                    'leave_with_pay' => "No {$summary['label']} balance is configured for {$year}.",
-                ]);
-            }
-
-            if ((float) $leaveRequest->number_of_days > $summary['remaining']) {
-                $remaining = number_format($summary['remaining'], 2);
-
-                return back()->withErrors([
-                    'leave_with_pay' => "Insufficient {$summary['label']} credits. Only {$remaining} day(s) remain.",
-                ]);
-            }
-        }
-
         DB::beginTransaction();
 
         try {
-            $leaveRequest->status = 'approved';
-            $leaveRequest->approver_id = auth()->id();
+            $leaveRequest->status        = 'approved';
+            $leaveRequest->approver_id   = auth()->id();
             $leaveRequest->approval_date = Carbon::now('Asia/Manila');
             $leaveRequest->save();
 
@@ -660,19 +583,18 @@ class LeaveRequestController extends Controller
 
             Log::info('Leave request approved', [
                 'leave_request_id' => $leaveRequest->id,
-                'leave_type' => $leaveRequest->leave_type,
-                'approver_id' => auth()->id(),
+                'approver_id'      => auth()->id(),
             ]);
 
             return redirect()->route('leave_requests.show', $leaveRequest->id)
-                ->with('success', 'Leave request approved successfully.');
+                            ->with('success', 'Leave request approved successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
 
             Log::error('Failed to approve leave request', [
-                'error' => $e->getMessage(),
+                'error'            => $e->getMessage(),
                 'leave_request_id' => $leaveRequest->id,
-                'approver_id' => auth()->id(),
+                'approver_id'      => auth()->id(),
             ]);
 
             return back()->withErrors('An error occurred while approving the request.');
@@ -738,26 +660,20 @@ class LeaveRequestController extends Controller
     }
     public function fetchApprovedByDate($employeeId, $start, $end)
     {
-        $employee = Employee::findOrFail($employeeId);
+        $employee  = \App\Models\Employee::findOrFail($employeeId);
         $companyId = $employee->company_id;
-        $year = Carbon::parse($start)->year;
-        $startDate = Carbon::parse($start)->startOfDay();
+        $year      = \Carbon\Carbon::parse($start)->year;
 
-        $balances = \App\Models\LeaveBalance::where('employee_id', $employeeId)
+        // 1️⃣ Fetch leave balance for the year
+        $leaveBalance = \App\Models\LeaveBalance::where('employee_id', $employeeId)
             ->where('company_id', $companyId)
             ->where('year', $year)
-            ->whereIn('leave_type', $this->leaveCredits->types())
-            ->get()
-            ->keyBy('leave_type');
+            ->first();
 
-        $remainingByType = [];
-        $originalBalances = [];
-        foreach ($this->leaveCredits->types() as $leaveType) {
-            $originalBalances[$leaveType] = (float) ($balances->get($leaveType)?->beginning_balance ?? 0);
-            $remainingByType[$leaveType] = $originalBalances[$leaveType];
-        }
+        $availableCredits = $leaveBalance?->beginning_balance ?? 0;
 
-        $leaveRequests = LeaveRequest::where('employee_id', $employeeId)
+        // 2️⃣ Fetch all approved leaves (both paid and unpaid)
+        $leaveRequests = \App\Models\LeaveRequest::where('employee_id', $employeeId)
             ->where('company_id', $companyId)
             ->where('status', 'approved')
             ->where(function ($query) use ($year) {
@@ -766,6 +682,7 @@ class LeaveRequestController extends Controller
             })
             ->get();
 
+        // 3️⃣ Flatten approved leaves into daily records
         $dailyLeaves = [];
 
         foreach ($leaveRequests as $leave) {
@@ -776,81 +693,71 @@ class LeaveRequestController extends Controller
                 continue;
             }
 
-            $dailyValue = round($leave->number_of_days / $daysCount, 4);
+            $dailyValue = $daysCount > 0
+                ? round($leave->number_of_days / $daysCount, 4)
+                : $leave->number_of_days;
 
             foreach ($period as $date) {
-                if ($date->year !== $year) {
+                $dateStr = $date->toDateString();
+                if (\Carbon\Carbon::parse($dateStr)->year !== $year) {
                     continue;
                 }
 
-                $dateStr = $date->toDateString();
-                $dailyLeaves[$dateStr] = [
-                    'days' => max($dailyLeaves[$dateStr]['days'] ?? 0, $dailyValue),
-                    'with_pay' => (bool) $leave->leave_with_pay,
-                    'leave_type' => $leave->leave_type,
-                    'leave_type_label' => $leave->leave_type_label,
-                ];
+                // keep only the largest leave value per date
+                $dailyLeaves[$dateStr] = max(
+                    $dailyLeaves[$dateStr] ?? 0,
+                    $dailyValue
+                );
+
+                // mark if it's paid or unpaid
+                $dailyLeaves[$dateStr . '_with_pay'] = (bool) $leave->leave_with_pay;
             }
         }
 
-        $preUsedCreditsByType = array_fill_keys($this->leaveCredits->types(), 0.0);
-        foreach ($dailyLeaves as $dateStr => $leaveData) {
-            $date = Carbon::parse($dateStr);
-            $leaveType = $leaveData['leave_type'] ?? LeaveRequest::TYPE_VACATION;
-
-            if ($date->lessThan($startDate) && $leaveData['with_pay'] && isset($remainingByType[$leaveType])) {
-                $preUsedCreditsByType[$leaveType] += $leaveData['days'];
+        // 4️⃣ Deduct *only paid leaves* that occurred before the requested start date
+        $preUsedCredits = 0;
+        foreach ($dailyLeaves as $key => $value) {
+            if (str_ends_with($key, '_with_pay')) continue;
+            $date = \Carbon\Carbon::parse($key);
+            if ($date->lessThan($start) && ($dailyLeaves[$key . '_with_pay'] ?? false)) {
+                $preUsedCredits += $value;
             }
         }
 
-        foreach ($preUsedCreditsByType as $leaveType => $used) {
-            $remainingByType[$leaveType] = max(0, $remainingByType[$leaveType] - $used);
-        }
+        $remaining = max(0, $availableCredits - $preUsedCredits);
 
+        // 5️⃣ Loop through requested period and build result
         $period = \Carbon\CarbonPeriod::create($start, $end);
         $remainingCreditsByDate = [];
-        $remainingCreditsByTypeByDate = [];
         $result = [];
 
         foreach ($period as $date) {
             $dateStr = $date->toDateString();
-            $leaveData = $dailyLeaves[$dateStr] ?? null;
+            $leaveValue = $dailyLeaves[$dateStr] ?? 0;
+            $isWithPay  = $dailyLeaves[$dateStr . '_with_pay'] ?? false;
 
-            if ($leaveData && $leaveData['with_pay']) {
-                $leaveType = $leaveData['leave_type'];
-                if (isset($remainingByType[$leaveType])) {
-                    $remainingByType[$leaveType] = max(0, $remainingByType[$leaveType] - $leaveData['days']);
-                }
+            $deductible = $isWithPay && $leaveValue > 0;
+            if ($deductible) {
+                $remaining -= $leaveValue;
             }
 
-            $remainingCreditsByTypeByDate[$dateStr] = collect($remainingByType)
-                ->map(fn ($value) => round($value, 2))
-                ->all();
+            $remaining = max(0, $remaining);
+            $remainingCreditsByDate[$dateStr] = round($remaining, 2);
 
-            if ($leaveData) {
-                $leaveType = $leaveData['leave_type'];
-                $remainingCreditsByDate[$dateStr] = round($remainingByType[$leaveType] ?? 0, 2);
+            if ($leaveValue > 0) {
                 $result[$dateStr] = [
-                    'days' => round($leaveData['days'], 2),
-                    'with_pay' => $leaveData['with_pay'],
-                    'leave_type' => $leaveType,
-                    'leave_type_label' => $leaveData['leave_type_label'],
+                    'days'     => round($leaveValue, 2),
+                    'with_pay' => $isWithPay,
                 ];
-            } else {
-                // Backward-compatible singular field: total remaining VL + EL on non-leave days.
-                $remainingCreditsByDate[$dateStr] = round(array_sum($remainingByType), 2);
             }
         }
 
         return response()->json([
-            'dates' => $result,
-            'remaining_credits' => round(array_sum($remainingByType), 2),
+            'dates'                     => $result,
+            'remaining_credits'         => round($remaining, 2),
             'remaining_credits_by_date' => $remainingCreditsByDate,
-            'remaining_credits_by_type_by_date' => $remainingCreditsByTypeByDate,
-            'original_balance' => round(array_sum($originalBalances), 2),
-            'original_balances' => $originalBalances,
-            'pre_used_credits' => round(array_sum($preUsedCreditsByType), 2),
-            'pre_used_credits_by_type' => $preUsedCreditsByType,
+            'original_balance'          => $availableCredits,
+            'pre_used_credits'          => round($preUsedCredits, 2),
         ]);
     }
 

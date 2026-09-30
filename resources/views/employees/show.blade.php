@@ -34,10 +34,13 @@
                         <dt class="col-sm-3">Approver</dt>
                         <dd class="col-sm-9">{{ $employee->approver?->name ?? 'N/A' }}</dd>
 
-                        <dt class="col-sm-3">Flexible Time</dt>
-                        <dd class="col-sm-9">{{ $employee->flexible_time ? 'Yes' : 'No' }}</dd>
+                        <dt class="col-sm-3">Legacy Flexible Time</dt>
+                        <dd class="col-sm-9">
+                            {{ $employee->flexible_time ? 'Yes' : 'No' }}
+                            <div class="small text-muted">Applies to attendance dates before October 1, 2026.</div>
+                        </dd>
 
-                        <dt class="col-sm-3">Credit Not Usable for Compensatory Time-Off</dt>
+                        <dt class="col-sm-3">Compensatory Overtime Credit Not Convertible to Compensatory Time-Off</dt>
                         <dd class="col-sm-9">{{ $employee->ot_not_convertible_to_offset ? 'Yes' : 'No' }}</dd>
                     </dl>
                 </div>

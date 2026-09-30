@@ -42,18 +42,6 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label for="leave_type" class="form-label">Leave Type</label>
-                            <select name="leave_type" id="leave_type" class="form-select">
-                                <option value="">-- All Leave Types --</option>
-                                @foreach ($leaveTypes as $value => $label)
-                                    <option value="{{ $value }}" {{ request('leave_type') === $value ? 'selected' : '' }}>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-md-4">
                             <label for="status" class="form-label">Status</label>
                             <select name="status" id="status" class="form-select">
                                 <option value="">-- All Statuses --</option>
@@ -99,7 +87,6 @@
                                         {{ $request->employee->first_name }} {{ $request->employee->last_name }}
                                         ({{ $request->employee->employee_number }})
                                     </h6>
-                                    <p class="mb-1"><strong>Type:</strong> {{ $request->leave_type_label }}</p>
                                     <p class="mb-1">
                                         {{ $request->start_date }} to {{ $request->end_date }}
                                         ({{ $request->number_of_days }} day{{ $request->number_of_days > 1 ? 's' : '' }})
@@ -214,11 +201,6 @@
                 });
                 $('#status').select2({
                     placeholder: 'Select status...',
-                    allowClear: true,
-                    width: '100%'
-                });
-                $('#leave_type').select2({
-                    placeholder: 'Select leave type...',
                     allowClear: true,
                     width: '100%'
                 });

@@ -39,11 +39,10 @@
             @if($user->hasAnyRole(['employee']))
                 @php
                     $employeeCards = [
-                        ['VL Balance (days)', $employeeVacationLeaveBalance ?? 0],
-                        ['EL Balance (days)', $employeeEmergencyLeaveBalance ?? 0],
+                        ['Leave Balance (days)', $employeeLeaveBalance ?? 0],
                         ['Upcoming Leaves', $employeeUpcomingLeaves ?? 0],
-                        ['Compensatory Over Time Credit (hrs)', $employeeFiledOtHours ?? 0],
-                        ['Pending Compensatory Over Time Credit Pre-Approvals', $employeePendingOvertimePreApprovals ?? 0],
+                        ['Compensatory Overtime Credit (hrs)', $employeeFiledOtHours ?? 0],
+                        ['Pending Compensatory Overtime Credit Pre-Approvals', $employeePendingOvertimePreApprovals ?? 0],
                         ['Late Time-ins', $employeeLateCount ?? 0],
                         ['Undertime Records', $employeeUndertimeCount ?? 0],
                     ];
@@ -65,11 +64,11 @@
                 @php
                     $adminCards = [
                         ['Pending Leave Requests', $pendingLeaveRequests ?? 0],
-                        ['Pending Compensatory Over Time Credit Requests', $pendingOvertimeRequests ?? 0],
+                        ['Pending Compensatory Overtime Credit Requests', $pendingOvertimeRequests ?? 0],
                         ['Pending Compensatory Time-Off Requests', $pendingOffsetRequests ?? 0],
                         ['Pending Outbase Requests', $pendingOutbaseRequests ?? 0],
                         ['Pending Time Records', $pendingTimeRecords ?? 0],
-                        ['Total Compensatory Over Time Credit Hours (Period)', $monthlyOtHours ?? 0],
+                        ['Total Compensatory Overtime Credit Hours (Period)', $monthlyOtHours ?? 0],
                     ];
                 @endphp
                 @foreach($adminCards as [$title, $value])
@@ -104,10 +103,10 @@
                                 </a>
                             </div>
 
-                            {{-- Compensatory Over Time Credit --}}
+                            {{-- Compensatory Overtime Credit --}}
                             <div class="col-md-6 col-lg-4 d-flex gap-2">
                                 <a href="{{ route('overtime_requests.create') }}" class="btn btn-outline-primary flex-fill">
-                                    + Compensatory Over Time Credit
+                                    + Compensatory Overtime Credit
                                 </a>
                                 <a href="{{ route('overtime_requests.index') }}" class="btn btn-outline-secondary flex-fill">
                                     📄 View
@@ -117,7 +116,7 @@
                             {{-- Compensatory Time-Off --}}
                             <div class="col-md-6 col-lg-4 d-flex gap-2">
                                 <a href="{{ route('offset_requests.create') }}" class="btn btn-outline-primary flex-fill">
-                                    + Compensatory Time-Off
+                                    + Compensatory Time-Off Request
                                 </a>
                                 <a href="{{ route('offset_requests.index') }}" class="btn btn-outline-secondary flex-fill">
                                     📄 View
@@ -203,10 +202,10 @@
                                     </tr>
                                 @endforeach
 
-                                {{-- Compensatory Over Time Credit Requests --}}
+                                {{-- Compensatory Overtime Credit Requests --}}
                                 @foreach($pendingOvertimeRequestList ?? [] as $request)
                                     <tr>
-                                        <td>Compensatory Over Time Credit</td>
+                                        <td>Compensatory Overtime Credit</td>
                                         <td>{{ $request->employee->user->name }}</td>
                                         <td>{{ $request->created_at->format('Y-m-d') }}</td>
                                         <td>{{ $request->date }} ({{ $request->number_of_hours }} hrs)</td>
@@ -215,10 +214,10 @@
                                     </tr>
                                 @endforeach
 
-{{-- Compensatory Over Time Credit Pre-Approvals --}}
+{{-- Compensatory Overtime Credit Pre-Approvals --}}
 @foreach($pendingOvertimePreApprovalList ?? [] as $request)
     <tr>
-        <td>Compensatory Over Time Credit Pre-Approval</td>
+        <td>Compensatory Overtime Credit Pre-Approval</td>
         <td>{{ $request->employee->user->name ?? '-' }}</td>
         <td>{{ optional($request->created_at)->format('Y-m-d') }}</td>
         <td>
@@ -346,10 +345,10 @@
                                     </tr>
                                 @endforeach
 
-                                {{-- Compensatory Over Time Credit Requests --}}
+                                {{-- Compensatory Overtime Credit Requests --}}
                                 @foreach($forApprovalOvertimeRequestList ?? [] as $request)
                                     <tr>
-                                        <td>Compensatory Over Time Credit</td>
+                                        <td>Compensatory Overtime Credit</td>
                                         <td>{{ $request->employee->user->name }}</td>
                                         <td>{{ $request->created_at->format('Y-m-d') }}</td>
                                         <td>{{ $request->date }} ({{ $request->number_of_hours }} hrs)</td>
@@ -358,10 +357,10 @@
                                     </tr>
                                 @endforeach
 
-{{-- Compensatory Over Time Credit Pre-Approvals --}}
+{{-- Compensatory Overtime Credit Pre-Approvals --}}
                                 @foreach($forApprovalOvertimePreApprovalList ?? [] as $request)
                                     <tr>
-                                        <td>Compensatory Over Time Credit Pre-Approval</td>
+                                        <td>Compensatory Overtime Credit Pre-Approval</td>
                                         <td>{{ $request->employee->user->name ?? '-' }}</td>
                                         <td>{{ optional($request->created_at)->format('Y-m-d') }}</td>
                                         <td>

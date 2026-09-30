@@ -113,9 +113,9 @@
                                             <th scope="col">OT Start</th>
                                             <th scope="col">OT End</th>
                                             <th scope="col">OT Hours</th>
-                                            <th scope="col">Offset Start</th>
-                                            <th scope="col">Offset End</th>
-                                            <th scope="col">Offset Hours</th>
+                                            <th scope="col">Compensatory Time-Off Start</th>
+                                            <th scope="col">Compensatory Time-Off End</th>
+                                            <th scope="col">Compensatory Time-Off Hours</th>
                                             <th scope="col">Outbase Start</th>
                                             <th scope="col">Outbase End</th>
                                             <th scope="col">Leave Days</th>
@@ -175,10 +175,40 @@
 
     <script>
         const currentEmployeeId = @json($employee->id);
-        const isFlexible = @json($employee->flexible_time);
+        const attendancePolicy = @json($attendancePolicy);
         const scheduledTimeIn = @json(optional(optional($employee->employeeShift)->shift)->time_in);
         const scheduledTimeOut = @json(optional(optional($employee->employeeShift)->shift)->time_out);
         const approvedOvertimeHours = @json($overtimeByDate);
+
+        function isLegacyAttendanceDate(dateStr) {
+            return dateStr < attendancePolicy.effective_date;
+        }
+
+        function legacyBreakOverlapMinutes(start, end) {
+            const breakStart = timeToMinutes(attendancePolicy.legacy_break_start || '12:00');
+            const breakEnd = timeToMinutes(attendancePolicy.legacy_break_end || '13:00');
+
+            if (end <= breakStart || start >= breakEnd) return 0;
+
+            const overlapStart = Math.max(start, breakStart);
+            const overlapEnd = Math.min(end, breakEnd);
+
+            return Math.max(0, overlapEnd - overlapStart);
+        }
+
+        function calculateLegacyFlexibleUndertime(clockIn, clockOut) {
+            if (!clockIn || !clockOut) return 0;
+
+            let start = timeToMinutes(clockIn);
+            let end = timeToMinutes(clockOut);
+
+            if (end <= start) end += 24 * 60;
+
+            const worked = Math.max(0, end - start - legacyBreakOverlapMinutes(start, end));
+            const required = Number(attendancePolicy.required_work_minutes || 480);
+
+            return worked < required ? required - worked : 0;
+        }
 
         function calculateFlexibleUndertime(clockIn, clockOut) {
             if (!clockIn || !clockOut) return 0;
@@ -186,21 +216,104 @@
             let start = timeToMinutes(clockIn);
             let end = timeToMinutes(clockOut);
 
-            // Define lunch break window: 12:00–13:00
-            const lunchStart = 12 * 60;
-            const lunchEnd = 13 * 60;
+            if (end <= start) end += 24 * 60;
 
-            let worked = end - start;
+            const breakMinutes = Math.max(0, Number(attendancePolicy.break_minutes || 60));
+            const worked = Math.max(0, (end - start) - breakMinutes);
+            const required = Number(attendancePolicy.required_work_minutes || 480);
 
-            // Deduct overlap with lunch (if any)
-            const overlapStart = Math.max(start, lunchStart);
-            const overlapEnd = Math.min(end, lunchEnd);
-            if (overlapEnd > overlapStart) {
-                worked -= (overlapEnd - overlapStart);
+            return worked < required ? required - worked : 0;
+        }
+
+        function getAttendancePolicy(dateStr) {
+            return isLegacyAttendanceDate(dateStr)
+                ? attendancePolicy.legacy_policy
+                : attendancePolicy.policy_after_effective_date;
+        }
+
+        function calculateLateMinutes(scheduled, actual, useLegacyBreak = false) {
+            if (!scheduled || !actual) return 0;
+
+            const sched = timeToMinutes(scheduled);
+            const act = timeToMinutes(actual);
+
+            if (act <= sched) return 0;
+
+            let diff = act - sched;
+            if (useLegacyBreak) diff -= legacyBreakOverlapMinutes(sched, act);
+
+            return Math.max(0, diff);
+        }
+
+        function calculateUndertimeMinutes(scheduledOut, actualOut, useLegacyBreak = false) {
+            if (!scheduledOut || !actualOut) return 0;
+
+            const sched = timeToMinutes(scheduledOut);
+            const act = timeToMinutes(actualOut);
+
+            if (act >= sched) return 0;
+
+            let diff = sched - act;
+            if (useLegacyBreak) diff -= legacyBreakOverlapMinutes(act, sched);
+
+            return Math.max(0, diff);
+        }
+
+        function applyAttendancePolicyToRow(row, dateStr) {
+            const policy = getAttendancePolicy(dateStr);
+            const legacyDate = isLegacyAttendanceDate(dateStr);
+            const clockInInput = row.querySelector('.clock-in-input');
+            const clockOutInput = row.querySelector('.clock-out-input');
+            const lateInput = row.querySelector('.late-minutes-input');
+            const undertimeInput = row.querySelector('.undertime-minutes-input');
+
+            if (lateInput) lateInput.value = 0;
+            if (undertimeInput) undertimeInput.value = 0;
+
+            if (policy === 'fixed') {
+                if (scheduledTimeIn && clockInInput?.value && lateInput) {
+                    lateInput.value = calculateLateMinutes(
+                        scheduledTimeIn,
+                        clockInInput.value,
+                        legacyDate
+                    );
+                }
+
+                if (scheduledTimeOut && clockOutInput?.value && undertimeInput) {
+                    undertimeInput.value = calculateUndertimeMinutes(
+                        scheduledTimeOut,
+                        clockOutInput.value,
+                        legacyDate
+                    );
+                }
+
+                return;
             }
 
-            const required = 480; // 8 hours
-            return worked < required ? required - worked : 0;
+            if (policy === 'legacy_flexible') {
+                if (clockInInput?.value && clockOutInput?.value && undertimeInput) {
+                    undertimeInput.value = calculateLegacyFlexibleUndertime(
+                        clockInInput.value,
+                        clockOutInput.value
+                    );
+                }
+                return;
+            }
+
+            if (policy === 'flexible_cutoff' && clockInInput?.value && lateInput) {
+                lateInput.value = calculateLateMinutes(
+                    attendancePolicy.flexible_cutoff_time,
+                    clockInInput.value,
+                    false
+                );
+            }
+
+            if (clockInInput?.value && clockOutInput?.value && undertimeInput) {
+                undertimeInput.value = calculateFlexibleUndertime(
+                    clockInInput.value,
+                    clockOutInput.value
+                );
+            }
         }
 
         function determineClockInOrOut(attendanceTime, shiftIn, shiftOut) {
@@ -229,52 +342,6 @@
             if (typeof datetime !== 'string') return '';
             const match = datetime.match(/(\d{2}:\d{2})(:\d{2})?/);
             return match ? match[0].substring(0, 5) : '';
-        }
-
-        function excludeLunchMinutes(start, end) {
-            const lunchStart = 12 * 60;
-            const lunchEnd = 13 * 60;
-
-            // no overlap → no adjustment
-            if (end <= lunchStart || start >= lunchEnd) return 0;
-
-            // overlap → compute overlap minutes
-            const overlapStart = Math.max(start, lunchStart);
-            const overlapEnd = Math.min(end, lunchEnd);
-
-            return Math.max(0, overlapEnd - overlapStart);
-        }
-
-        function calculateLateMinutes(scheduled, actual) {
-            if (!scheduled || !actual) return 0;
-
-            const sched = timeToMinutes(scheduled);
-            const act = timeToMinutes(actual);
-
-            if (act <= sched) return 0;
-
-            let diff = act - sched;
-
-            // ✅ Subtract any overlap with lunch
-            diff -= excludeLunchMinutes(sched, act);
-
-            return Math.max(0, diff);
-        }
-
-        function calculateUndertimeMinutes(scheduledOut, actualOut) {
-            if (!scheduledOut || !actualOut) return 0;
-
-            const sched = timeToMinutes(scheduledOut);
-            const act = timeToMinutes(actualOut);
-
-            if (act >= sched) return 0;
-
-            let diff = sched - act;
-
-            // ✅ Subtract any overlap with lunch
-            diff -= excludeLunchMinutes(act, sched);
-
-            return Math.max(0, diff);
         }
 
         document.getElementById('payroll_period_id').addEventListener('change', function () {
@@ -375,32 +442,7 @@
                     `;
                     tbody.appendChild(row);
 
-                    if (isFlexible) {
-                        const clockInInput = row.querySelector('.clock-in-input');
-                        const clockOutInput = row.querySelector('.clock-out-input');
-                        const undertimeInput = row.querySelector('.undertime-minutes-input');
-
-                        if (clockInInput && clockOutInput && undertimeInput) {
-                            undertimeInput.value = calculateFlexibleUndertime(clockInInput.value, clockOutInput.value);
-                        }
-                    } else {
-
-                        if (!isFlexible && scheduledTimeIn) {
-                            const clockInInput = row.querySelector('.clock-in-input');
-                            const lateInput = row.querySelector('.late-minutes-input');
-                            if (clockInInput && clockInInput.value && lateInput) {
-                                lateInput.value = calculateLateMinutes(scheduledTimeIn, clockInInput.value);
-                            }
-                        }
-
-                        if (!isFlexible && scheduledTimeOut) {
-                            const clockOutInput = row.querySelector('.clock-out-input');
-                            const undertimeInput = row.querySelector('.undertime-minutes-input');
-                            if (clockOutInput && clockOutInput.value && undertimeInput) {
-                                undertimeInput.value = calculateUndertimeMinutes(scheduledTimeOut, clockOutInput.value);
-                            }
-                        }
-                    }
+                    applyAttendancePolicyToRow(row, dateStr);
                 }
             });
         });
@@ -507,32 +549,7 @@
                     `;
                     tbody.appendChild(row);
 
-                    if (isFlexible) {
-                        const clockInInput = row.querySelector('.clock-in-input');
-                        const clockOutInput = row.querySelector('.clock-out-input');
-                        const undertimeInput = row.querySelector('.undertime-minutes-input');
-
-                        if (clockInInput && clockOutInput && undertimeInput) {
-                            undertimeInput.value = calculateFlexibleUndertime(clockInInput.value, clockOutInput.value);
-                        }
-                    } else {
-
-                        if (!isFlexible && scheduledTimeIn) {
-                            const clockInInput = row.querySelector('.clock-in-input');
-                            const lateInput = row.querySelector('.late-minutes-input');
-                            if (clockInInput && clockInInput.value && lateInput) {
-                                lateInput.value = calculateLateMinutes(scheduledTimeIn, clockInInput.value);
-                            }
-                        }
-
-                        if (!isFlexible && scheduledTimeOut) {
-                            const clockOutInput = row.querySelector('.clock-out-input');
-                            const undertimeInput = row.querySelector('.undertime-minutes-input');
-                            if (clockOutInput && clockOutInput.value && undertimeInput) {
-                                undertimeInput.value = calculateUndertimeMinutes(scheduledTimeOut, clockOutInput.value);
-                            }
-                        }
-                    }
+                    applyAttendancePolicyToRow(row, dateStr);
 
                 }
             });

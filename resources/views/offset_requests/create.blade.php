@@ -79,9 +79,9 @@
                             @error('reason') <div class="text-danger small">{{ $message }}</div> @enderror
                         </div>
 
-                        <!-- Available Compensatory Over Time Credits -->
+                        <!-- Approved & Upcoming Compensatory Overtime Credit -->
                         <div class="mb-4">
-                            <label class="form-label">Available Compensatory Over Time Credits</label>
+                            <label class="form-label">Approved and Upcoming Compensatory Overtime Credit Requests</label>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-sm align-middle">
                                     <thead class="table-light">
@@ -89,9 +89,9 @@
                                             <th>Date</th>
                                             <th>Start</th>
                                             <th>End</th>
-                                            <th>Total Credit</th>
+                                            <th>Total OT</th>
                                             <th>Remaining</th>
-                                            <th>Hours to Use</th>
+                                            <th>Hours to Compensatory Time-Off</th>
                                         </tr>
                                     </thead>
                                     <tbody id="overtime-table-body">
@@ -155,7 +155,7 @@
         const OFFSET_VALID_DAYS = {{ $employee->company->offset_valid_after_days ?? 90 }};
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Compensatory Over Time Credit input listeners
+            // OT input listeners
             const inputs = document.querySelectorAll('.hours-to-offset');
             inputs.forEach(input => {
                 input.addEventListener('input', () => {
@@ -193,7 +193,7 @@
             timeStart.addEventListener('change', calculateHours);
             timeEnd.addEventListener('change', calculateHours);
 
-            // Initial expired Compensatory Over Time Credit check
+            // Initial expired OT check
             updateExpiredOvertime();
             document.getElementById('date').addEventListener('change', e => {
                 updateExpiredOvertime(e.target.value);

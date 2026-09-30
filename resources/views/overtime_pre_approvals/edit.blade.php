@@ -2,7 +2,7 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="h4 text-dark">{{ __('Edit Compensatory Over Time Credit Pre-Approval') }}</h2>
+        <h2 class="h4 text-dark">{{ __('Edit Compensatory Overtime Credit Pre-Approval') }}</h2>
     </x-slot>
 
     <div class="container py-5">
@@ -51,7 +51,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="date" class="form-label">Compensatory Over Time Credit Date</label>
+                        <label for="date" class="form-label">Compensatory Overtime Credit Date</label>
                         <input type="date" name="date" id="date" class="form-control"
                                value="{{ old('date', optional($overtimePreApproval->date)->format('Y-m-d')) }}" required>
                         @error('date')
@@ -88,7 +88,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="reason" class="form-label">Reason for Compensatory Over Time Credit</label>
+                        <label for="reason" class="form-label">Reason for Compensatory Overtime Credit</label>
                         <textarea name="reason" id="reason" rows="3" class="form-control" required>{{ old('reason', $overtimePreApproval->reason) }}</textarea>
                         @error('reason')
                             <div class="text-danger small">{{ $message }}</div>
@@ -98,7 +98,7 @@
                     <div class="mb-4">
                         <label for="planned_tasks" class="form-label">Planned Tasks / Deliverables</label>
                         <textarea name="planned_tasks" id="planned_tasks" rows="3" class="form-control"
-                                  placeholder="Specify the tasks or deliverables to be completed during the Compensatory Over Time Credit period.">{{ old('planned_tasks', $overtimePreApproval->planned_tasks) }}</textarea>
+                                  placeholder="Specify the tasks or deliverables to be completed during overtime.">{{ old('planned_tasks', $overtimePreApproval->planned_tasks) }}</textarea>
                         @error('planned_tasks')
                             <div class="text-danger small">{{ $message }}</div>
                         @enderror

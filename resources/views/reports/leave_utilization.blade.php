@@ -55,27 +55,31 @@
                                 <td>{{ $row['year'] }}</td>
                                 <td class="text-end">{{ number_format($row['vacation_opening'], 2) }}</td>
                                 <td class="text-end text-danger">{{ number_format($row['vacation_used'], 2) }}</td>
-                                <td class="text-end text-success fw-semibold">{{ number_format($row['vacation_remaining'], 2) }}</td>
+                                <td class="text-end {{ $row['vacation_remaining'] < 0 ? 'text-danger' : 'text-success' }} fw-semibold">
+                                    {{ number_format($row['vacation_remaining'], 2) }}
+                                </td>
                                 <td class="text-end">{{ number_format($row['emergency_opening'], 2) }}</td>
                                 <td class="text-end text-danger">{{ number_format($row['emergency_used'], 2) }}</td>
-                                <td class="text-end text-success fw-semibold">{{ number_format($row['emergency_remaining'], 2) }}</td>
+                                <td class="text-end {{ $row['emergency_remaining'] < 0 ? 'text-danger' : 'text-success' }} fw-semibold">
+                                    {{ number_format($row['emergency_remaining'], 2) }}
+                                </td>
                             </tr>
                         @empty
                             <tr><td colspan="9" class="text-center">No data available.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
-                <!-- Download Buttons -->
+
                 <div class="d-flex gap-2 mb-3">
                     <a id="pdfLink"
-                    href="{{ route('reports.leave_utilization.pdf', request()->only('year', 'department_id')) }}"
-                    class="btn btn-outline-primary">
+                       href="{{ route('reports.leave_utilization.pdf', request()->only('year', 'department_id')) }}"
+                       class="btn btn-outline-primary">
                         Download PDF
                     </a>
 
                     <a id="excelLink"
-                    href="{{ route('reports.leave_utilization.excel', request()->only('year', 'department_id')) }}"
-                    class="btn btn-outline-success">
+                       href="{{ route('reports.leave_utilization.excel', request()->only('year', 'department_id')) }}"
+                       class="btn btn-outline-success">
                         Export Excel
                     </a>
                 </div>

@@ -54,9 +54,20 @@ class DashboardController extends Controller
 
         if ($user->hasRole('Employee') && $employee && $employee->company_id === $company->id) {
 
-            $leaveCreditSummary = app(\App\Services\LeaveCreditService::class)->summaries($employee, $year);
-            $vacationLeaveRemaining = $leaveCreditSummary['vacation']['remaining'] ?? 0;
-            $emergencyLeaveRemaining = $leaveCreditSummary['emergency']['remaining'] ?? 0;
+            $leaveBalance = \App\Models\LeaveBalance::where('employee_id', $employee->id)
+                ->where('company_id', $company->id)
+                ->where('year', $year)
+                ->first();
+
+            $approvedLeaveDays = LeaveRequest::where('employee_id', $employee->id)
+                ->where('company_id', $company->id)
+                ->whereYear('start_date', $year)
+                ->where('start_date', '<=', $endDate)
+                ->where('status', 'approved')
+                ->where('leave_with_pay', true)
+                ->sum('number_of_days');
+
+            $remaining = ($leaveBalance->beginning_balance ?? 0) - $approvedLeaveDays;
 
             $today = $endDate;
 
@@ -79,8 +90,7 @@ $overtimePreApprovalTable = (new OvertimePreApproval)->getTable();
 $overtimePreApprovalHasApproverColumn = Schema::hasColumn($overtimePreApprovalTable, 'approver_id');
 
             $data += [
-                'employeeVacationLeaveBalance' => max(0, $vacationLeaveRemaining),
-                'employeeEmergencyLeaveBalance' => max(0, $emergencyLeaveRemaining),
+                'employeeLeaveBalance'   => max(0, $remaining),
                 'employeeUpcomingLeaves' => $employee->leaveRequests()
                     ->where('company_id', $company->id)
                     ->where('status', 'approved')

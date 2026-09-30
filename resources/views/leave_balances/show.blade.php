@@ -75,10 +75,6 @@
                         <input type="number" class="form-control" disabled value="{{ $leaveBalance->year }}">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Leave Type</label>
-                        <input type="text" class="form-control" disabled value="{{ $leaveBalance->leave_type_label }}">
-                    </div>
-                    <div class="col-md-6">
                         <label class="form-label">Beginning Balance</label>
                         <input type="number" class="form-control" disabled value="{{ $leaveBalance->beginning_balance }}">
                     </div>

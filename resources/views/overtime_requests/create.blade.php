@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="h4 text-dark">{{ __('Add Compensatory Over Time Credit') }}</h2>
+        <h2 class="h4 text-dark">{{ __('Add Compensatory Overtime Credit Request') }}</h2>
     </x-slot>
 
     <div class="container py-5">
@@ -25,7 +25,7 @@
 
                 @if (!$employee)
                     <div class="alert alert-warning fw-semibold">
-                        You need to complete your employee profile before submitting a Compensatory Over Time Credit request. 
+                        You need to complete your employee profile before submitting a Compensatory Overtime Credit request. 
                         <a href="{{ route('employees.create') }}" class="text-decoration-underline">Click here to set up your profile</a>.
                     </div>
                 @else
@@ -44,9 +44,9 @@
                             <input type="hidden" name="employee_id" value="{{ $employee->id }}">
                         </div>
 
-                        <!-- Compensatory Over Time Credit Date -->
+                        <!-- Compensatory Overtime Credit Date -->
                         <div class="mb-3">
-                            <label for="date" class="form-label">Compensatory Over Time Credit Date</label>
+                            <label for="date" class="form-label">Compensatory Overtime Credit Date</label>
                             <input type="date" name="date" id="date" class="form-control"
                                    value="{{ old('date') }}" required>
                             @error('date')

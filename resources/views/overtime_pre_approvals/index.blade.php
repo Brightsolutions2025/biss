@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="h4 text-dark">
-            {{ __('Compensatory Over Time Credit Pre-Approvals') }}
+            {{ __('Compensatory Overtime Credit Pre-Approvals') }}
         </h2>
     </x-slot>
 
@@ -67,13 +67,13 @@
 
                 <br>
 
-                <h5 class="mb-3">Add New Compensatory Over Time Credit Pre-Approval</h5>
+                <h5 class="mb-3">Add New Pre-Approval</h5>
                 <p>
-                    Need to request Compensatory Over Time Credit approval ahead of time?
+                    Need to request overtime approval ahead of time?
                     <a href="{{ route('overtime_pre_approvals.create') }}">Click here</a>!
                 </p>
 
-                <h5 class="mt-4">List of Compensatory Over Time Credit Pre-Approvals</h5>
+                <h5 class="mt-4">List of Compensatory Overtime Credit Pre-Approvals</h5>
 
                 @forelse ($overtimePreApprovals as $preApproval)
                     <div class="card mb-3 border shadow-sm">
@@ -120,7 +120,7 @@
                                     <form method="POST" action="{{ route('overtime_pre_approvals.approve', $preApproval) }}" class="d-inline">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="btn btn-sm btn-outline-success" onclick="return confirm('Approve this Compensatory Over Time Credit Pre-Approval?')">
+                                        <button type="submit" class="btn btn-sm btn-outline-success" onclick="return confirm('Approve this Compensatory Overtime Credit Pre-Approval?')">
                                             Approve
                                         </button>
                                     </form>
@@ -129,7 +129,7 @@
                                         @csrf
                                         @method('PATCH')
                                         <input type="hidden" name="reason" value="Rejected from list page.">
-                                        <button type="submit" class="btn btn-sm btn-outline-warning" onclick="return confirm('Reject this Compensatory Over Time Credit Pre-Approval?')">
+                                        <button type="submit" class="btn btn-sm btn-outline-warning" onclick="return confirm('Reject this Compensatory Overtime Credit Pre-Approval?')">
                                             Reject
                                         </button>
                                     </form>
@@ -146,7 +146,7 @@
                         </div>
                     </div>
                 @empty
-                    <p class="text-muted">No Compensatory Over Time Credit Pre-Approval records found.</p>
+                    <p class="text-muted">No Compensatory Overtime Credit Pre-Approval records found.</p>
                 @endforelse
 
                 @php

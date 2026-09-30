@@ -19,7 +19,7 @@
         }
     </style>
     <x-slot name="header">
-        <h2 class="h4 fw-semibold text-dark">Compensatory Over Time Credit vs Compensatory Time-Off Report</h2>
+        <h2 class="h4 fw-semibold text-dark">Compensatory Overtime Credit vs Compensatory Time-Off Report</h2>
     </x-slot>
 
     <div class="container py-4">
@@ -69,9 +69,9 @@
                         <tr>
                             <th>Employee</th>
                             <th>Department</th>
-                            <th class="text-end">Total Credit</th>
-                            <th class="text-end text-danger">Expired Credit</th>
-                            <th class="text-end text-primary">Valid Credit</th>
+                            <th class="text-end">Total OT</th>
+                            <th class="text-end text-danger">Expired OT</th>
+                            <th class="text-end text-primary">Valid OT</th>
                             <th class="text-end text-warning">Compensatory Time-Off Used</th>
                             <th class="text-end text-success">Remaining Balance</th>
                         </tr>
@@ -96,7 +96,7 @@
                 </table>
 
                 <p class="small text-muted mt-2">
-                    <i>Note: Remaining Balance = Valid Compensatory Over Time Credit – Compensatory Time-Off Used. Expired Compensatory Over Time Credit is not usable.</i>
+                    <i>Note: Remaining Balance = Valid Compensatory Overtime Credit – Compensatory Time-Off Used. Expired Compensatory Overtime Credit is not usable.</i>
                 </p>
                 <!-- Download Buttons -->
                 <div class="d-flex gap-2 mb-3">
@@ -119,13 +119,13 @@
                 @endphp
 
                 @if ($employeeModel)
-                    <h5 class="fw-bold mt-4">Detailed Compensatory Over Time Credit & Compensatory Time-Off Requests: {{ $employeeModel->user->name }}</h5>
+                    <h5 class="fw-bold mt-4">Detailed Compensatory Overtime Credit & Compensatory Time-Off Requests: {{ $employeeModel->user->name }}</h5>
 
                     <table class="table table-bordered table-sm table-hover align-middle mt-2">
                         <thead class="table-light">
                             <tr>
-                                <th>Credit Date</th>
-                                <th class="text-end">Credit Hours</th>
+                                <th>OT Date</th>
+                                <th class="text-end">OT Hours</th>
                                 <th class="text-end text-danger">Expired?</th>
                                 <th>Compensatory Time-Off Date</th>
                                 <th class="text-end">Used Hours</th>
@@ -142,7 +142,7 @@
                                     // ✅ FIX: use pivot->used_hours, not offset->number_of_hours
                                     $offsetTotal = $offsets->sum(fn($o) => $o->pivot->used_hours);
 
-                                    // ✅ Expired Compensatory Over Time Credits have no balance
+                                    // ✅ Expired OTs have no balance
                                     $isExpired = $overtime->expires_at && \Carbon\Carbon::parse($overtime->expires_at)->lt(now());
                                     $balance = $isExpired ? 0 : ($overtime->number_of_hours - $offsetTotal);
                                 @endphp
@@ -190,7 +190,7 @@
                                 @endforeach
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center">No Compensatory Over Time Credit or Compensatory Time-Off records found.</td>
+                                    <td colspan="6" class="text-center">No overtime or offset records found.</td>
                                 </tr>
                             @endforelse
                         </tbody>

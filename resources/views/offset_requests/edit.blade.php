@@ -71,9 +71,9 @@
                             <textarea id="reason" name="reason" rows="3" class="form-control">{{ old('reason', $offsetRequest->reason) }}</textarea>
                         </div>
 
-                        <!-- Compensatory Over Time Credit Mapping -->
+                        <!-- Compensatory Overtime Credit Mapping -->
                         <div class="mb-4">
-                            <label class="form-label">Available Compensatory Over Time Credits</label>
+                            <label class="form-label">Approved and Upcoming Compensatory Overtime Credit Requests</label>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-sm align-middle">
                                     <thead class="table-light">
@@ -81,9 +81,9 @@
                                             <th>Date</th>
                                             <th>Start</th>
                                             <th>End</th>
-                                            <th>Total Credit</th>
+                                            <th>Total OT</th>
                                             <th>Remaining</th>
-                                            <th>Hours to Use</th>
+                                            <th>Hours to Compensatory Time-Off</th>
                                         </tr>
                                     </thead>
                                     <tbody id="overtime-table-body">
@@ -162,7 +162,7 @@
             timeStart.addEventListener('change', calculateHours);
             timeEnd.addEventListener('change', calculateHours);
 
-            // Expired Compensatory Over Time Credit check on load
+            // Expired OT check on load
             updateExpiredOvertime();
             document.getElementById('date').addEventListener('change', e => {
                 updateExpiredOvertime(e.target.value);

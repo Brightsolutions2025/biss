@@ -26,7 +26,7 @@
         <thead>
             <tr>
                 <th>Employee</th>
-                <th>Compensatory Over Time Credit Date</th>
+                <th>Compensatory Overtime Credit Date</th>
                 <th>Approved Hours</th>
                 <th>Used Hours</th>
                 <th>Remaining</th>
